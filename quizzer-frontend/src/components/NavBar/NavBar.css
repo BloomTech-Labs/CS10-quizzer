@@ -1,0 +1,87 @@
+.nav-container {
+    background: #6A5ACD;
+    color: #fff;
+    display: flex; 
+    justify-content: space-between; 
+    height: 5rem;
+}
+
+.home-group {
+    align-items: center; 
+    display: flex; 
+    margin: 0 0 0 2%; 
+    width: 33%; 
+}
+
+.home-button h1 {
+    color: #ffffff; 
+    font-family: monospace; 
+    font-weight: bold; 
+}
+
+.home-button:hover {
+    text-decoration: none; 
+}
+
+.create-quiz {
+    background-color: #6A5ACD !important; 
+    border-color: #6A5ACD !important;
+    margin: 0 0 0 25%; 
+}
+
+.plus {
+    border: 4px solid #ffffff; 
+    font-size: 20px; 
+    font-weight: bold; 
+    padding: 5px 10px; 
+}
+
+.plus:hover {
+    border: 4px solid #808080; 
+    color: #808080; 
+}
+
+.text {
+    font-family: monospace; 
+    font-size: 20px; 
+    font-weight: bold; 
+    margin: 0 0 0 5%; 
+}
+
+.text:hover {
+    color: #808080; 
+}
+
+.button-group {
+    align-items: center; 
+    display: flex; 
+    margin: 0 2% 0 0; 
+}
+
+.login {
+    background-color: #6A5ACD !important; 
+    border-color: #6A5ACD !important; 
+    font-family: monospace; 
+    font-size: 20px !important; 
+    font-weight: bold !important; 
+}
+
+.login:hover {
+    color: #808080 !important; 
+}
+
+.login:actice {
+    border-color: #6A5ACD; 
+}
+
+.signup {
+    font-family: monospace; 
+    font-size: 20px !important; 
+    font-weight: bold !important; 
+    margin: 0 0 0 5%; 
+}
+
+.signup:hover {
+    color: #808080 !important; 
+}
+
