@@ -8,5 +8,6 @@ python_version = "3.6"
 
 [packages]
 django = "*"
+python-decouple = "*"
 
 [dev-packages]
