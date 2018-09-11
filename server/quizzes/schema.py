@@ -35,6 +35,30 @@ class ChoiceType(DjangoObjectType):
         model = Choice
 
 
+class CreateClass(graphene.Mutation):
+    class Arguments:
+        ClassName = graphene.String()
+
+    ok = graphene.Boolean()
+    new_class = graphene.Field(lambda: ClassMutation)
+
+    @staticmethod
+    def mutate(self, info, ClassName):
+        # new_class = ClassMutation(ClassName=ClassName)
+        new_class = Class.objects.create(ClassName=ClassName)
+        ok = True
+
+        return CreateClass(new_class=new_class, ok=ok)
+
+
+class ClassMutation(graphene.ObjectType):
+    ClassName = graphene.String()
+
+
+class Mutation(graphene.ObjectType):
+    create_class = CreateClass.Field()
+
+
 class Query(graphene.ObjectType):
     '''
     Allows us to make GET/Query requests from the DB using GraphQL
@@ -57,4 +81,4 @@ class Query(graphene.ObjectType):
         return Choice.objects.all()
 
 
-schema = graphene.Schema(query=Query)
+schema = graphene.Schema(query=Query, mutation=Mutation)
