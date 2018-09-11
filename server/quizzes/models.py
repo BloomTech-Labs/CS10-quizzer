@@ -9,6 +9,10 @@ class Class(models.Model):
     created_at = models.DateTimeField(auto_now_add = True)
     last_modified = models.DateTimeField(auto_now = True)
 
+    class Meta:
+        db_table = 'Classes'
+        verbose_name_plural = 'classes'
+
 class Quiz(models.Model):
     QuizID = models.UUIDField(primary_key=True, default = uuid4, editable = False)
     ClassesID = models.ForeignKey('Class', on_delete = models.CASCADE)
@@ -16,12 +20,20 @@ class Quiz(models.Model):
     created_at = models.DateTimeField(auto_now_add = True)
     last_modified = models.DateTimeField(auto_now = True)
 
+    class Meta:
+        db_table = 'Quizzes'
+        verbose_name_plural = 'quizzes'
+
 class Question(models.Model):
     QuestionID = models.UUIDField(primary_key=True, default = uuid4, editable = False)
     QuizID = models.ForeignKey('Quiz', on_delete = models.CASCADE)
     Question = models.TextField(blank = False)
     created_at = models.DateTimeField(auto_now_add = True)
     last_modified = models.DateTimeField(auto_now = True)
+
+    class Meta:
+        db_table = 'Questions'
+        verbose_name_plural = 'questions'
     
 
 class Choice(models.Model):
@@ -31,3 +43,7 @@ class Choice(models.Model):
     isCorrect = models.BooleanField()
     created_at = models.DateTimeField(auto_now_add = True)
     last_modified = models.DateTimeField(auto_now = True)
+
+    class Meta:
+        db_table = 'Choices'
+        verbose_name_plural = 'choices'
