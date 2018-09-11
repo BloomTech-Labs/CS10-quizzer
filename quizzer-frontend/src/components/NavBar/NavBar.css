@@ -70,3 +70,14 @@
     color: #808080 !important; 
 }
 
+.popup_header {
+    background-color: #003366; 
+    color: #fff; 
+    font-family: monospace !important; 
+    font-weight: bold !important; 
+}
+
+.popup_header span {
+    font-size: 20px;
+    padding: 20px;  
+}
