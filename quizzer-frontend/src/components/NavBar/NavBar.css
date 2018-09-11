@@ -29,18 +29,6 @@
     margin: 0 0 0 25%; 
 }
 
-.createquiz_button_plussign {
-    border: 4px solid #ffffff; 
-    font-size: 20px; 
-    font-weight: bold; 
-    padding: 5px 10px; 
-}
-
-.createquiz_button_plussign:hover {
-    border: 4px solid #808080; 
-    color: #808080; 
-}
-
 .createquiz_button_text {
     font-family: monospace; 
     font-size: 20px; 
@@ -61,12 +49,13 @@
 .nav_container_right_login_button {
     background-color: #003366 !important; 
     border-color: #003366 !important; 
+    color: #fff !important;
     font-family: monospace; 
     font-size: 20px !important; 
     font-weight: bold !important; 
 }
 
-.nav_container_right_login_button {
+.nav_container_right_login_button:hover {
     color: #808080 !important; 
 }
 
