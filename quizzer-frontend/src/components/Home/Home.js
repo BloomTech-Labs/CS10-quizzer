@@ -11,8 +11,8 @@ class Home extends Component {
                 <NavBar />
                 <div className="main-content">
                     <div className="main-content-left">
-                        <h1>A cool quiz creation app for teachers.</h1>
-                        <p>Search millions of publicly created quizzes to improve your grades or create your own if you are a teacher.</p>
+                        <h1>A cool web app for teachers to create dynamic quizzes.</h1>
+                        <p>Search millions of publicly created quizzes to improve your grades as a student or create your own if you are a teacher.</p>
                         <Button color="info" className="getstart">Get started</Button>
                     </div>
                     <img className="firstimg" src={firstimg} alt="Main Image" />
