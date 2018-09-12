@@ -11,5 +11,6 @@ django = "*"
 python-decouple = "*"
 graphene-django = "*"
 pyjwt = "*"
+django-cors-headers = "*"
 
 [dev-packages]
