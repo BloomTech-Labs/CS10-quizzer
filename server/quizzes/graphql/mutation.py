@@ -1,5 +1,8 @@
 import graphene
+import jwt
+import time
 
+from decouple import config
 from quizzes.models import Class, Quiz, Question, Choice
 
 class CreateClass(graphene.Mutation):
@@ -33,14 +36,26 @@ class CreateClass(graphene.Mutation):
         ClassName = graphene.String()
 
     ok = graphene.Boolean()
+    jwt_string = graphene.String()
     new_class = graphene.Field(lambda: ClassMutation)
 
     @staticmethod
     def mutate(self, info, ClassName):
+        secret = config('SECRET_KEY')
+        algorithm = 'HS256'
+        payload = {
+            'sub': ClassName,
+            'iat': time.time(),
+            'exp': time.time() + 86400
+        }
+
+        enc_jwt = jwt.encode(payload, secret, algorithm=algorithm)
+        
         new_class = Class.objects.create(ClassName=ClassName)
         ok = True
+        jwt_string = enc_jwt.decode('utf-8')
 
-        return CreateClass(new_class=new_class, ok=ok)
+        return CreateClass(new_class=new_class, ok=ok, jwt_string=jwt_string)
 
 
 class ClassMutation(graphene.ObjectType):
