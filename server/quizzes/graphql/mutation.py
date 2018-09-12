@@ -47,7 +47,7 @@ class CreateClass(graphene.Mutation):
         secret    = config('SECRET_KEY')
         algorithm = 'HS256'
         dec_jwt   = jwt.decode(enc_jwt, secret, algorithms=[ algorithm ])
-        
+
         # `user` variable needs to be changed to use the ID given by the JWT
         # for now JWT does NOT return a userID
         user      = Teacher.objects.get(TeacherName=dec_jwt[ 'sub' ])
@@ -80,13 +80,12 @@ start CreateTeacher
 class CreateTeacher(graphene.Mutation):
     class Arguments:
         TeacherName = graphene.String()
-        ClassID     = graphene.ID()
 
     jwt_string = graphene.String()
     teacher    = graphene.Field(lambda: TeacherMutation)
 
     @staticmethod
-    def mutate(self, info, TeacherName, ClassID):
+    def mutate(self, info, TeacherName):
         secret    = config('SECRET_KEY')
         algorithm = 'HS256'
         payload = {
@@ -98,17 +97,13 @@ class CreateTeacher(graphene.Mutation):
         enc_jwt = jwt.encode(payload, secret, algorithm=algorithm)
 
         jwt_string = enc_jwt.decode('utf-8')
-        teacher = Teacher.objects.create(
-            TeacherName=TeacherName,
-            ClassID=ClassID
-            )
+        teacher = Teacher.objects.create(TeacherName=TeacherName)
 
         return CreateTeacher(teacher=teacher, jwt_string=jwt_string)
 
 
 class TeacherMutation(graphene.ObjectType):
     TeacherName = graphene.String()
-    ClassID     = graphene.ID()
         
 '''
 end CreateTeacher
