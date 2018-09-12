@@ -63,7 +63,7 @@ class NavBar extends Component {
                             <input type='password' name='password' />
                         </div>
                         <div className='modal_div'>
-                            <span className='modal_text'>By clicking Sign up, you accept Quzzer's <span>Terms of Service</span> and <span>Privacy Policy</span></span>
+                            <span className='modal_text'>By clicking Sign up, you accept Quizzer's <span>Terms of Service</span> and <span>Privacy Policy</span></span>
                             <Button color="info" className='signup_login_modal_button'>Sign up</Button>
                         </div>
                     </ModalBody>
