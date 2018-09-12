@@ -45,26 +45,28 @@ class NavBar extends Component {
             <span>Sign up for free to create study sets</span>
           </ModalHeader>
           <ModalBody className='signup_loginModal_body'>
-            <div className='modal_div'>
-              <span>USERNAME</span>
-              <input type='text' name='username' />
-            </div>
-            <div className='modal_div'>
-              <span>EMAIL</span>
-              <input type='email' name='email' />
-            </div>
-            <div className='modal_div'>
-              <span>PASSWORD</span>
-              <input type='password' name='password' />
-            </div>
-            <div className='modal_div'>
-              <span>CONFIRM PASSWORD</span>
-              <input type='password' name='password' />
-            </div>
-            <div className='modal_div'>
-              <span className='modal_text'>By clicking Sign up, you accept Quizzer's <span>Terms of Service</span> and <span>Privacy Policy</span></span>
-              <Button color='info' className='signup_loginModal_button'>Sign up</Button>
-            </div>
+            <form>
+              <div className='modal_div'>
+                <span>USERNAME</span>
+                <input type='text' name='username' required />
+              </div>
+              <div className='modal_div'>
+                <span>EMAIL</span>
+                <input type='email' name='email' required />
+              </div>
+              <div className='modal_div'>
+                <span>PASSWORD</span>
+                <input type='password' name='password' required />
+              </div>
+              <div className='modal_div'>
+                <span>CONFIRM PASSWORD</span>
+                <input type='password' name='password' />
+              </div>
+              <div className='modal_div'>
+                <span className='modal_text'>By clicking Sign up, you accept Quizzer's <span>Terms of Service</span> and <span>Privacy Policy</span></span>
+                <Button type='submit' color='info' className='signup_loginModal_button'>Sign up</Button>
+              </div>
+            </form>
           </ModalBody>
           <ModalFooter className='signup_loginModal_footer'>
             <span>Already have an account? <span className='signup_loginModal_login'>Log in</span></span>
