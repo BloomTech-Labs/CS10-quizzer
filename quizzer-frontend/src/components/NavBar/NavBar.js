@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
+import { Query } from 'react-apollo'
+import gql from 'graphql-tag'
 import './NavBar.css'
 
 class NavBar extends Component {
@@ -8,11 +10,18 @@ class NavBar extends Component {
     super(props)
     this.state = {
       signupModal: false,
-      loginModal: false
+      loginModal: false,
+      badCredentialsModal: false,
+      userData: {
+        username: '',
+        password: ''
+      }
     }
 
     this.toggleSignup = this.toggleSignup.bind(this)
     this.toggleLogin = this.toggleLogin.bind(this)
+    this.toggleBadCredentials = this.toggleBadCredentials.bind(this)
+    this.login = this.login.bind(this)
   }
 
   toggleSignup () {
@@ -25,6 +34,23 @@ class NavBar extends Component {
     this.setState({
       loginModal: !this.state.loginModal
     })
+  }
+
+  toggleBadCredentials () {
+    this.setState({
+      badCredentialsModal: !this.state.badCredentialsModal
+    })
+  }
+
+  login (username, password) {
+    if (!username || !password) {
+      console.log('Username n password plz')
+    } else {
+      gql`
+      {
+        
+      }`
+    }
   }
 
   render () {
