@@ -1,38 +1,17 @@
 from graphene_django import DjangoObjectType
 import graphene
+
 from quizzes.models import Class, Quiz, Question, Choice
+from quizzes.graphql.query import ClassType, QuizType, QuestionType, ChoiceType
+from quizzes.graphql.mutation import CreateClass
 
 
-class ClassType(DjangoObjectType):
+class Mutation(graphene.ObjectType):
     '''
-    ClassType GraphQL Schema
+    Mutation class allows us to make POST/Mutation requests to create new
+    fields
     '''
-    class Meta:
-        model = Class
-
-
-class QuizType(DjangoObjectType):
-    '''
-    QuizType GraphQL Schema
-    '''
-    class Meta:
-        model = Quiz
-
-
-class QuestionType(DjangoObjectType):
-    '''
-    Question GraphQL Schema
-    '''
-    class Meta:
-        model = Question
-
-
-class ChoiceType(DjangoObjectType):
-    '''
-    ChoiceType GraphQL Schema
-    '''
-    class Meta:
-        model = Choice
+    create_class = CreateClass.Field()
 
 
 class Query(graphene.ObjectType):
@@ -44,6 +23,12 @@ class Query(graphene.ObjectType):
     questions = graphene.List(QuestionType)
     choices = graphene.List(ChoiceType)
 
+    '''
+    Each method, resolve_<< name >>, is named after what we want to return.
+    For example, we have a property called `classes` so we name our
+    `resolve_` method `resolve_classes()` which will then return our query
+    to `Class.objects.all()` from the DB
+    '''
     def resolve_classes(self, info):
         return Class.objects.all()
 
@@ -57,4 +42,4 @@ class Query(graphene.ObjectType):
         return Choice.objects.all()
 
 
-schema = graphene.Schema(query=Query)
+schema = graphene.Schema(query=Query, mutation=Mutation)
