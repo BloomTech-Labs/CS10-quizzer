@@ -77,7 +77,7 @@ class NavBar extends Component {
                     </ModalHeader>
                     <ModalBody className='signup_login_modal_body'>
                         <div className='modal_div'>
-                            <span>USERNAME</span>
+                            <span>USERNAME OR EMAIL</span>
                             <input type='text' name='username' />
                         </div>
                         <div className='modal_div'>
@@ -89,7 +89,7 @@ class NavBar extends Component {
                         </div>
                     </ModalBody>
                     <ModalFooter className='signup_login_modal_footer'>
-                        <span className='modal_text'>Remember to log out on shared devices <span>Forgot password?</span></span>
+                        <span className='modal_text'>Remember to log out on shared devices. <span>Forgot password?</span></span>
                     </ModalFooter>
                 </Modal>
             </div>
