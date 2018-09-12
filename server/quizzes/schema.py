@@ -1,9 +1,13 @@
-from graphene_django import DjangoObjectType
 import graphene
 
-from quizzes.models import Class, Quiz, Question, Choice
-from quizzes.graphql.query import ClassType, QuizType, QuestionType, ChoiceType
+from graphene_django import DjangoObjectType
 from quizzes.graphql.mutation import CreateClass
+from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student
+
+from quizzes.graphql.query import (
+    ClassType, QuizType, QuestionType, ChoiceType, TeacherType, StudentType
+)
+
 
 
 class Mutation(graphene.ObjectType):
@@ -18,10 +22,12 @@ class Query(graphene.ObjectType):
     '''
     Allows us to make GET/Query requests from the DB using GraphQL
     '''
-    classes = graphene.List(ClassType)
-    quizzes = graphene.List(QuizType)
-    questions = graphene.List(QuestionType)
-    choices = graphene.List(ChoiceType)
+    classes    = graphene.List(ClassType)
+    quizzes    = graphene.List(QuizType)
+    questions  = graphene.List(QuestionType)
+    choices    = graphene.List(ChoiceType)
+    teachers   = graphene.List(TeacherType)
+    students   = graphene.List(StudentType)
 
     '''
     Each method, resolve_<< name >>, is named after what we want to return.
@@ -40,6 +46,12 @@ class Query(graphene.ObjectType):
 
     def resolve_choices(self, info):
         return Choice.objects.all()
+
+    def resolve_teachers(self, info):
+        return Teacher.objects.all()
+
+    def resolve_students(self, info):
+        return Student.objects.all()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
