@@ -1,7 +1,7 @@
 import graphene
 
 from graphene_django import DjangoObjectType
-from quizzes.graphql.mutation import CreateClass
+from quizzes.graphql.mutation import CreateClass, CreateTeacher
 from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student
 
 from quizzes.graphql.query import (
@@ -15,7 +15,8 @@ class Mutation(graphene.ObjectType):
     Mutation class allows us to make POST/Mutation requests to create new
     fields
     '''
-    create_class = CreateClass.Field()
+    create_class   = CreateClass.Field()
+    create_teacher = CreateTeacher.Field()
 
 
 class Query(graphene.ObjectType):
