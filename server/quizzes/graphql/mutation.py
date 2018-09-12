@@ -3,7 +3,7 @@ import jwt
 import time
 
 from decouple import config
-from quizzes.models import Class, Quiz, Question, Choice
+from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student
 
 class CreateClass(graphene.Mutation):
     '''
@@ -60,3 +60,38 @@ class CreateClass(graphene.Mutation):
 
 class ClassMutation(graphene.ObjectType):
     ClassName = graphene.String()
+
+
+class CreateTeacher(graphene.Mutation):
+    class Arguments:
+        TeacherName = graphene.String()
+        ClassID     = graphene.ID()
+
+    jwt_string = graphene.String()
+    teacher    = graphene.Field(lambda: TeacherMutation)
+
+    @staticmethod
+    def mutate(self, info, TeacherName, ClassID):
+        secret    = config('SECRET_KEY')
+        algorithm = 'HS256'
+        payload = {
+            'sub': TeacherName,
+            'iat': time.time(),
+            'exp': time.time() + 86400
+        }
+
+        enc_jwt = jwt.encode(payload, secret, algorithm=algorithm)
+
+        jwt_string = enc_jwt.decode('utf-8')
+        teacher = Teacher.objects.create(
+            TeacherName=TeacherName,
+            ClassID=ClassID
+            )
+
+        return CreateTeacher(teacher=teacher, jwt_string=jwt_string)
+
+
+class TeacherMutation(graphene.ObjectType):
+    TeacherName = graphene.String()
+    ClassID     = graphene.ID()
+        
