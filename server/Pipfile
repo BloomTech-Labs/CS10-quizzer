@@ -10,5 +10,6 @@ python_version = "3.6"
 django = "*"
 python-decouple = "*"
 graphene-django = "*"
+pyjwt = "*"
 
 [dev-packages]
