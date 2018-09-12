@@ -11,5 +11,6 @@ django = "*"
 python-decouple = "*"
 graphene-django = "*"
 pyjwt = "*"
+djangorestframework = "*"
 
 [dev-packages]
