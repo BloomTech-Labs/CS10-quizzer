@@ -1,1 +1,1 @@
-web: gunicorn CS10-quizzer.wsgi —-log-file -
+web: gunicorn cs10-quizzer.wsgi --log-file -
