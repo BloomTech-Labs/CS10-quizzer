@@ -1,7 +1,14 @@
 import graphene
+import jwt
+import time
 
-from quizzes.models import Class, Quiz, Question, Choice
+from decouple import config
+from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student
 
+
+'''
+CreateClass
+'''
 class CreateClass(graphene.Mutation):
     '''
     The `Arguments` nested class is how GraphQL knows what arguments
@@ -30,18 +37,74 @@ class CreateClass(graphene.Mutation):
 
     '''
     class Arguments:
-        ClassName = graphene.String()
+        ClassName  = graphene.String()
+        enc_jwt    = graphene.String()
 
-    ok = graphene.Boolean()
     new_class = graphene.Field(lambda: ClassMutation)
 
     @staticmethod
-    def mutate(self, info, ClassName):
-        new_class = Class.objects.create(ClassName=ClassName)
-        ok = True
+    def mutate(self, info, ClassName, enc_jwt):
+        secret    = config('SECRET_KEY')
+        algorithm = 'HS256'
+        dec_jwt   = jwt.decode(enc_jwt, secret, algorithms=[ algorithm ])
 
-        return CreateClass(new_class=new_class, ok=ok)
+        # `user` variable needs to be changed to use the ID given by the JWT
+        # for now JWT does NOT return a userID
+        user      = Teacher.objects.get(TeacherName=dec_jwt[ 'sub' ])
+        
+        # if token is expired return expiration error to user
+        if dec_jwt[ 'exp' ] < time.time():
+            return print('\n\nTOKEN EXPIRED\nRETURN ERROR TO CLIENT\n\n')
+        
+        # if user does not exist in the database return error
+        if not user:
+            return print('\n\nUSER DOES NOT EXISTS\nRETURN ERRO TO CLIENT\n\n')
+        
+        else:
+            new_class = Class.objects.create(ClassName=ClassName)
+
+        return CreateClass(new_class=new_class)
 
 
 class ClassMutation(graphene.ObjectType):
     ClassName = graphene.String()
+
+'''
+end CreateClass
+'''
+
+
+'''
+start CreateTeacher
+'''
+class CreateTeacher(graphene.Mutation):
+    class Arguments:
+        TeacherName = graphene.String()
+
+    jwt_string = graphene.String()
+    teacher    = graphene.Field(lambda: TeacherMutation)
+
+    @staticmethod
+    def mutate(self, info, TeacherName):
+        secret    = config('SECRET_KEY')
+        algorithm = 'HS256'
+        payload = {
+            'sub': TeacherName,
+            'iat': time.time(),
+            'exp': time.time() + 86400
+        }
+
+        enc_jwt = jwt.encode(payload, secret, algorithm=algorithm)
+
+        jwt_string = enc_jwt.decode('utf-8')
+        teacher = Teacher.objects.create(TeacherName=TeacherName)
+
+        return CreateTeacher(teacher=teacher, jwt_string=jwt_string)
+
+
+class TeacherMutation(graphene.ObjectType):
+    TeacherName = graphene.String()
+        
+'''
+end CreateTeacher
+'''
