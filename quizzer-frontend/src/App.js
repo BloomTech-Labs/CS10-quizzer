@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import Home from './components/Home/Home'
+import QuizPage from './components/QuizPage/QuizPage'
 import './App.css'
 
 class App extends Component {
-  render () {
+  render() {
     return (
       <div>
-        <Home />
+        {/* <Home /> */}
+        <QuizPage />
       </div>
     )
   }
