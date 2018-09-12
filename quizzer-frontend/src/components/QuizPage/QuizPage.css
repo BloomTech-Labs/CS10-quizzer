@@ -1,0 +1,55 @@
+.quiz_header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.quiz_header h1 {
+    color: #003366;
+    font-family: monospace;
+    font-size: 40px;
+    font-weight: bold;
+    margin: 30px 10% 0 0;
+}
+
+.quiz_header h1:first-child {
+    margin: 30px 0 0 2% !important;
+}
+
+.quiz_body {
+    margin: 0 0 0 2%;
+}
+
+.quiz_body h1 {
+    color: #003366;
+    font-family: monospace;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.quiz_body p {
+    font-family: monospace;
+    font-size: 20px;
+    padding: 0 10% 0 0;
+    text-align: justify;
+}
+
+.quiz_form {
+    margin: 0 0 0 2%; 
+}
+
+.quiz_form input {
+    margin: 10px 0 0 0; 
+}
+
+.quiz_form label {
+    font-family: monospace; 
+    font-size: 20px; 
+    margin: 0 0 0 2%; 
+}
+
+.quiz_submit_button {
+    font-family: monospace;
+    font-size: 20px !important;
+    font-weight: bold !important;
+}
+
