@@ -17,6 +17,7 @@ class Quiz(models.Model):
     QuizID = models.UUIDField(primary_key=True, default = uuid4, editable = False)
     ClassesID = models.ForeignKey('Class', on_delete = models.CASCADE)
     QuizName = models.CharField(max_length = 100, blank = False)
+    Public = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add = True)
     last_modified = models.DateTimeField(auto_now = True)
 
@@ -47,3 +48,28 @@ class Choice(models.Model):
     class Meta:
         db_table = 'Choices'
         verbose_name_plural = 'choices'
+
+
+class Teacher(models.Model):
+    TeacherID = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    TeacherName = models.CharField(max_length=50, blank=False)
+    ClassID = models.ForeignKey('Class', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'Teachers'
+        verbose_name_plural = 'teachers'
+
+
+class Student(models.Model):
+    StudentID = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    StudentName = models.CharField(max_length=50, blank=False)
+    ClassID = models.ForeignKey('Class', on_delete=models.CASCADE)
+    TeacherID = models.ForeignKey('Teacher', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'Students'
+        verbose_name_plural = 'students'
