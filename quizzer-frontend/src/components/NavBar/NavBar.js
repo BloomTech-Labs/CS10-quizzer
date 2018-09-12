@@ -17,38 +17,33 @@ class NavBar extends Component {
         password: ''
       }
     }
-
-    this.toggleSignup = this.toggleSignup.bind(this)
-    this.toggleLogin = this.toggleLogin.bind(this)
-    this.toggleBadCredentials = this.toggleBadCredentials.bind(this)
-    this.login = this.login.bind(this)
   }
 
-  toggleSignup () {
+  toggleSignup = () => {
     this.setState({
       signupModal: !this.state.signupModal
     })
   }
 
-  toggleLogin () {
+  toggleLogin = () => {
     this.setState({
       loginModal: !this.state.loginModal
     })
   }
 
-  toggleBadCredentials () {
+  toggleBadCredentials = () => {
     this.setState({
       badCredentialsModal: !this.state.badCredentialsModal
     })
   }
 
-  login (username, password) {
+  login = (username, password) => {
     if (!username || !password) {
       console.log('Username n password plz')
     } else {
       gql`
       {
-        
+
       }`
     }
   }
