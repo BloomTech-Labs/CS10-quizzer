@@ -29,18 +29,6 @@
     margin: 0 0 0 25%; 
 }
 
-.createquiz_button_plussign {
-    border: 4px solid #ffffff; 
-    font-size: 20px; 
-    font-weight: bold; 
-    padding: 5px 10px; 
-}
-
-.createquiz_button_plussign:hover {
-    border: 4px solid #808080; 
-    color: #808080; 
-}
-
 .createquiz_button_text {
     font-family: monospace; 
     font-size: 20px; 
@@ -61,12 +49,13 @@
 .nav_container_right_login_button {
     background-color: #003366 !important; 
     border-color: #003366 !important; 
+    color: #fff !important;
     font-family: monospace; 
     font-size: 20px !important; 
     font-weight: bold !important; 
 }
 
-.nav_container_right_login_button {
+.nav_container_right_login_button:hover {
     color: #808080 !important; 
 }
 
@@ -77,7 +66,79 @@
     margin: 0 0 0 5%; 
 }
 
-.nav_container_.nav_container_right_signup_button:hover {
+.nav_container_right_signup_button:hover {
     color: #808080 !important; 
 }
 
+.signup_login_modal_header {
+    background-color: #003366; 
+    border-radius: 0 !important; 
+    justify-content: center !important; 
+}
+
+.signup_login_modal_header span {
+    color: #fff; 
+    font-family: monospace !important; 
+    font-size: 20px;
+    font-weight: bold !important; 
+}
+
+.signup_login_modal_body {
+    border-radius: 0 !important; 
+}
+
+.modal-content {
+    border-radius: 0 !important; 
+}
+
+.modal_div {
+    display: flex; 
+    flex-direction: column; 
+    margin: 0 0 20px 0; 
+}
+
+.modal_div span {
+    color: #696969; 
+    font-family: monospace; 
+    font-size: 20px; 
+    font-weight: bold; 
+    margin: 0 0 10px 0; 
+}
+
+.modal_div input {
+    width: 75%; 
+}
+
+.modal_text {
+    color: #000 !important; 
+    font-size: 15px !important; 
+    text-align: center; 
+}
+
+.modal_text span {
+    color: #117a8b; 
+    font-size: 15px !important; 
+}
+
+.signup_login_modal_button {
+    font-family: monospace;
+    font-size: 20px !important;
+    font-weight: bold !important;  
+}
+
+.signup_login_modal_footer {
+    border: none !important; 
+    padding: 0 !important; 
+    margin: -10px 0 0 0; 
+}
+
+.signup_login_modal_footer span {
+    font-family: monospace; 
+    font-size: 15px; 
+    font-weight: bold; 
+    margin: 0 auto 20px auto; 
+}
+
+.signup_login_modal_login {
+    color: #117a8b; 
+}
