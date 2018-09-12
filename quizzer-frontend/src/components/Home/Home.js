@@ -11,7 +11,7 @@ class Home extends Component {
 
     render() {
         return (
-            <div class='home_container'>
+            <div className='home_container'>
                 <NavBar />
                 <div className='home_container_first_section'>
                     <div className='home_container_first_section_left'>
@@ -19,15 +19,15 @@ class Home extends Component {
                         <p>Search millions of publicly created quizzes to improve your grades as a student or create your own if you are a teacher.</p>
                         <Button color='info' className='first_section_left_getstarted_button'>Get started</Button>
                     </div>
-                    <img className='first_section_image' src={first_section_image} alt='First Section Image' />
+                    <img className='first_section_image' src={first_section_image} alt='A laptop with flowers behind it.' />
                 </div>
-                <div className="footer">
+                <div className='footer'>
                     <span>Quizzer</span>
                     <span>Follow us</span>
-                    <div className="footer_socialmedia_icons">
-                        <img src={facebook_icon} alt="Facebook Icon" />
-                        <img src={instagram_icon} alt="Instagram Icon" />
-                        <img src={twitter_icon} alt="Twitter Icon" />
+                    <div className='footer_socialmedia_icons'>
+                        <img src={facebook_icon} alt='Facebook Icon' />
+                        <img src={instagram_icon} alt='Instagram Icon' />
+                        <img src={twitter_icon} alt='Twitter Icon' />
                     </div>
                     <span>&#169; 2018 Quizzer Inc.</span>
                 </div>
