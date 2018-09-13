@@ -50,7 +50,6 @@ class NavBar extends Component {
   }`
 
   render () {
-    // const { teacher } = this.state
     const { teacher, password } = this.state
 
     return (
