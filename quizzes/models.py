@@ -53,7 +53,6 @@ class Choice(models.Model):
 class Teacher(models.Model):
     TeacherID = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     TeacherName = models.CharField(max_length=50, blank=False)
-    TeacherPW = models.CharField(max_length=256, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 
