@@ -92,7 +92,10 @@ class CreateTeacher(graphene.Mutation):
         secret    = config('SECRET_KEY')
         algorithm = 'HS256'
         payload = {
-            'sub': TeacherName,
+            'sub': {
+                'username': TeacherName,
+                'email': TeacherEmail
+            }
             'iat': time.time(),
             'exp': time.time() + 86400
         }
