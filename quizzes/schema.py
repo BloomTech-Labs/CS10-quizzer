@@ -28,6 +28,11 @@ class Query(graphene.ObjectType):
     questions  = graphene.List(QuestionType)
     choices    = graphene.List(ChoiceType)
     teachers   = graphene.List(TeacherType)
+    teacher    = graphene.Field(
+        TeacherType,
+        email=graphene.String(),
+        password=graphene.String()
+    )
     students   = graphene.List(StudentType)
 
     '''
@@ -50,6 +55,30 @@ class Query(graphene.ObjectType):
 
     def resolve_teachers(self, info):
         return Teacher.objects.all()
+
+    '''
+    Searches for a single teacher by their email address provided by login form
+    '''
+    def resolve_teacher(self, info, **kwargs):
+        teacher_email = kwargs.get('email')
+        teacher_pw    = kwargs.get('password')
+        teacher       = Teacher.objects.get(TeacherEmail=teacher_email)
+
+        if teacher:
+            byte_pw   = teacher_pw.encode('utf-8')
+            salt      = uuid4().hex.encode('utf-8')
+            pass_salt = b''.join([ byte_pw, salt ])
+            hashed_pw = hashlib.sha256(pass_salt).hexdigest()
+
+            if teacher_pw == teacher.TeacherPW:
+                return teacher
+
+            else:
+                print('\n\nWRONG PASSWORD\n\n')
+
+        else:
+            print('\n\nTEACHER DOES NOT EXIST\n\n')
+        
 
     def resolve_students(self, info):
         return Student.objects.all()
