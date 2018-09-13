@@ -81,6 +81,11 @@ class NavBar extends Component {
                   <form onSubmit={event => {
                     event.preventDefault()
                     createNewUser({ variables: { teacher, email, password } })
+                    this.setState({
+                      teacher: '',
+                      email: '',
+                      password: ''
+                    })
                   }}>
                     <div className='modal_div'>
                       <span>USERNAME</span>
@@ -105,7 +110,7 @@ class NavBar extends Component {
                   </form>
                   {loading && <p>Saving new user...</p>}
                   {error && <p>Something went wrong, please try again</p>}
-                  {data && window.localStorage.setItem('token', data.createTeacher.jwtString)}
+                  {data && <p>User successfully created!</p> && window.localStorage.setItem('token', data.createTeacher.jwtString)}
                 </div>
               )}
             </Mutation>
