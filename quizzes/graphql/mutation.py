@@ -1,11 +1,9 @@
 import graphene
-import hashlib
 import jwt
 import time
 
 from decouple import config
 from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student
-from uuid import uuid4
 
 
 '''
@@ -82,14 +80,12 @@ start CreateTeacher
 class CreateTeacher(graphene.Mutation):
     class Arguments:
         TeacherName = graphene.String()
-        TeacherPW   = graphene.String()
 
     jwt_string = graphene.String()
     teacher    = graphene.Field(lambda: TeacherMutation)
 
     @staticmethod
-    def mutate(self, info, TeacherName, TeacherPW):
-        # create DATA for JWT
+    def mutate(self, info, TeacherName):
         secret    = config('SECRET_KEY')
         algorithm = 'HS256'
         payload = {
@@ -98,22 +94,11 @@ class CreateTeacher(graphene.Mutation):
             'exp': time.time() + 86400
         }
 
-        enc_jwt    = jwt.encode(payload, secret, algorithm=algorithm)
+        enc_jwt = jwt.encode(payload, secret, algorithm=algorithm)
+
         jwt_string = enc_jwt.decode('utf-8')
+        teacher = Teacher.objects.create(TeacherName=TeacherName)
 
-        # password hashing
-        # turn string into byte string
-        password  = TeacherPW.encode('utf-8')
-        salt      = uuid4().hex.encode('utf-8')
-        pass_salt = b''.join([ password, salt ])
-        hashed_pw = hashlib.sha256(pass_salt).hexdigest()
-
-        print(hashed_pw)
-
-        # saving new Teacher into DB
-        teacher = Teacher.objects.create(TeacherName=TeacherName, TeacherPW=hashed_pw)
-
-        # this is what GraphQL is going to return
         return CreateTeacher(teacher=teacher, jwt_string=jwt_string)
 
 
