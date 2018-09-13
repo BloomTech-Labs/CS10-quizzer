@@ -6,19 +6,24 @@ import gql from 'graphql-tag'
 import './NavBar.css'
 
 const newUserMutation = gql`
-mutation NewUser($teacher: String!, $email: String!, $password: String!) {
-  createTeacher(TeacherName: $teacher) {
-    teacher {
-      TeacherName
+  mutation NewUser($TeacherName: String!, $TeacherEmail: String!, $TeacherPW: String!) {
+    createTeacher(TeacherName: $TeacherName, TeacherEmail: $TeacherEmail, TeacherPW: $TeacherPW) {
+      teacher {
+        TeacherName
+      }
+      jwtString
     }
-    jwtString
-  }
-}`
+  }`
 
-// const userLoginQuery = gql`
-// {
-
-// }`
+const userLoginQueryMutation = gql`
+  mutation LoginUser($TeacherEmail: String!, $TeacherPW: String!) {
+    queryTeacher(TeacherEmail: $TeacherEmail, TeacherPW: $TeacherPW) {
+      teacher {
+        teacherEmail
+      }
+      jwtString
+    }
+  }`
 
 class NavBar extends Component {
   constructor (props) {
@@ -26,8 +31,7 @@ class NavBar extends Component {
     this.state = {
       signupModal: false,
       loginModal: false,
-      badCredentialsModal: false,
-      teacher: '',
+      name: '',
       email: '',
       password: ''
     }
@@ -45,18 +49,12 @@ class NavBar extends Component {
     })
   }
 
-  toggleBadCredentials = () => {
-    this.setState({
-      badCredentialsModal: !this.state.badCredentialsModal
-    })
-  }
-
   handleInputChange = event => {
     this.setState({ [event.target.name]: event.target.value })
   }
 
   render () {
-    const { teacher, email, password } = this.state
+    const { name, email, password } = this.state
 
     return (
       <div className='nav_container'>
@@ -80,16 +78,15 @@ class NavBar extends Component {
                 <div>
                   <form onSubmit={event => {
                     event.preventDefault()
-                    createNewUser({ variables: { teacher, email, password } })
+                    createNewUser({ variables: { name, email, password } })
                     this.setState({
-                      teacher: '',
                       email: '',
                       password: ''
                     })
                   }}>
                     <div className='modal_div'>
                       <span>USERNAME</span>
-                      <input type='text' name='teacher' value={teacher} onChange={this.handleInputChange} required />
+                      <input type='text' name='teacher' value={name} onChange={this.handleInputChange} required />
                     </div>
                     <div className='modal_div'>
                       <span>EMAIL</span>
@@ -124,23 +121,35 @@ class NavBar extends Component {
             <span>Log in</span>
           </ModalHeader>
           <ModalBody className='signup_loginModal_body'>
-            <div>
-              <form onSubmit={event => {
-                event.preventDefault()
-              }}>
-                <div className='modal_div'>
-                  <span>USERNAME OR EMAIL</span>
-                  <input type='text' name='teacher' value={teacher} onChange={this.handleInputChange} required />
+            <Mutation mutation={userLoginQueryMutation}>
+              {(loginUser, { loading, error, data }) => (
+                <div>
+                  <form onSubmit={event => {
+                    event.preventDefault()
+                    loginUser({ variables: { email, password } })
+                    this.setState({
+                      email: '',
+                      password: ''
+                    })
+                  }}>
+                    <div className='modal_div'>
+                      <span>EMAIL</span>
+                      <input type='text' name='teacher' value={email} onChange={this.handleInputChange} required />
+                    </div>
+                    <div className='modal_div'>
+                      <span>PASSWORD</span>
+                      <input type='password' name='password' value={password} onChange={this.handleInputChange} required />
+                    </div>
+                    <div className='modal_div'>
+                      <Button type='submit' color='info' className='signup_loginModal_button'>Log in</Button>
+                    </div>
+                  </form>
+                  {loading && <p>Signing you in...</p>}
+                  {error && <p>Invalid username or password.</p>}
+                  {data && <p>Successfully signed in!</p> && window.localStorage.setItem('token', data.queryTeacher.jwtString)}
                 </div>
-                <div className='modal_div'>
-                  <span>PASSWORD</span>
-                  <input type='password' name='password' value={password} onChange={this.handleInputChange} />
-                </div>
-                <div className='modal_div'>
-                  <Button type='submit' color='info' className='signup_loginModal_button'>Log in</Button>
-                </div>
-              </form>
-            </div>
+              )}
+            </Mutation>
           </ModalBody>
           <ModalFooter className='signup_loginModal_footer'>
             <span className='modal_text'>Remember to log out on shared devices. <span>Forgot password?</span></span>
