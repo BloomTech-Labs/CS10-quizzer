@@ -1,4 +1,4 @@
-
+import bcrypt
 import graphene
 import hashlib
 import jwt
@@ -95,7 +95,7 @@ class CreateTeacher(graphene.Mutation):
             'sub': {
                 'username': TeacherName,
                 'email': TeacherEmail
-            }
+            },
             'iat': time.time(),
             'exp': time.time() + 86400
         }
@@ -114,7 +114,7 @@ class CreateTeacher(graphene.Mutation):
         hashed_pw = hashlib.sha256(pass_salt).hexdigest()
 
         # saving new Teacher into DB
-        teacher = Teacher.objects.create(TeacherName=TeacherName, TeacherPW=hashed_pw, TeacherEmail=TeacherEmail)
+        teacher = Teacher.objects.create(TeacherName=TeacherName, TeacherPW=TeacherPW, TeacherEmail=TeacherEmail)
 
         # this is what GraphQL is going to return
         return CreateTeacher(teacher=teacher, jwt_string=jwt_string)
@@ -127,4 +127,61 @@ class TeacherMutation(graphene.ObjectType):
         
 '''
 end CreateTeacher
+'''
+
+
+'''
+start QueryTeacher
+'''
+class QueryTeacher(graphene.Mutation):
+    class Arguments:
+        TeacherPW    = graphene.String()
+        TeacherEmail = graphene.String()
+
+    jwt_string = graphene.String()
+    teacher    = graphene.Field(lambda: QueryTeacherMutation)
+
+    @staticmethod
+    def mutate(self, info, TeacherPW, TeacherEmail):
+        # saving new Teacher into DB
+        # teacher = Teacher.objects.create(TeacherName=TeacherName, TeacherPW=TeacherPW, TeacherEmail=TeacherEmail)
+        teacher = Teacher.objects.get(TeacherEmail=TeacherEmail)
+        teacher_pw = TeacherPW
+
+        if teacher:
+            if teacher_pw == teacher.TeacherPW:
+                # create DATA for JWT
+                secret    = config('SECRET_KEY')
+                algorithm = 'HS256'
+                payload = {
+                    'sub': {
+                        'username': teacher.TeacherName,
+                        'email': teacher.TeacherEmail
+                    },
+                    'iat': time.time(),
+                    'exp': time.time() + 86400
+                }
+
+                # create JWT as a byte string e.g. b'<< JWT >>'
+                enc_jwt = jwt.encode(payload, secret, algorithm=algorithm)
+                # transforms JWT-byte-string into a normal UTF-8 string
+                jwt_string = enc_jwt.decode('utf-8')
+
+                print(jwt_string)
+                # this is what GraphQL is going to return
+                return QueryTeacher(teacher=teacher, jwt_string=jwt_string)
+
+            else:
+                print('\n\nWRONG PASSWORD\n\n')
+
+        else:
+            print('\n\nTEACHER DOES NOT EXIST\n\n')
+
+
+
+class QueryTeacherMutation(graphene.ObjectType):
+    TeacherPW    = graphene.String()
+    TeacherEmail = graphene.String()
+'''
+end QueryTeacher
 '''
