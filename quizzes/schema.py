@@ -1,7 +1,10 @@
 import graphene
+import jwt
+import time
 
+from decouple import config
 from graphene_django import DjangoObjectType
-from quizzes.graphql.mutation import CreateClass, CreateTeacher
+from quizzes.graphql.mutation import CreateClass, CreateTeacher, QueryTeacher
 from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student
 
 from quizzes.graphql.query import (
@@ -17,6 +20,7 @@ class Mutation(graphene.ObjectType):
     '''
     create_class   = CreateClass.Field()
     create_teacher = CreateTeacher.Field()
+    query_teacher  = QueryTeacher.Field()
 
 
 class Query(graphene.ObjectType):
@@ -28,6 +32,11 @@ class Query(graphene.ObjectType):
     questions  = graphene.List(QuestionType)
     choices    = graphene.List(ChoiceType)
     teachers   = graphene.List(TeacherType)
+    teacher    = graphene.Field(
+        TeacherType,
+        email=graphene.String(),
+        password=graphene.String()
+    )
     students   = graphene.List(StudentType)
 
     '''
@@ -50,6 +59,47 @@ class Query(graphene.ObjectType):
 
     def resolve_teachers(self, info):
         return Teacher.objects.all()
+
+    '''
+    Searches for a single teacher by their email address provided by login form
+
+    ** NOTE THIS DOES NOT WORK
+    ** THIS IS HERE FOR FUTURE TESTING
+    ** MAYBE WE CAN MAKE THIS WORK
+    '''
+    def resolve_teacher(self, info, **kwargs):
+        teacher_email = kwargs.get('email')
+        teacher_pw    = kwargs.get('password')
+        teacher       = Teacher.objects.get(TeacherEmail=teacher_email)
+
+        if teacher:
+            if teacher_pw == teacher.TeacherPW:
+                # create DATA for JWT
+                secret    = config('SECRET_KEY')
+                algorithm = 'HS256'
+                payload = {
+                    'sub': {
+                        'username': teacher.TeacherName,
+                        'email': teacher.TeacherEmail
+                    },
+                    'iat': time.time(),
+                    'exp': time.time() + 86400
+                }
+
+                # create JWT as a byte string e.g. b'<< JWT >>'
+                enc_jwt = jwt.encode(payload, secret, algorithm=algorithm)
+                # transforms JWT-byte-string into a normal UTF-8 string
+                jwt_string = enc_jwt.decode('utf-8')
+
+                print(jwt_string)
+                return teacher
+
+            else:
+                print('\n\nWRONG PASSWORD\n\n')
+
+        else:
+            print('\n\nTEACHER DOES NOT EXIST\n\n')
+        
 
     def resolve_students(self, info):
         return Student.objects.all()
