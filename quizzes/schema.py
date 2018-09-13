@@ -1,7 +1,10 @@
 import graphene
+import jwt
+import time
 
+from decouple import config
 from graphene_django import DjangoObjectType
-from quizzes.graphql.mutation import CreateClass, CreateTeacher
+from quizzes.graphql.mutation import CreateClass, CreateTeacher, QueryTeacher
 from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student
 
 from quizzes.graphql.query import (
@@ -17,6 +20,7 @@ class Mutation(graphene.ObjectType):
     '''
     create_class   = CreateClass.Field()
     create_teacher = CreateTeacher.Field()
+    query_teacher  = QueryTeacher.Field()
 
 
 class Query(graphene.ObjectType):
@@ -58,6 +62,10 @@ class Query(graphene.ObjectType):
 
     '''
     Searches for a single teacher by their email address provided by login form
+
+    ** NOTE THIS DOES NOT WORK
+    ** THIS IS HERE FOR FUTURE TESTING
+    ** MAYBE WE CAN MAKE THIS WORK
     '''
     def resolve_teacher(self, info, **kwargs):
         teacher_email = kwargs.get('email')
@@ -65,12 +73,25 @@ class Query(graphene.ObjectType):
         teacher       = Teacher.objects.get(TeacherEmail=teacher_email)
 
         if teacher:
-            byte_pw   = teacher_pw.encode('utf-8')
-            salt      = uuid4().hex.encode('utf-8')
-            pass_salt = b''.join([ byte_pw, salt ])
-            hashed_pw = hashlib.sha256(pass_salt).hexdigest()
-
             if teacher_pw == teacher.TeacherPW:
+                # create DATA for JWT
+                secret    = config('SECRET_KEY')
+                algorithm = 'HS256'
+                payload = {
+                    'sub': {
+                        'username': teacher.TeacherName,
+                        'email': teacher.TeacherEmail
+                    },
+                    'iat': time.time(),
+                    'exp': time.time() + 86400
+                }
+
+                # create JWT as a byte string e.g. b'<< JWT >>'
+                enc_jwt = jwt.encode(payload, secret, algorithm=algorithm)
+                # transforms JWT-byte-string into a normal UTF-8 string
+                jwt_string = enc_jwt.decode('utf-8')
+
+                print(jwt_string)
                 return teacher
 
             else:
