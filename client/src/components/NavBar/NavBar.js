@@ -97,8 +97,8 @@ class NavBar extends Component {
                       <input type='password' name='password' value={password} onChange={this.handleInputChange} required />
                     </div>
                     <div className='modal_div'>
-                      <span>CONFIRM PASSWORD</span>
-                      <input type='password' name='password' required />
+                      <span>CONFIRM PASSWORD (ignore me for now)</span>
+                      <input type='password' name='password' />
                     </div>
                     <div className='modal_div'>
                       <span className='modal_text'>By clicking Sign up, you accept Quizzer's <span>Terms of Service</span> and <span>Privacy Policy</span></span>
@@ -106,8 +106,9 @@ class NavBar extends Component {
                     </div>
                   </form>
                   {loading && <p>Saving new user...</p>}
-                  {error && <p>Something went wrong, please try again</p>}
-                  {data && <p>User successfully created!</p> && window.localStorage.setItem('token', data.createTeacher.jwtString)}
+                  {error && <p>Something went wrong, please try again.</p>}
+                  {data && window.localStorage.setItem('token', data.createTeacher.jwtString)}
+                  {window.localStorage.getItem('token') ? <p>User successfully created!</p> : null}
                 </div>
               )}
             </Mutation>
@@ -146,7 +147,8 @@ class NavBar extends Component {
                   </form>
                   {loading && <p>Signing you in...</p>}
                   {error && <p>Invalid username or password.</p>}
-                  {data && <p>Successfully signed in!</p> && window.localStorage.setItem('token', data.queryTeacher.jwtString)}
+                  {data && window.localStorage.setItem('token', data.queryTeacher.jwtString)}
+                  {window.localStorage.getItem('token') ? <p>Successfully signed in!</p> : null}
                 </div>
               )}
             </Mutation>
