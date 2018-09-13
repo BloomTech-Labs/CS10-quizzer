@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
-import firstSectionImage from '../../images/first_image.png'
+import firstSectionImage from '../../images/firstImage.png'
 import facebookIcon from '../../images/facebookIcon.png'
 import instagramIcon from '../../images/instagramIcon.png'
 import twitterIcon from '../../images/twitterIcon.png'
