@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
-import { Query } from 'react-apollo'
+import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import './NavBar.css'
 
@@ -12,10 +12,8 @@ class NavBar extends Component {
       signupModal: false,
       loginModal: false,
       badCredentialsModal: false,
-      userData: {
-        username: '',
-        password: ''
-      }
+      teacher: '',
+      password: ''
     }
   }
 
@@ -37,18 +35,24 @@ class NavBar extends Component {
     })
   }
 
-  login = (username, password) => {
-    if (!username || !password) {
-      console.log('Username n password plz')
-    } else {
-      gql`
-      {
-
-      }`
-    }
+  handleInputChange = event => {
+    this.setState({ [event.target.name]: event.target.value })
   }
 
+  newUserMutation = gql`
+  mutation NewUser($teacher: String!) {
+    createTeacher(TeacherName: $teacher) {
+      teacher {
+        TeacherName
+      }
+      jwtString
+    }
+  }`
+
   render () {
+    // const { teacher } = this.state
+    const { teacher, password } = this.state
+
     return (
       <div className='nav_container'>
         <div className='nav_container_left'>
@@ -66,28 +70,40 @@ class NavBar extends Component {
             <span>Sign up for free to create study sets</span>
           </ModalHeader>
           <ModalBody className='signup_loginModal_body'>
-            <form>
-              <div className='modal_div'>
-                <span>USERNAME</span>
-                <input type='text' name='username' required />
-              </div>
-              <div className='modal_div'>
-                <span>EMAIL</span>
-                <input type='email' name='email' required />
-              </div>
-              <div className='modal_div'>
-                <span>PASSWORD</span>
-                <input type='password' name='password' required />
-              </div>
-              <div className='modal_div'>
-                <span>CONFIRM PASSWORD</span>
-                <input type='password' name='password' />
-              </div>
-              <div className='modal_div'>
-                <span className='modal_text'>By clicking Sign up, you accept Quizzer's <span>Terms of Service</span> and <span>Privacy Policy</span></span>
-                <Button type='submit' color='info' className='signup_loginModal_button'>Sign up</Button>
-              </div>
-            </form>
+            <Mutation mutation={this.newUserMutation}>
+              {(createNewUser, { loading, error, data }) => (
+                <div>
+                  <form onSubmit={event => {
+                    event.preventDefault()
+                    createNewUser({ variables: { teacher } })
+                  }}>
+                    <div className='modal_div'>
+                      <span>USERNAME</span>
+                      <input type='text' name='teacher' value={teacher} onChange={this.handleInputChange} required />
+                    </div>
+                    <div className='modal_div'>
+                      <span>EMAIL</span>
+                      <input type='email' name='email' />
+                    </div>
+                    <div className='modal_div'>
+                      <span>PASSWORD</span>
+                      <input type='password' name='password' value={password} onChange={this.handleInputChange} />
+                    </div>
+                    <div className='modal_div'>
+                      <span>CONFIRM PASSWORD</span>
+                      <input type='password' name='password' />
+                    </div>
+                    <div className='modal_div'>
+                      <span className='modal_text'>By clicking Sign up, you accept Quizzer's <span>Terms of Service</span> and <span>Privacy Policy</span></span>
+                      <Button type='submit' color='info' className='signup_loginModal_button'>Sign Up</Button>
+                    </div>
+                  </form>
+                  {loading && <p>Saving new user...</p>}
+                  {error && <p>Something went wrong, please try again</p>}
+                  {data && window.localStorage.setItem('token', data.createTeacher.jwtString)}
+                </div>
+              )}
+            </Mutation>
           </ModalBody>
           <ModalFooter className='signup_loginModal_footer'>
             <span>Already have an account? <span className='signup_loginModal_login'>Log in</span></span>
@@ -98,16 +114,22 @@ class NavBar extends Component {
             <span>Log in</span>
           </ModalHeader>
           <ModalBody className='signup_loginModal_body'>
-            <div className='modal_div'>
-              <span>USERNAME OR EMAIL</span>
-              <input type='text' name='username' />
-            </div>
-            <div className='modal_div'>
-              <span>PASSWORD</span>
-              <input type='password' name='password' />
-            </div>
-            <div className='modal_div'>
-              <Button color='info' className='signup_loginModal_button'>Log in</Button>
+            <div>
+              <form onSubmit={event => {
+                event.preventDefault()
+              }}>
+                <div className='modal_div'>
+                  <span>USERNAME OR EMAIL</span>
+                  <input type='text' name='teacher' value={teacher} onChange={this.handleInputChange} required />
+                </div>
+                <div className='modal_div'>
+                  <span>PASSWORD</span>
+                  <input type='password' name='password' value={password} onChange={this.handleInputChange} />
+                </div>
+                <div className='modal_div'>
+                  <Button type='submit' color='info' className='signup_loginModal_button'>Log in</Button>
+                </div>
+              </form>
             </div>
           </ModalBody>
           <ModalFooter className='signup_loginModal_footer'>
