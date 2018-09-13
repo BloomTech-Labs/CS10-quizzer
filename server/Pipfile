@@ -7,12 +7,14 @@ name = "pypi"
 python_version = "3.6"
 
 [packages]
-django = "*"
 python-decouple = "*"
 "psycopg2" = "*"
 "psycopg2-binary" = "*"
 django-dotenv = "*"
 gunicorn = "*"
 whitenoise = "*"
+dj-database-url = "*"
+djangorestframework = "*"
+django = "*"
 
 [dev-packages]
