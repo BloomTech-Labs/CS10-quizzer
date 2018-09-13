@@ -19,7 +19,7 @@ const userLoginQueryMutation = gql`
   mutation LoginUser($TeacherEmail: String!, $TeacherPW: String!) {
     queryTeacher(TeacherEmail: $TeacherEmail, TeacherPW: $TeacherPW) {
       teacher {
-        teacherEmail
+        TeacherEmail
       }
       jwtString
     }
@@ -78,15 +78,15 @@ class NavBar extends Component {
                 <div>
                   <form onSubmit={event => {
                     event.preventDefault()
-                    createNewUser({ variables: { name, email, password } })
+                    createNewUser({ variables: { TeacherName: name, TeacherEmail: email, TeacherPW: password } })
                     this.setState({
                       email: '',
                       password: ''
                     })
                   }}>
                     <div className='modal_div'>
-                      <span>USERNAME</span>
-                      <input type='text' name='teacher' value={name} onChange={this.handleInputChange} required />
+                      <span>NAME</span>
+                      <input type='text' name='name' value={name} onChange={this.handleInputChange} required />
                     </div>
                     <div className='modal_div'>
                       <span>EMAIL</span>
@@ -126,7 +126,7 @@ class NavBar extends Component {
                 <div>
                   <form onSubmit={event => {
                     event.preventDefault()
-                    loginUser({ variables: { email, password } })
+                    loginUser({ variables: { TeacherEmail: email, TeacherPW: password } })
                     this.setState({
                       email: '',
                       password: ''
@@ -134,7 +134,7 @@ class NavBar extends Component {
                   }}>
                     <div className='modal_div'>
                       <span>EMAIL</span>
-                      <input type='text' name='teacher' value={email} onChange={this.handleInputChange} required />
+                      <input type='text' name='email' value={email} onChange={this.handleInputChange} required />
                     </div>
                     <div className='modal_div'>
                       <span>PASSWORD</span>

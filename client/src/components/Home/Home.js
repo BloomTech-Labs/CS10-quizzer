@@ -33,7 +33,7 @@ class Home extends Component {
             <p>Search millions of publicly created quizzes to improve your grades as a student or create your own if you are a teacher.</p>
             <Button color='info' className='first_section_left_getstarted_button' onClick={this.toggleGetStarted}>Get started</Button>
           </div>
-          <img className='firstSectionImage' src={firstSectionImage} alt='A laptop with flowers behind it.' />
+          <img className='first_section_image' src={firstSectionImage} alt='A laptop with flowers behind it.' />
         </div>
         <div className='footer'>
           <span>Quizzer</span>
