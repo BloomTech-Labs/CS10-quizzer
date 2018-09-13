@@ -5,6 +5,21 @@ import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import './NavBar.css'
 
+const newUserMutation = gql`
+mutation NewUser($teacher: String!, $email: String!, $password: String!) {
+  createTeacher(TeacherName: $teacher) {
+    teacher {
+      TeacherName
+    }
+    jwtString
+  }
+}`
+
+// const userLoginQuery = gql`
+// {
+
+// }`
+
 class NavBar extends Component {
   constructor (props) {
     super(props)
@@ -13,6 +28,7 @@ class NavBar extends Component {
       loginModal: false,
       badCredentialsModal: false,
       teacher: '',
+      email: '',
       password: ''
     }
   }
@@ -39,18 +55,8 @@ class NavBar extends Component {
     this.setState({ [event.target.name]: event.target.value })
   }
 
-  newUserMutation = gql`
-  mutation NewUser($teacher: String!) {
-    createTeacher(TeacherName: $teacher) {
-      teacher {
-        TeacherName
-      }
-      jwtString
-    }
-  }`
-
   render () {
-    const { teacher, password } = this.state
+    const { teacher, email, password } = this.state
 
     return (
       <div className='nav_container'>
@@ -69,12 +75,12 @@ class NavBar extends Component {
             <span>Sign up for free to create study sets</span>
           </ModalHeader>
           <ModalBody className='signup_loginModal_body'>
-            <Mutation mutation={this.newUserMutation}>
+            <Mutation mutation={newUserMutation}>
               {(createNewUser, { loading, error, data }) => (
                 <div>
                   <form onSubmit={event => {
                     event.preventDefault()
-                    createNewUser({ variables: { teacher } })
+                    createNewUser({ variables: { teacher, email, password } })
                   }}>
                     <div className='modal_div'>
                       <span>USERNAME</span>
@@ -82,15 +88,15 @@ class NavBar extends Component {
                     </div>
                     <div className='modal_div'>
                       <span>EMAIL</span>
-                      <input type='email' name='email' />
+                      <input type='email' name='email' value={email} onChange={this.handleInputChange} required />
                     </div>
                     <div className='modal_div'>
                       <span>PASSWORD</span>
-                      <input type='password' name='password' value={password} onChange={this.handleInputChange} />
+                      <input type='password' name='password' value={password} onChange={this.handleInputChange} required />
                     </div>
                     <div className='modal_div'>
                       <span>CONFIRM PASSWORD</span>
-                      <input type='password' name='password' />
+                      <input type='password' name='password' required />
                     </div>
                     <div className='modal_div'>
                       <span className='modal_text'>By clicking Sign up, you accept Quizzer's <span>Terms of Service</span> and <span>Privacy Policy</span></span>
