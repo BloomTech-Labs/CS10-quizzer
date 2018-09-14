@@ -49,6 +49,10 @@ class NavBar extends Component {
     })
   }
 
+  logout = () => {
+    window.localStorage.clear()
+  }
+
   handleInputChange = event => {
     this.setState({ [event.target.name]: event.target.value })
   }
@@ -65,8 +69,13 @@ class NavBar extends Component {
           </Button>
         </div>
         <div className='nav_container_right'>
-          <Button className='nav_container_right_login_button' onClick={this.toggleLogin}>Log in</Button>
-          <Button className='nav_container_right_signup_button' color='info' onClick={this.toggleSignup}>Sign up</Button>
+          {window.localStorage.getItem('token')
+            ? <Button className='nav_container_right_logout_button' color='warning' onClick={this.logout}>Log out</Button>
+            : <div className='nav_container_right'>
+              <Button className='nav_container_right_login_button' onClick={this.toggleLogin}>Log in</Button>
+              <Button className='nav_container_right_signup_button' color='info' onClick={this.toggleSignup}>Sign up</Button>
+            </div>
+          }
         </div>
         <Modal className='signup_loginModal' isOpen={this.state.signupModal} toggle={this.toggleSignup}>
           <ModalHeader className='signup_loginModal_header'>
