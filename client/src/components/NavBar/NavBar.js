@@ -51,10 +51,29 @@ class NavBar extends Component {
 
   logout = () => {
     window.localStorage.clear()
+    this.forceUpdate()
   }
 
   handleInputChange = event => {
     this.setState({ [event.target.name]: event.target.value })
+  }
+
+  attemptLogin = (data, error) => {
+    if (error) {
+      return this.state.loginModal ? <p>Invalid user name or password.</p> : <p>Something went wrong, please try again.</p>
+    }
+
+    if (data) {
+      if (data.queryTeacher && data.queryTeacher.jwtString) {
+        window.localStorage.setItem('token', data.queryTeacher.jwtString)
+        return <p>Successfully signed in!</p>
+      } else if (data.queryTeacher && !data.queryTeacher.jwtString) {
+        return <p>Invalid user name or password</p>
+      } else if (data.createTeacher) {
+        window.localStorage.setItem('token', data.createTeacher.jwtString)
+        return <p>Successfully created new user!</p>
+      }
+    }
   }
 
   render () {
@@ -115,9 +134,7 @@ class NavBar extends Component {
                     </div>
                   </form>
                   {loading && <p>Saving new user...</p>}
-                  {error && <p>Something went wrong, please try again.</p>}
-                  {data && window.localStorage.setItem('token', data.createTeacher.jwtString)}
-                  {window.localStorage.getItem('token') ? <p>User successfully created!</p> : null}
+                  {(data || error) && this.attemptLogin(data, error)}
                 </div>
               )}
             </Mutation>
@@ -155,9 +172,7 @@ class NavBar extends Component {
                     </div>
                   </form>
                   {loading && <p>Signing you in...</p>}
-                  {error && <p>Invalid username or password.</p>}
-                  {data && data.queryTeacher && window.localStorage.setItem('token', data.queryTeacher.jwtString)}
-                  {window.localStorage.getItem('token') ? <p>Successfully signed in!</p> : null}
+                  {(data || error) && this.attemptLogin(data, error)}
                 </div>
               )}
             </Mutation>
