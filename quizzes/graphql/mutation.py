@@ -8,6 +8,8 @@ from decouple import config
 from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student
 from uuid import uuid4
 
+salt = uuid4().hex.encode('utf-8')
+
 
 '''
 CreateClass
@@ -108,13 +110,13 @@ class CreateTeacher(graphene.Mutation):
         # password hashing
         # turn strings into byte-strings
         password  = TeacherPW.encode('utf-8')
-        salt      = uuid4().hex.encode('utf-8')
+        # salt      = uuid4().hex.encode('utf-8')
         pass_salt = b''.join([ password, salt ])
         # hashlib.sha256 requires byte-strings in order to apply the algorithm
         hashed_pw = hashlib.sha256(pass_salt).hexdigest()
 
         # saving new Teacher into DB
-        teacher = Teacher.objects.create(TeacherName=TeacherName, TeacherPW=TeacherPW, TeacherEmail=TeacherEmail)
+        teacher = Teacher.objects.create(TeacherName=TeacherName, TeacherPW=hashed_pw, TeacherEmail=TeacherEmail)
 
         # this is what GraphQL is going to return
         return CreateTeacher(teacher=teacher, jwt_string=jwt_string)
@@ -146,10 +148,13 @@ class QueryTeacher(graphene.Mutation):
         # saving new Teacher into DB
         # teacher = Teacher.objects.create(TeacherName=TeacherName, TeacherPW=TeacherPW, TeacherEmail=TeacherEmail)
         teacher = Teacher.objects.get(TeacherEmail=TeacherEmail)
-        teacher_pw = TeacherPW
+        teacher_pw = TeacherPW.encode('utf-8')
+        pass_salt  = b''.join([ teacher_pw, salt ])
+        hashed_pw  = hashlib.sha256(pass_salt).hexdigest()
 
         if teacher:
-            if teacher_pw == teacher.TeacherPW:
+            print(salt)
+            if hashed_pw == teacher.TeacherPW:
                 # create DATA for JWT
                 secret    = config('SECRET_KEY')
                 algorithm = 'HS256'
