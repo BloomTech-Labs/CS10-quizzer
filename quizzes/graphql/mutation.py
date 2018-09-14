@@ -1,3 +1,4 @@
+import bcrypt
 import graphene
 import hashlib
 import jwt
@@ -110,13 +111,14 @@ class CreateTeacher(graphene.Mutation):
         # turn strings into byte-strings
         password  = TeacherPW.encode('utf-8')
         # salt      = uuid4().hex.encode('utf-8')
-        pass_salt = b''.join([ password, salt ])
+        # pass_salt = b''.join([ password, salt ])
         # hashlib.sha256 requires byte-strings in order to apply the algorithm
-        hashed_pw = hashlib.sha256(pass_salt).hexdigest()
+        # hashed_pw = hashlib.sha256(pass_salt).hexdigest()
+        hashed = bcrypt.hashpw(password, bcrypt.gensalt()).decode('utf-8')
 
         # saving new Teacher into DB
         # teacher = Teacher.objects.create(TeacherName=TeacherName, TeacherPW=hashed_pw, TeacherEmail=TeacherEmail)
-        teacher = Teacher.objects.create(TeacherName=TeacherName, TeacherPW=TeacherPW, TeacherEmail=TeacherEmail)
+        teacher = Teacher.objects.create(TeacherName=TeacherName, TeacherPW=hashed, TeacherEmail=TeacherEmail)
 
         # this is what GraphQL is going to return
         return CreateTeacher(teacher=teacher, jwt_string=jwt_string)
@@ -145,17 +147,13 @@ class QueryTeacher(graphene.Mutation):
 
     @staticmethod
     def mutate(self, info, TeacherPW, TeacherEmail):
-        # saving new Teacher into DB
-        # teacher = Teacher.objects.create(TeacherName=TeacherName, TeacherPW=TeacherPW, TeacherEmail=TeacherEmail)
         teacher = Teacher.objects.get(TeacherEmail=TeacherEmail)
-        teacher_pw = TeacherPW.encode('utf-8')
-        pass_salt  = b''.join([ teacher_pw, salt ])
-        hashed_pw  = hashlib.sha256(pass_salt).hexdigest()
+        plain_pw = TeacherPW.encode('utf-8')
+        hashed_pw = teacher.TeacherPW.encode('utf-8')
 
-        if teacher_pw:
+        if plain_pw:
             if teacher:
-                if TeacherPW == teacher.TeacherPW:
-                # if hashed_pw == teacher.TeacherPW:
+                if bcrypt.checkpw(plain_pw, hashed_pw):
                     # create DATA for JWT
                     secret    = config('SECRET_KEY')
                     algorithm = 'HS256'
