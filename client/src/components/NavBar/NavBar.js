@@ -161,7 +161,7 @@ class NavBar extends Component {
                   }}>
                     <div className='modal_div'>
                       <span>EMAIL</span>
-                      <input type='text' name='email' value={email} onChange={this.handleInputChange} required />
+                      <input type='email' name='email' value={email} onChange={this.handleInputChange} required />
                     </div>
                     <div className='modal_div'>
                       <span>PASSWORD</span>
