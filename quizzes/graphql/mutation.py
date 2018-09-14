@@ -194,17 +194,3 @@ class QueryTeacherMutation(graphene.ObjectType):
 '''
 end QueryTeacher
 '''
-
-
-{
-  "data": {
-    "createTeacher": {
-      "teacher": {
-        "TeacherName": "b",
-        "TeacherPW": "7826bb67ef0a3d4ffa1ae213713c3b5160d745400d949778cafc4dd8c94874bb",
-        "TeacherEmail": "b"
-      },
-      "jwtString": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOnsidXNlcm5hbWUiOiJiIiwiZW1haWwiOiJiIn0sImlhdCI6MTUzNjk0MzAwNy43NTAzMTQyLCJleHAiOjE1MzcwMjk0MDcuNzUwMzE1fQ.CIbg-UBhcVzAF_RTlgiPlwgFiQaVWsT6ZiraCj7FdYo"
-    }
-  }
-}
