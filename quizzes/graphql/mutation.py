@@ -52,7 +52,7 @@ class CreateClass(graphene.Mutation):
 
         # `user` variable needs to be changed to use the ID given by the JWT
         # for now JWT does NOT return a userID
-        user = Teacher.objects.get(TeacherName=dec_jwt[ 'sub' ])
+        user = Teacher.objects.get(TeacherEmail=dec_jwt[ 'sub' ][ 'email' ])
         
         # if token is expired return expiration error to user
         if dec_jwt[ 'exp' ] < time.time():
@@ -111,12 +111,14 @@ class CreateTeacher(graphene.Mutation):
         # turn strings into byte-strings
         password  = TeacherPW.encode('utf-8')
         # salt      = uuid4().hex.encode('utf-8')
-        pass_salt = b''.join([ password, salt ])
+        # pass_salt = b''.join([ password, salt ])
         # hashlib.sha256 requires byte-strings in order to apply the algorithm
-        hashed_pw = hashlib.sha256(pass_salt).hexdigest()
+        # hashed_pw = hashlib.sha256(pass_salt).hexdigest()
+        hashed = bcrypt.hashpw(password, bcrypt.gensalt()).decode('utf-8')
 
         # saving new Teacher into DB
-        teacher = Teacher.objects.create(TeacherName=TeacherName, TeacherPW=hashed_pw, TeacherEmail=TeacherEmail)
+        # teacher = Teacher.objects.create(TeacherName=TeacherName, TeacherPW=hashed_pw, TeacherEmail=TeacherEmail)
+        teacher = Teacher.objects.create(TeacherName=TeacherName, TeacherPW=hashed, TeacherEmail=TeacherEmail)
 
         # this is what GraphQL is going to return
         return CreateTeacher(teacher=teacher, jwt_string=jwt_string)
@@ -145,42 +147,44 @@ class QueryTeacher(graphene.Mutation):
 
     @staticmethod
     def mutate(self, info, TeacherPW, TeacherEmail):
-        # saving new Teacher into DB
-        # teacher = Teacher.objects.create(TeacherName=TeacherName, TeacherPW=TeacherPW, TeacherEmail=TeacherEmail)
         teacher = Teacher.objects.get(TeacherEmail=TeacherEmail)
-        teacher_pw = TeacherPW.encode('utf-8')
-        pass_salt  = b''.join([ teacher_pw, salt ])
-        hashed_pw  = hashlib.sha256(pass_salt).hexdigest()
+        plain_pw = TeacherPW.encode('utf-8')
+        hashed_pw = teacher.TeacherPW.encode('utf-8')
 
-        if teacher:
-            print(salt)
-            if hashed_pw == teacher.TeacherPW:
-                # create DATA for JWT
-                secret    = config('SECRET_KEY')
-                algorithm = 'HS256'
-                payload = {
-                    'sub': {
-                        'username': teacher.TeacherName,
-                        'email': teacher.TeacherEmail
-                    },
-                    'iat': time.time(),
-                    'exp': time.time() + 86400
-                }
+        if plain_pw:
+            if teacher:
+                if bcrypt.checkpw(plain_pw, hashed_pw):
+                    # create DATA for JWT
+                    secret    = config('SECRET_KEY')
+                    algorithm = 'HS256'
+                    payload = {
+                        'sub': {
+                            'username': teacher.TeacherName,
+                            'email': teacher.TeacherEmail
+                        },
+                        'iat': time.time(),
+                        'exp': time.time() + 86400
+                    }
 
-                # create JWT as a byte string e.g. b'<< JWT >>'
-                enc_jwt = jwt.encode(payload, secret, algorithm=algorithm)
-                # transforms JWT-byte-string into a normal UTF-8 string
-                jwt_string = enc_jwt.decode('utf-8')
+                    # create JWT as a byte string e.g. b'<< JWT >>'
+                    enc_jwt = jwt.encode(payload, secret, algorithm=algorithm)
+                    # transforms JWT-byte-string into a normal UTF-8 string
+                    jwt_string = enc_jwt.decode('utf-8')
 
-                print(jwt_string)
-                # this is what GraphQL is going to return
-                return QueryTeacher(teacher=teacher, jwt_string=jwt_string)
+                    # this is what GraphQL is going to return
+                    return QueryTeacher(teacher=teacher, jwt_string=jwt_string)
+
+                else:
+                    print('\n\nWRONG PASSWORD\n\n')
+                    return {}
 
             else:
-                print('\n\nWRONG PASSWORD\n\n')
+                print('\n\nTEACHER DOES NOT EXIST\n\n')
+                return {}
 
         else:
-            print('\n\nTEACHER DOES NOT EXIST\n\n')
+            print('\n\nWRONG PW\n\n')
+            return {}
 
 
 
@@ -190,3 +194,17 @@ class QueryTeacherMutation(graphene.ObjectType):
 '''
 end QueryTeacher
 '''
+
+
+{
+  "data": {
+    "createTeacher": {
+      "teacher": {
+        "TeacherName": "b",
+        "TeacherPW": "7826bb67ef0a3d4ffa1ae213713c3b5160d745400d949778cafc4dd8c94874bb",
+        "TeacherEmail": "b"
+      },
+      "jwtString": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOnsidXNlcm5hbWUiOiJiIiwiZW1haWwiOiJiIn0sImlhdCI6MTUzNjk0MzAwNy43NTAzMTQyLCJleHAiOjE1MzcwMjk0MDcuNzUwMzE1fQ.CIbg-UBhcVzAF_RTlgiPlwgFiQaVWsT6ZiraCj7FdYo"
+    }
+  }
+}
