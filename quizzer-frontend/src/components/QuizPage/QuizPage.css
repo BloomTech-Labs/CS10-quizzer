@@ -33,23 +33,41 @@
     text-align: justify;
 }
 
-.quiz_form {
+.answers_list {
     margin: 0 0 0 2%; 
 }
 
-.quiz_form input {
+.answers_list input {
     margin: 10px 0 0 0; 
 }
 
-.quiz_form label {
+.answers_list label {
     font-family: monospace; 
     font-size: 20px; 
     margin: 0 0 0 2%; 
 }
 
-.quiz_submit_button {
+.quiz_buttons {
+    display: flex; 
+    justify-content: flex-end;
     font-family: monospace;
+}
+
+.back_button {
     font-size: 20px !important;
     font-weight: bold !important;
+    margin: 20px 5% 0 0; 
+}
+
+.next_button {
+    font-size: 20px !important;
+    font-weight: bold !important;
+    margin: 20px 5% 0 0; 
+}
+
+.submit_button {
+    font-size: 20px !important; 
+    font-weight: bold !important; 
+    margin: 20px 5% 0 0; 
 }
 

@@ -1,0 +1,81 @@
+{
+  "quiz": {
+    "className": "CS10",
+    "studentName": "Sue Student",
+    "quizName": "Graphs Quiz",
+    "quizContent": [
+      "Graphs are collections of related data. They’re like trees, except connections can be made from any node to any other node, even forming loops.",
+      "The nodes in a graph are called vertexes (or vertices or verts), and the connections between the verts are called edges.",
+      "And edge denotes a relationship or linkage between the two verts."
+    ],
+    "questions": [
+      {
+        "question": "A popular online map application provides navigational aids and the fastest path between two points.  This data is represented with vertexes where two or more roads intersect and edges representing the roads between intersections and the time it takes to traverse them.  What kind of graph is this?",
+          "choices": [
+            {
+              "type": "checkbox",
+              "name": "graphs",
+              "id": "uda",
+              "label": "Unweighted, Directed, Acyclic"
+            },
+            {
+              "type": "checkbox",
+              "name": "graphs",
+              "id": "dwa",
+              "label": "Directed, Weighted, Acyclic"
+            },
+            {
+              "type": "checkbox",
+              "name": "graphs",
+              "id": "dwc",
+              "label": "Directed, Unweighted, Acyclic"
+            },
+            {
+              "type": "checkbox",
+              "name": "graphs",
+              "id": "duc",
+              "label": "Directed, Unweighted, Cyclic"
+            }
+          ],
+          "answer": ["dwc", "duc"]
+        }, 
+        {
+          "question": "Who was the first man to fly around the earth with a spaceship?",
+            "choices": [
+              {
+                "type": "radio",
+                "name": "science",
+                "id": "gagarin",
+                "label": "Gagarin"
+              },
+              {
+                "type": "radio",
+                "name": "science",
+                "id": "haywood",
+                "label": "Haywood"
+              },
+              {
+                "type": "radio",
+                "name": "science",
+                "id": "eddy",
+                "label": "Eddy"
+              },
+              {
+                "type": "radio",
+                "name": "science",
+                "id": "Daniel",
+                "label": "Daniel"
+              },
+              {
+                "type": "radio", 
+                "name": "science", 
+                "id": "brandon", 
+                "label": "Brandon"
+              }
+            ],
+            "answer": "gagarin"
+          }
+    ]
+  }
+}
+

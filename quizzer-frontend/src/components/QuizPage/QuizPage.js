@@ -1,90 +1,136 @@
 import React, { Component } from 'react'
-import { Button, Form, FormGroup, Input, Label } from 'reactstrap'
+import { Button, Input, Label } from 'reactstrap'
 import './QuizPage.css'
+const testData = require('./testData.json')
 
 class QuizPage extends Component {
   constructor () {
     super()
     this.state = {
-      class: '',
+      className: '',
       studentName: '',
       quizName: '',
-      quizContent: null,
-      question: [],
-      options: [],
-      page: null,
-      grade: null
+      quizContent: [],
+      questions: [],
+      page: 1,
+      cache: [],
+      grade: 0
     }
+    this.back = this.back.bind(this)
+    this.next = this.next.bind(this)
+    this.selectAnswer = this.selectAnswer.bind(this)
+    this.check = this.check.bind(this)
+    // this.submit = this.submit.bind(this)
   }
   componentDidMount () {
+    const quiz = testData.quiz
     this.setState({
-      class: 'CS14',
-      studentName: 'Sue Student',
-      quizName: 'Graphs Quiz',
-      quizContent: <div><p>Graphs are collections of related data. They’re like trees, except connections can be made from any node to any other node, even forming loops.</p><p>The nodes in a graph are called vertexes (or vertices or verts), and the connections between the verts are called edges.
-      </p><p>And edge denotes a relationship or linkage between the two verts.</p></div>,
-      question: ['A popular online map application provides navigational aids and the fastest path between two points.  This data is represented with vertexes where two or more roads intersect and edges representing the roads between intersections and the time it takes to traverse them.  What kind of graph is this?'],
-      options: [{
-        type: 'checkbox',
-        name: 'graphs',
-        choices: [
-          {
-            id: 'uda',
-            label_text: 'Unweighted, Directed, Acyclic'
-          },
-          {
-            id: 'dwa',
-            label_text: 'Directed, Weighted, Acyclic'
-          },
-          {
-            id: 'dwc',
-            label_text: 'Directed, Weighted, Cyclic'
-          },
-          {
-            id: 'duc',
-            label_text: 'Directed, Unweighted, Cyclic'
-          }
-        ],
-        correctAnswer: []
-      }],
-      page: 1
+      className: quiz.className,
+      studentName: quiz.studentName,
+      quizName: quiz.quizName,
+      quizContent: quiz.quizContent,
+      questions: quiz.questions
     })
   }
 
-  displayChoices () {
-    let choices = []
-    const option = this.state.page - 1
-    for (let i = 0; i < this.state.options[option].choices.length; i++) {
-      choices.push(
-        <FormGroup className={`question_${option}_options`} key={`option_${i}`}>
-          <Input type={this.state.options[option].type} id={this.state.options[option].choices[i].id} name={this.state.options[option].name} value={this.state.options[option].choices[i].id} />
-          <Label for={this.state.options[option].choices[i].id}>{this.state.options[option].choices[i].label_text}</Label>
-        </FormGroup>
+  displayQuizContent () {
+    let content = []
+    for (let i = 0; i < this.state.quizContent.length; i++) {
+      content.push(
+        <p key={`paragraph${i}`}>{this.state.quizContent[i]}</p>
       )
     }
-    return choices
+    return content
+  }
+
+  displayChoices () {
+    let options = []
+    const question = this.state.page - 1
+    const choices = this.state.questions[question].choices
+    for (let i = 0; i < choices.length; i++) {
+      options.push(
+        <div key={`choice${i}`}>
+          <Input type={choices[i].type} id={choices[i].id} name={choices[i].name} value={choices[i].id} onChange={this.selectAnswer} checked={this.check(choices[i].type, choices[i].id)} />
+          <Label for={choices[i].id}>{choices[i].label}</Label>
+        </div>
+      )
+    }
+    return options
+  }
+
+  check (type, value) {
+    console.log(type, value)
+    if (this.state.cache.length > 0) {
+      if (type === 'checkbox') {
+        if (this.state.cache[this.state.page - 1].indexOf(value) > -1) {
+          return true
+        }
+      } else {
+        if (this.state.cache[this.state.page - 1] === value) {
+          return true
+        }
+      }
+    }
+  }
+
+  back () {
+    this.setState({
+      page: this.state.page - 1
+    })
+  }
+
+  next () {
+    this.setState({
+      page: this.state.page + 1
+    })
+  }
+
+  selectAnswer (event) {
+    let cacheCopy = Object.assign([], this.state.cache)
+    const page = this.state.page - 1
+    if (event.target.type === 'checkbox') {
+      if (cacheCopy[page]) {
+        const index = cacheCopy[page].indexOf(event.target.id)
+        if (index > -1) {
+          cacheCopy[page].splice(index, 1)
+        } else {
+          cacheCopy[page].push(event.target.id)
+        }
+      } else {
+        cacheCopy[page] = [event.target.id]
+      }
+    } else {
+      cacheCopy[page] = event.target.id
+    }
+    this.setState({
+      cache: cacheCopy
+    })
   }
 
   render () {
-    if (this.state.page === null) {
-      return <div>Loading</div>
+    if (this.state.questions.length === 0) {
+      return <div>Loading...</div>
     }
     return (
       <div>
         <div className='quiz_header'>
-          <h1>{this.state.class} - {this.state.studentName}</h1>
-          <h1>{this.state.page} of {this.state.question.length}</h1>
+          <h1>{this.state.className} - {this.state.studentName}</h1>
+          <h1>{this.state.page} of {this.state.questions.length}</h1>
         </div>
         <div className='quiz_body'>
           <h1>{this.state.quizName}</h1>
-          <p>{this.state.quizContent}</p>
-          <h1>Question:</h1>
-          <p>{this.state.question[this.state.page - 1]}</p>
+          {this.displayQuizContent()}
+          <h1>Question: {this.state.page}</h1>
+          <p>{this.state.questions[this.state.page - 1].question}</p>
         </div>
-        <Form className='quiz_form'>
+        <div className='answers_list'>
           {this.displayChoices()}
-          <Button color='info' className='quiz_submit_button'>Submit</Button>
-        </Form>
+        </div>
+        <div className='quiz_buttons'>
+          {this.state.page > 1 ? <Button color='warning' className='back_button' onClick={this.back}>Back</Button> : null}
+          {this.state.page !== this.state.questions.length ? <Button color='info' className='next_button' onClick={this.next}>Next</Button> : null}
+          {this.state.page === this.state.questions.length ? <Button color='danger' className='submit_button'>Submit</Button> : null}
+        </div>
       </div>
     )
   }
