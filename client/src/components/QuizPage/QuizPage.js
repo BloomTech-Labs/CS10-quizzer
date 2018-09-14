@@ -20,7 +20,7 @@ class QuizPage extends Component {
     this.next = this.next.bind(this)
     this.selectAnswer = this.selectAnswer.bind(this)
     this.check = this.check.bind(this)
-    this.submit = this.submit.bind(this)
+    // this.submit = this.submit.bind(this)
   }
   componentDidMount () {
     const quiz = testData.quiz
