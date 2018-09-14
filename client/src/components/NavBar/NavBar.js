@@ -156,7 +156,7 @@ class NavBar extends Component {
                   </form>
                   {loading && <p>Signing you in...</p>}
                   {error && <p>Invalid username or password.</p>}
-                  {data && window.localStorage.setItem('token', data.queryTeacher.jwtString)}
+                  {data && data.queryTeacher && window.localStorage.setItem('token', data.queryTeacher.jwtString)}
                   {window.localStorage.getItem('token') ? <p>Successfully signed in!</p> : null}
                 </div>
               )}
