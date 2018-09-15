@@ -1,6 +1,7 @@
 import bcrypt
 import graphene
 import hashlib
+import json
 import jwt
 import time
 
@@ -142,6 +143,7 @@ class QueryTeacher(graphene.Mutation):
         TeacherEmail = graphene.String()
         TeacherPW    = graphene.String()
 
+    errors     = graphene.JSONString()
     jwt_string = graphene.String()
     teacher    = graphene.Field(lambda: QueryTeacherMutation)
 
@@ -183,8 +185,8 @@ class QueryTeacher(graphene.Mutation):
                 return {}
 
         else:
-            print('\n\nWRONG PW\n\n')
-            return {}
+            errors = '{ "statusText": "Please supply a valid password", "statusCode": "401" }'
+            return QueryTeacher(errors=errors)
 
 
 
