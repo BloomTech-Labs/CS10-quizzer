@@ -139,8 +139,8 @@ start QueryTeacher
 '''
 class QueryTeacher(graphene.Mutation):
     class Arguments:
-        TeacherPW    = graphene.String()
         TeacherEmail = graphene.String()
+        TeacherPW    = graphene.String()
 
     jwt_string = graphene.String()
     teacher    = graphene.Field(lambda: QueryTeacherMutation)
@@ -189,8 +189,10 @@ class QueryTeacher(graphene.Mutation):
 
 
 class QueryTeacherMutation(graphene.ObjectType):
-    TeacherPW    = graphene.String()
+    TeacherID    = graphene.String()
     TeacherEmail = graphene.String()
+    TeacherName  = graphene.String()
+    TeacherPW    = graphene.String()
 '''
 end QueryTeacher
 '''
