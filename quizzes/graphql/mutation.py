@@ -1,15 +1,11 @@
 import bcrypt
 import graphene
-import hashlib
 import json
 import jwt
 import time
 
 from decouple import config
 from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student
-from uuid import uuid4
-
-salt = uuid4().hex.encode('utf-8')
 
 
 '''
@@ -111,14 +107,9 @@ class CreateTeacher(graphene.Mutation):
         # password hashing
         # turn strings into byte-strings
         password  = TeacherPW.encode('utf-8')
-        # salt      = uuid4().hex.encode('utf-8')
-        # pass_salt = b''.join([ password, salt ])
-        # hashlib.sha256 requires byte-strings in order to apply the algorithm
-        # hashed_pw = hashlib.sha256(pass_salt).hexdigest()
         hashed = bcrypt.hashpw(password, bcrypt.gensalt()).decode('utf-8')
 
         # saving new Teacher into DB
-        # teacher = Teacher.objects.create(TeacherName=TeacherName, TeacherPW=hashed_pw, TeacherEmail=TeacherEmail)
         teacher = Teacher.objects.create(TeacherName=TeacherName, TeacherPW=hashed, TeacherEmail=TeacherEmail)
 
         # this is what GraphQL is going to return
@@ -194,7 +185,6 @@ class QueryTeacherMutation(graphene.ObjectType):
     TeacherID    = graphene.String()
     TeacherEmail = graphene.String()
     TeacherName  = graphene.String()
-    TeacherPW    = graphene.String()
 '''
 end QueryTeacher
 '''
