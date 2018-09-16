@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
-import firstSectionImg from '../../images/first_image.png'
-import facebookIcon from '../../images/facebook_icon.png'
-import instagramIcon from '../../images/instagram_icon.png'
-import twitterIcon from '../../images/twitter_icon.png'
+import firstSectionImage from '../../images/firstImage.png'
+import facebookIcon from '../../images/facebookIcon.png'
+import instagramIcon from '../../images/instagramIcon.png'
+import twitterIcon from '../../images/twitterIcon.png'
 import NavBar from '../NavBar/NavBar'
 import './Home.css'
 
@@ -13,24 +13,27 @@ class Home extends Component {
     this.state = {
       getStartedModal: false
     }
+
     this.toggleGetStarted = this.toggleGetStarted.bind(this)
   }
+
   toggleGetStarted () {
     this.setState({
-      getstarted_modal: !this.state.getStartedModal
+      getStartedModal: !this.state.getStartedModal
     })
   }
+
   render () {
     return (
       <div className='home_container'>
         <NavBar />
         <div className='home_container_first_section'>
           <div className='home_container_first_section_left'>
-            <h1>A web app for teachers to create quizzes.</h1>
+            <h1>A web app for teachers to create.</h1>
             <p>Search millions of publicly created quizzes to improve your grades or create your own.</p>
             <Button color='info' className='first_section_left_getstarted_button' onClick={this.toggleGetStarted}>Get started</Button>
           </div>
-          <img className='first_section_image' src={firstSectionImg} alt='A laptop with flowers behind it.' />
+          <img className='first_section_image' src={firstSectionImage} alt='A laptop with flowers behind it.' />
         </div>
         <div className='footer'>
           <span>Quizzer</span>
