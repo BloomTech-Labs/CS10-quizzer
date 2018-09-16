@@ -29,8 +29,8 @@ class Home extends Component {
         <NavBar />
         <div className='home_container_first_section'>
           <div className='home_container_first_section_left'>
-            <h1>A cool web app for teachers to create dynamic quizzes.</h1>
-            <p>Search millions of publicly created quizzes to improve your grades as a student or create your own if you are a teacher.</p>
+            <h1>A web app for teachers to create.</h1>
+            <p>Search millions of publicly created quizzes to improve your grades or create your own.</p>
             <Button color='info' className='first_section_left_getstarted_button' onClick={this.toggleGetStarted}>Get started</Button>
           </div>
           <img className='first_section_image' src={firstSectionImage} alt='A laptop with flowers behind it.' />
@@ -43,7 +43,7 @@ class Home extends Component {
             <img src={instagramIcon} alt='Instagram Icon' />
             <img src={twitterIcon} alt='Twitter Icon' />
           </div>
-          <span>&#169 2018 Quizzer Inc.</span>
+          <span>&#169; 2018 Quizzer Inc.</span>
         </div>
         <Modal className='getstarted_button_modal' isOpen={this.state.getStartedModal} toggle={this.toggleGetStarted}>
           <ModalHeader className='getstarted_button_modal_header'>
