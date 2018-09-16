@@ -27,7 +27,7 @@
             {
               "type": "checkbox",
               "name": "graphs",
-              "id": "dwc",
+              "id": "dua",
               "label": "Directed, Unweighted, Acyclic"
             },
             {
@@ -37,7 +37,7 @@
               "label": "Directed, Unweighted, Cyclic"
             }
           ],
-          "answer": ["dwc", "duc"]
+          "answer": ["dua", "duc"]
         }, 
         {
           "question": "Who was the first man to fly around the earth with a spaceship?",

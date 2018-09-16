@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Button, Input, Label } from 'reactstrap'
+import { Redirect } from 'react-router-dom'
 import './QuizPage.css'
 const testData = require('./testData.json')
 
@@ -14,13 +15,14 @@ class QuizPage extends Component {
       questions: [],
       page: 1,
       cache: [],
-      grade: 0
+      grade: 0,
+      submit: false
     }
     this.back = this.back.bind(this)
     this.next = this.next.bind(this)
     this.selectAnswer = this.selectAnswer.bind(this)
     this.check = this.check.bind(this)
-    // this.submit = this.submit.bind(this)
+    this.submit = this.submit.bind(this)
   }
   componentDidMount () {
     const quiz = testData.quiz
@@ -44,6 +46,7 @@ class QuizPage extends Component {
   }
 
   displayChoices () {
+    console.log('Cache', this.state.cache)
     let options = []
     const question = this.state.page - 1
     const choices = this.state.questions[question].choices
@@ -59,8 +62,7 @@ class QuizPage extends Component {
   }
 
   check (type, value) {
-    console.log(type, value)
-    if (this.state.cache.length > 0) {
+    if (this.state.cache.length > 0 && this.state.cache[this.state.page - 1] !== null) {
       if (type === 'checkbox') {
         if (this.state.cache[this.state.page - 1].indexOf(value) > -1) {
           return true
@@ -80,8 +82,42 @@ class QuizPage extends Component {
   }
 
   next () {
+    let cacheCopy = Object.assign([], this.state.cache)
+    const index = this.state.page - 1
+    if (!cacheCopy[index]) {
+      cacheCopy[index] = null
+    }
     this.setState({
+      cache: cacheCopy,
       page: this.state.page + 1
+    })
+  }
+
+  submit () {
+    let cacheCopy = Object.assign([], this.state.cache)
+    const index = this.state.page - 1
+    let gradeCopy = 0
+    if (!cacheCopy[index]) {
+      cacheCopy[index] = null
+    }
+    for (let i = 0; i < cacheCopy.length; i++) {
+      if (cacheCopy[i] === null) {
+        continue
+      } else if (typeof (cacheCopy[i]) === 'object') {
+        cacheCopy[i].sort()
+        this.state.questions[i].answer.sort()
+        if (JSON.stringify(cacheCopy[i]) === JSON.stringify(this.state.questions[i].answer)) {
+          gradeCopy = gradeCopy + 1
+        }
+      } else {
+        if (cacheCopy[i] === this.state.questions[i].answer) {
+          gradeCopy = gradeCopy + 1
+        }
+      }
+    }
+    this.setState({
+      grade: (gradeCopy / cacheCopy.length) * 100,
+      submit: true
     })
   }
 
@@ -129,7 +165,13 @@ class QuizPage extends Component {
         <div className='quiz_buttons'>
           {this.state.page > 1 ? <Button color='warning' className='back_button' onClick={this.back}>Back</Button> : null}
           {this.state.page !== this.state.questions.length ? <Button color='info' className='next_button' onClick={this.next}>Next</Button> : null}
-          {this.state.page === this.state.questions.length ? <Button color='danger' className='submit_button'>Submit</Button> : null}
+          {this.state.page === this.state.questions.length ? <Button color='danger' className='submit_button' onClick={this.submit}>Submit</Button> : null}
+          {this.state.submit ? <Redirect to={
+            {
+              pathname: '/result',
+              state: { grade: this.state.grade }
+            }
+          } /> : null}
         </div>
       </div>
     )
