@@ -30,17 +30,18 @@ class Query(graphene.ObjectType):
     '''
     Allows us to make GET/Query requests from the DB using GraphQL
     '''
-    classes    = graphene.List(ClassType)
-    quizzes    = graphene.List(QuizType)
-    questions  = graphene.List(QuestionType)
-    choices    = graphene.List(ChoiceType)
-    teachers   = graphene.List(TeacherType)
-    teacher    = graphene.Field(
+    classes   = graphene.List(ClassType, enc_jwt=graphene.String())
+    quizzes   = graphene.List(QuizType)
+    questions = graphene.List(QuestionType)
+    choices   = graphene.List(ChoiceType)
+    teachers  = graphene.List(TeacherType)
+    students  = graphene.List(StudentType)
+
+    teacher = graphene.Field(
         TeacherType,
         email=graphene.String(),
         password=graphene.String()
     )
-    students   = graphene.List(StudentType)
 
     '''
     Each method, resolve_<< name >>, is named after what we want to return.
@@ -48,8 +49,35 @@ class Query(graphene.ObjectType):
     `resolve_` method `resolve_classes()` which will then return our query
     to `Class.objects.all()` from the DB
     '''
-    def resolve_classes(self, info):
-        return Class.objects.all()
+    def resolve_classes(self, info, **kwargs):
+        '''
+        if an enc_jwt argument is supplied to the classes query
+        we can get back every class that a teacher has created
+        
+        if we do not supply an enc_jwt or the enc_jwt is wrong we are then
+        returned with EVERY class created
+
+        TODO: do not return every single class if JWT is wrong/missing
+        '''
+        try:
+            enc_jwt    = kwargs.get('enc_jwt').encode('utf-8')
+            secret     = config('SECRET_KEY')
+            algorithm  = 'HS256'
+            dec_jwt    = jwt.decode(enc_jwt, secret, algorithms=[ algorithm ])
+            teacher    = Teacher.objects.get(TeacherID=dec_jwt[ 'sub' ][ 'id' ])
+
+            '''
+            grabs every class that contains a teacher with this email address
+
+            << tableName >>__<< field >>__<< contains >> = << value to search for >>
+            NOTE: these are double underscores between each field
+            '''
+            return Class.objects.filter(
+                TeacherID__TeacherEmail__contains=teacher.TeacherEmail
+                )
+
+        except:
+            return Class.objects.all()
 
     def resolve_quizzes(self, info):
         return Quiz.objects.all()
