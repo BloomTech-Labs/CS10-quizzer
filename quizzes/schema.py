@@ -4,6 +4,7 @@ import time
 
 from decouple import config
 from graphene_django import DjangoObjectType
+from graphql import GraphQLError
 from quizzes.graphql.mutation import CreateTeacher, QueryTeacher, CreateStudent, CreateQuiz
 from quizzes.graphql.mutations.classes import CreateClass
 from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student
@@ -77,7 +78,7 @@ class Query(graphene.ObjectType):
                 )
 
         except:
-            return Class.objects.all()
+            raise GraphQLError('Please supply a valid JWT')
 
     def resolve_quizzes(self, info):
         return Quiz.objects.all()
