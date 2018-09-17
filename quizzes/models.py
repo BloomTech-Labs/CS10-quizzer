@@ -6,6 +6,7 @@ from uuid import uuid4
 class Class(models.Model):
     ClassID       = models.UUIDField(primary_key=True, default = uuid4, editable = False)
     ClassName     = models.CharField(max_length = 50, blank = False)
+    TeacherID     = models.ForeignKey('Teacher', on_delete=models.CASCADE)
     created_at    = models.DateTimeField(auto_now_add = True)
     last_modified = models.DateTimeField(auto_now = True)
 
@@ -13,9 +14,10 @@ class Class(models.Model):
         db_table            = 'Classes'
         verbose_name_plural = 'classes'
 
+
 class Quiz(models.Model):
     QuizID        = models.UUIDField(primary_key=True, default = uuid4, editable = False)
-    ClassID       = models.ForeignKey('Class', on_delete = models.CASCADE)
+    TeacherID     = models.ForeignKey('Teacher', on_delete=models.CASCADE)
     QuizName      = models.CharField(max_length = 100, blank = False)
     Public        = models.BooleanField(default=True)
     created_at    = models.DateTimeField(auto_now_add = True)
@@ -24,6 +26,7 @@ class Quiz(models.Model):
     class Meta:
         db_table            = 'Quizzes'
         verbose_name_plural = 'quizzes'
+
 
 class Question(models.Model):
     QuestionID    = models.UUIDField(primary_key=True, default = uuid4, editable = False)
@@ -68,10 +71,30 @@ class Student(models.Model):
     StudentName   = models.CharField(max_length=50, blank=False)
     StudentEmail  = models.CharField(max_length=256, unique=True, blank=False)
     ClassID       = models.ForeignKey('Class', on_delete=models.CASCADE)
-    TeacherID     = models.ForeignKey('Teacher', on_delete=models.CASCADE)
     created_at    = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table            = 'Students'
         verbose_name_plural = 'students'
+
+
+class Class_Quiz(models.Model):
+    Class_QuizID = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    ClassID      = models.ForeignKey('Class', on_delete=models.CASCADE)
+    QuizID       = models.ForeignKey('Quiz', on_delete=models.CASCADE)
+
+    class Meta:
+        db_table            = 'Class_Quiz'
+        verbose_name_plural = 'Class_Quiz'
+
+
+class Student_Quiz(models.Model):
+    Student_QuizID = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    Student        = models.ForeignKey('Student', on_delete=models.CASCADE)
+    Quiz           = models.ForeignKey('Quiz', on_delete=models.CASCADE)
+    Grade          = models.IntegerField()
+
+    class Meta:
+        db_table            = 'Student_Quiz'
+        verbose_name_plural = 'Student_Quiz'
