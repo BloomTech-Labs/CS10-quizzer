@@ -58,15 +58,15 @@ class CreateClass(graphene.Mutation):
         
         teacher = user.TeacherName
         # this portion is unreachable if any of the above conditions are true
-        new_class = Class.objects.create(ClassName=ClassName, Teacher=teacher)
+        new_class = Class.objects.create(ClassName=ClassName, TeacherID=user)
 
         return CreateClass(new_class=new_class)
 
 
 class ClassMutation(graphene.ObjectType):
     ClassID  = graphene.String()
+    TeacherID = graphene.String()
     ClassName  = graphene.String()
-    Teacher    = graphene.String()
     created_at = graphene.DateTime()
 
 '''
