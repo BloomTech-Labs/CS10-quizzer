@@ -71,7 +71,6 @@ class QueryTeacher(graphene.Mutation):
         TeacherEmail = graphene.String()
         TeacherPW    = graphene.String()
 
-    errors     = graphene.JSONString()
     jwt_string = graphene.String()
     teacher    = graphene.Field(lambda: QueryTeacherMutation)
 
@@ -106,12 +105,10 @@ class QueryTeacher(graphene.Mutation):
                     return QueryTeacher(teacher=teacher, jwt_string=jwt_string)
 
                 else:
-                    print('\n\nWRONG PASSWORD\n\n')
-                    return {}
+                    raise GraphQLError('Incorrect username or password.')
 
             else:
-                print('\n\nTEACHER DOES NOT EXIST\n\n')
-                return {}
+                raise GraphQLError('Incorrect username or password')
 
         else:
             raise GraphQLError('Please supply a valid password')

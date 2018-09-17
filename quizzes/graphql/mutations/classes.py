@@ -3,6 +3,7 @@ import jwt
 import time
 
 from decouple import config
+from graphql import GraphQLError
 from quizzes.models import Class, Teacher
 
 '''
@@ -50,11 +51,11 @@ class CreateClass(graphene.Mutation):
         
         # if token is expired return expiration error to user
         if dec_jwt[ 'exp' ] < time.time():
-            return print('\n\nTOKEN EXPIRED\nRETURN ERROR TO CLIENT\n\n')
+            raise GraphQLError('Token has expired.')
         
         # if user does not exist in the database return error
         if not user:
-            return print('\n\nUSER DOES NOT EXISTS\nRETURN ERRO TO CLIENT\n\n')
+            raise GraphQLError('This user does not exist')
         
         teacher = user.TeacherName
         # this portion is unreachable if any of the above conditions are true
