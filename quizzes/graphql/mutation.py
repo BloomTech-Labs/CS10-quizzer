@@ -5,73 +5,8 @@ import jwt
 import time
 
 from decouple import config
-from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student
 from graphql import GraphQLError
-
-
-# '''
-# CreateClass
-# '''
-# class CreateClass(graphene.Mutation):
-#     '''
-#     The `Arguments` nested class is how GraphQL knows what arguments
-#     are required when making a mutation/POST request.
-    
-#     The `ok` prop is required by GraphQL. This is not a Django Attribute
-#     The `new_class` prop is calling the `ClassMutation` class right below
-#     our `CreateClass` class. We then call the `mutate()` method, denoted with
-#     a `@staticmethod` decorator, that will then use the value of
-#     `ClassMutation.ClassName` and pass that to the `Class.objects.create()`
-#     method saved on the `new_class` variable inside of the
-#     `mutate()` method below
-#     EXAMPLE GRAPHQL MUTATION
-#     ------------------------
-    
-#     mutation {
-#         createClass(ClassName:"Test Class Creation 1") {
-#             newClass {
-#                 ClassName
-#             }
-#             ok
-#         }
-#     }
-#     '''
-#     class Arguments:
-#         ClassName  = graphene.String()
-#         enc_jwt    = graphene.String()
-
-#     new_class = graphene.Field(lambda: ClassMutation)
-
-#     @staticmethod
-#     def mutate(self, info, ClassName, enc_jwt):
-#         secret    = config('SECRET_KEY')
-#         algorithm = 'HS256'
-#         dec_jwt   = jwt.decode(enc_jwt, secret, algorithms=[ algorithm ])
-
-#         # `user` variable needs to be changed to use the ID given by the JWT
-#         # for now JWT does NOT return a userID
-#         user = Teacher.objects.get(TeacherEmail=dec_jwt[ 'sub' ][ 'email' ])
-        
-#         # if token is expired return expiration error to user
-#         if dec_jwt[ 'exp' ] < time.time():
-#             return print('\n\nTOKEN EXPIRED\nRETURN ERROR TO CLIENT\n\n')
-        
-#         # if user does not exist in the database return error
-#         if not user:
-#             return print('\n\nUSER DOES NOT EXISTS\nRETURN ERRO TO CLIENT\n\n')
-        
-#         # this portion is unreachable if any of the above conditions are true
-#         new_class = Class.objects.create(ClassName=ClassName)
-
-#         return CreateClass(new_class=new_class)
-
-
-# class ClassMutation(graphene.ObjectType):
-#     ClassName = graphene.String()
-
-# '''
-# end CreateClass
-# '''
+from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student
 
 
 '''
@@ -88,13 +23,23 @@ class CreateTeacher(graphene.Mutation):
 
     @staticmethod
     def mutate(self, info, TeacherName, TeacherPW, TeacherEmail):
+        # password hashing
+        # turn strings into byte-strings
+        password  = TeacherPW.encode('utf-8')
+        hashed = bcrypt.hashpw(password, bcrypt.gensalt()).decode('utf-8')
+
+        # saving new Teacher into DB
+        teacher = Teacher.objects.create(TeacherName=TeacherName, TeacherPW=hashed, TeacherEmail=TeacherEmail)
+        teacher.TeacherID = str(teacher.TeacherID)
+
         # create DATA for JWT
         secret    = config('SECRET_KEY')
         algorithm = 'HS256'
         payload = {
             'sub': {
-                'username': TeacherName,
-                'email': TeacherEmail
+                'id': teacher.TeacherID,
+                'username': teacher.TeacherName,
+                'email': teacher.TeacherEmail
             },
             'iat': time.time(),
             'exp': time.time() + 86400
@@ -105,14 +50,6 @@ class CreateTeacher(graphene.Mutation):
         # transforms JWT-byte-string into a normal UTF-8 string
         jwt_string = enc_jwt.decode('utf-8')
 
-        # password hashing
-        # turn strings into byte-strings
-        password  = TeacherPW.encode('utf-8')
-        hashed = bcrypt.hashpw(password, bcrypt.gensalt()).decode('utf-8')
-
-        # saving new Teacher into DB
-        teacher = Teacher.objects.create(TeacherName=TeacherName, TeacherPW=hashed, TeacherEmail=TeacherEmail)
-
         # this is what GraphQL is going to return
         return CreateTeacher(teacher=teacher, jwt_string=jwt_string)
 
@@ -121,7 +58,6 @@ class TeacherMutation(graphene.ObjectType):
     TeacherID    = graphene.String()
     TeacherEmail = graphene.String()
     TeacherName  = graphene.String()
-        
 '''
 end CreateTeacher
 '''
@@ -153,6 +89,7 @@ class QueryTeacher(graphene.Mutation):
                     algorithm = 'HS256'
                     payload = {
                         'sub': {
+                            'id': teacher.TeacherID,
                             'username': teacher.TeacherName,
                             'email': teacher.TeacherEmail
                         },
@@ -187,4 +124,69 @@ class QueryTeacherMutation(graphene.ObjectType):
     TeacherName  = graphene.String()
 '''
 end QueryTeacher
+'''
+
+
+'''
+start CreateStudent
+'''
+class CreateStudent(graphene.Mutation):
+    class Arguments:
+        StudentName  = graphene.String()
+        StudentEmail = graphene.String()
+        ClassID      = graphene.String()
+
+    student = graphene.Field(lambda: CreateStudentMutation)
+
+    @staticmethod
+    def mutate(self, info, StudentName, StudentEmail, ClassID):
+        ClassID   = Class.objects.get(ClassID=ClassID)
+        student = Student.objects.create(StudentName=StudentName,
+                                         StudentEmail=StudentEmail,
+                                         ClassID=ClassID
+                                        )
+        
+        return CreateStudent(student=student)
+
+
+class CreateStudentMutation(graphene.ObjectType):
+    StudentID    = graphene.String()
+    StudentName  = graphene.String()
+    StudentEmail = graphene.String()
+    ClassID      = graphene.String()
+    created_at   = graphene.String()
+'''
+end CreateStudent
+'''
+
+
+'''
+start CreateQuiz
+'''
+class CreateQuiz(graphene.Mutation):
+    class Arguments:
+        QuizName = graphene.String()
+        Public   = graphene.Boolean()
+        encJWT   = graphene.String()
+
+    quiz = graphene.Field(lambda: CreateQuizMutation)
+
+    @staticmethod
+    def mutate(self, info, QuizName, Public, encJWT):
+        secret    = config('SECRET_KEY')
+        algorithm = 'HS256'
+        decJWT    = jwt.decode(encJWT, secret, algorithms=[ algorithm ])
+
+        print(decJWT)
+
+
+class CreateQuizMutation(graphene.ObjectType):
+    QuizID        = graphene.String()
+    QuizName      = graphene.String()
+    TeacherID     = graphene.String()
+    Public        = graphene.String()
+    created_at    = graphene.String()
+    last_modified = graphene.String()
+'''
+end CreateQuiz
 '''
