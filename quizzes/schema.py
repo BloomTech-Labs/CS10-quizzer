@@ -4,7 +4,7 @@ import time
 
 from decouple import config
 from graphene_django import DjangoObjectType
-from quizzes.graphql.mutation import CreateTeacher, QueryTeacher
+from quizzes.graphql.mutation import CreateTeacher, QueryTeacher, CreateStudent, CreateQuiz
 from quizzes.graphql.mutations.classes import CreateClass
 from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student
 
@@ -22,6 +22,8 @@ class Mutation(graphene.ObjectType):
     create_class   = CreateClass.Field()
     create_teacher = CreateTeacher.Field()
     query_teacher  = QueryTeacher.Field()
+    create_student = CreateStudent.Field()
+    create_quiz    = CreateQuiz.Field()
 
 
 class Query(graphene.ObjectType):
