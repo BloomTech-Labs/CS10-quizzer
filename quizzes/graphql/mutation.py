@@ -6,71 +6,72 @@ import time
 
 from decouple import config
 from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student
+from graphql import GraphQLError
 
 
-'''
-CreateClass
-'''
-class CreateClass(graphene.Mutation):
-    '''
-    The `Arguments` nested class is how GraphQL knows what arguments
-    are required when making a mutation/POST request.
+# '''
+# CreateClass
+# '''
+# class CreateClass(graphene.Mutation):
+#     '''
+#     The `Arguments` nested class is how GraphQL knows what arguments
+#     are required when making a mutation/POST request.
     
-    The `ok` prop is required by GraphQL. This is not a Django Attribute
-    The `new_class` prop is calling the `ClassMutation` class right below
-    our `CreateClass` class. We then call the `mutate()` method, denoted with
-    a `@staticmethod` decorator, that will then use the value of
-    `ClassMutation.ClassName` and pass that to the `Class.objects.create()`
-    method saved on the `new_class` variable inside of the
-    `mutate()` method below
-    EXAMPLE GRAPHQL MUTATION
-    ------------------------
+#     The `ok` prop is required by GraphQL. This is not a Django Attribute
+#     The `new_class` prop is calling the `ClassMutation` class right below
+#     our `CreateClass` class. We then call the `mutate()` method, denoted with
+#     a `@staticmethod` decorator, that will then use the value of
+#     `ClassMutation.ClassName` and pass that to the `Class.objects.create()`
+#     method saved on the `new_class` variable inside of the
+#     `mutate()` method below
+#     EXAMPLE GRAPHQL MUTATION
+#     ------------------------
     
-    mutation {
-        createClass(ClassName:"Test Class Creation 1") {
-            newClass {
-                ClassName
-            }
-            ok
-        }
-    }
-    '''
-    class Arguments:
-        ClassName  = graphene.String()
-        enc_jwt    = graphene.String()
+#     mutation {
+#         createClass(ClassName:"Test Class Creation 1") {
+#             newClass {
+#                 ClassName
+#             }
+#             ok
+#         }
+#     }
+#     '''
+#     class Arguments:
+#         ClassName  = graphene.String()
+#         enc_jwt    = graphene.String()
 
-    new_class = graphene.Field(lambda: ClassMutation)
+#     new_class = graphene.Field(lambda: ClassMutation)
 
-    @staticmethod
-    def mutate(self, info, ClassName, enc_jwt):
-        secret    = config('SECRET_KEY')
-        algorithm = 'HS256'
-        dec_jwt   = jwt.decode(enc_jwt, secret, algorithms=[ algorithm ])
+#     @staticmethod
+#     def mutate(self, info, ClassName, enc_jwt):
+#         secret    = config('SECRET_KEY')
+#         algorithm = 'HS256'
+#         dec_jwt   = jwt.decode(enc_jwt, secret, algorithms=[ algorithm ])
 
-        # `user` variable needs to be changed to use the ID given by the JWT
-        # for now JWT does NOT return a userID
-        user = Teacher.objects.get(TeacherEmail=dec_jwt[ 'sub' ][ 'email' ])
+#         # `user` variable needs to be changed to use the ID given by the JWT
+#         # for now JWT does NOT return a userID
+#         user = Teacher.objects.get(TeacherEmail=dec_jwt[ 'sub' ][ 'email' ])
         
-        # if token is expired return expiration error to user
-        if dec_jwt[ 'exp' ] < time.time():
-            return print('\n\nTOKEN EXPIRED\nRETURN ERROR TO CLIENT\n\n')
+#         # if token is expired return expiration error to user
+#         if dec_jwt[ 'exp' ] < time.time():
+#             return print('\n\nTOKEN EXPIRED\nRETURN ERROR TO CLIENT\n\n')
         
-        # if user does not exist in the database return error
-        if not user:
-            return print('\n\nUSER DOES NOT EXISTS\nRETURN ERRO TO CLIENT\n\n')
+#         # if user does not exist in the database return error
+#         if not user:
+#             return print('\n\nUSER DOES NOT EXISTS\nRETURN ERRO TO CLIENT\n\n')
         
-        # this portion is unreachable if any of the above conditions are true
-        new_class = Class.objects.create(ClassName=ClassName)
+#         # this portion is unreachable if any of the above conditions are true
+#         new_class = Class.objects.create(ClassName=ClassName)
 
-        return CreateClass(new_class=new_class)
+#         return CreateClass(new_class=new_class)
 
 
-class ClassMutation(graphene.ObjectType):
-    ClassName = graphene.String()
+# class ClassMutation(graphene.ObjectType):
+#     ClassName = graphene.String()
 
-'''
-end CreateClass
-'''
+# '''
+# end CreateClass
+# '''
 
 
 '''
@@ -117,9 +118,9 @@ class CreateTeacher(graphene.Mutation):
 
 
 class TeacherMutation(graphene.ObjectType):
-    TeacherName  = graphene.String()
-    TeacherPW    = graphene.String()
+    TeacherID    = graphene.String()
     TeacherEmail = graphene.String()
+    TeacherName  = graphene.String()
         
 '''
 end CreateTeacher
@@ -176,8 +177,7 @@ class QueryTeacher(graphene.Mutation):
                 return {}
 
         else:
-            errors = '{ "statusText": "Please supply a valid password", "statusCode": "401" }'
-            return QueryTeacher(errors=errors)
+            raise GraphQLError('Please supply a valid password')
 
 
 
