@@ -176,9 +176,12 @@ class CreateQuiz(graphene.Mutation):
         secret    = config('SECRET_KEY')
         algorithm = 'HS256'
         decJWT    = jwt.decode(encJWT, secret, algorithms=[ algorithm ])
+        teacherID = decJWT[ 'sub' ][ 'id' ]
+        teacher   = Teacher.objects.get(TeacherID=teacherID)
 
-        print(decJWT)
+        quiz = Quiz.objects.create(TeacherID=teacher, QuizName=QuizName, Public=Public)
 
+        return CreateQuiz(quiz=quiz)
 
 class CreateQuizMutation(graphene.ObjectType):
     QuizID        = graphene.String()
