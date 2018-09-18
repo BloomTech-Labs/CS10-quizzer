@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { Elements, StripeProvider } from 'react-stripe-elements'; 
 import CheckoutForm from './components/CheckoutForm';
-import { NULL } from 'graphql/language/kinds';
 
 export default class Subscribe extends Component {
     render() {
         return (
-            <StripeProvider apiKey='null'>
+            <StripeProvider apiKey={`process.env.STRIPE_API_KEY`}>
                 <div>
                     <h1>Generic title or something</h1>
                     <Elements>
