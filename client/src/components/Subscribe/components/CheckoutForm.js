@@ -8,15 +8,15 @@ class CheckoutForm extends Component {
     }
 
     async submit(e) {
-
+        //when user clicks submit...
     }
 
     render() {
         return (
-            <div>
-                <p> Are you ready to submit? </p>
+            <div className="checkout">
+                <p> Is that your final answer? </p>
                 <CardElement />
-                <button onClick={ this.submit }> Send </button>
+                <button onClick={ this.submit }> Submit </button>
             </div>
         );
     }
