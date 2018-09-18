@@ -33,19 +33,24 @@ class NavBar extends Component {
 
   attemptLogIn = (data, error) => {
     if (error) {
-      return this.state.logInModal ? <p>Invalid user name or password.</p> : <p>Something went wrong, please try again.</p>
+      return <pre>Error: {error.graphQLErrors.map(({ message }, i) => (<span key={i}>{message}</span>))}</pre>
+      // return this.state.logInModal ? <p>Invalid user name or password.</p> : <p>Something went wrong, please try again.</p>
     }
 
+    // if (data) {
+    //   if (data.queryTeacher && data.queryTeacher.jwtString) {
+    //     window.localStorage.setItem('token', data.queryTeacher.jwtString)
+    //     return <p>Successfully signed in!</p>
+    //   } else if (data.queryTeacher && !data.queryTeacher.jwtString) {
+    //     return <p>Invalid user name or password</p>
+    //   } else if (data.createTeacher) {
+    //     window.localStorage.setItem('token', data.createTeacher.jwtString)
+    //     return <p>Successfully created new user!</p>
+    //   }
+    // }
     if (data) {
-      if (data.queryTeacher && data.queryTeacher.jwtString) {
-        window.localStorage.setItem('token', data.queryTeacher.jwtString)
-        return <p>Successfully signed in!</p>
-      } else if (data.queryTeacher && !data.queryTeacher.jwtString) {
-        return <p>Invalid user name or password</p>
-      } else if (data.createTeacher) {
-        window.localStorage.setItem('token', data.createTeacher.jwtString)
-        return <p>Successfully created new user!</p>
-      }
+      data.createTeacher ? window.localStorage.setItem('token', data.createTeacher.jwtString) : window.localStorage.setItem('token', data.queryTeacher.jwtString)
+      return this.state.logInModal ? <span>Successfully signed in!</span> : <span>Successfully created new user!</span>
     }
   }
 
