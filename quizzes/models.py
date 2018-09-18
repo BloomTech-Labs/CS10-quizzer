@@ -80,9 +80,11 @@ class Student(models.Model):
 
 
 class Class_Quiz(models.Model):
-    Class_QuizID = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    ClassID      = models.ForeignKey('Class', on_delete=models.CASCADE)
-    QuizID       = models.ForeignKey('Quiz', on_delete=models.CASCADE)
+    Class_QuizID  = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    ClassID       = models.ForeignKey('Class', on_delete=models.CASCADE)
+    QuizID        = models.ForeignKey('Quiz', on_delete=models.CASCADE)
+    created_at    = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table            = 'Class_Quiz'
@@ -94,6 +96,8 @@ class Student_Quiz(models.Model):
     Student        = models.ForeignKey('Student', on_delete=models.CASCADE)
     Quiz           = models.ForeignKey('Quiz', on_delete=models.CASCADE)
     Grade          = models.IntegerField()
+    created_at     = models.DateTimeField(auto_now_add=True)
+    last_modified  = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table            = 'Student_Quiz'
