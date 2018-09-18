@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import NavContainerLeft from './NavContainerLeft'
 import NavContainerRight from './NavContainerRight'
-import LogInModal from './LogInModal'
-import SignUpModal from './SignUpModal'
+import LogInModal from '../Modals/LogInModal'
+import SignUpModal from '../Modals/SignUpModal'
 import './NavBar.css'
 
 class NavBar extends Component {

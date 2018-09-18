@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
-import './Home.css'
+import './Landing.css'
 
 class GetStartedModal extends Component {
   render () {

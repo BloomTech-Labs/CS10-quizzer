@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 import PropTypes from 'prop-types'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import { Mutation } from 'react-apollo'
-import './NavBar.css'
+import '../NavBar/NavBar.css'
 
 const newUserMutation = gql`
   mutation NewUser($TeacherName: String!, $TeacherEmail: String!, $TeacherPW: String!) {
