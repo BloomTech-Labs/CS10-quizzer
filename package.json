@@ -1,0 +1,11 @@
+{
+  "engines": {
+    "node": "8.11.2",
+    "npm": "5.6.0"
+  },
+  "name": "quizzer",
+  "version": "1.0.0",
+  "scripts": {
+    "postinstall": "npm install --prefix client && npm run build --prefix client"
+  }
+}
