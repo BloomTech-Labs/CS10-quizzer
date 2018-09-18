@@ -88,7 +88,7 @@ class QueryTeacher(graphene.Mutation):
                     algorithm = 'HS256'
                     payload = {
                         'sub': {
-                            'id': teacher.TeacherID,
+                            'id': str(teacher.TeacherID),
                             'username': teacher.TeacherName,
                             'email': teacher.TeacherEmail
                         },

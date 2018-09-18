@@ -46,7 +46,6 @@ class QuizPage extends Component {
   }
 
   displayChoices () {
-    console.log('Cache', this.state.cache)
     let options = []
     const question = this.state.page - 1
     const choices = this.state.questions[question].choices

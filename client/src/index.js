@@ -8,9 +8,10 @@ import registerServiceWorker from './registerServiceWorker'
 import { ApolloProvider } from 'react-apollo'
 import ApolloClient from 'apollo-boost'
 
+const apiURI = process.env.NODE_ENV !== 'production' ? 'http://localhost:8000/graphiql/' : '/graphiql/'
+
 const client = new ApolloClient({
-  // uri: 'https://quizzer-cs10.herokuapp.com/graphiql/'
-  uri: 'http://localhost:8000/graphiql/'
+  uri: apiURI
 })
 
 render(
