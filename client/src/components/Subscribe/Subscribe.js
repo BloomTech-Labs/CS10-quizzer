@@ -1,25 +1,18 @@
 import React, { Component } from 'react';
-import { CardElement, injectStripe } from 'react-stripe-elements';
+import { Elements, StripeProvider } from 'react-stripe-elements'; 
+import CheckoutForm from './components/CheckoutForm';
 
-class Subscribe extends Component {
-    constructor(props) {
-        super(props);
-        this.submit = this.submit.bind(this);
-    }
-
-    async submit(e) {
-
-    }
-
+export default class Subscribe extends Component {
     render() {
-        return (
-            <div>
-                <p>Would you like to complete the purchase?</p>
-                <CardElement />
-                <button onClick={ this.submit }> Send </button>
-            </div>
+        render (
+            <StripeProvider apiKey={ process.env.STRIPE_API_KEY }>
+                <div>
+                    <h1>Generic title or something</h1>
+                    <Elements>
+                        <CheckoutForm/>
+                    </Elements>
+                </div>
+            </StripeProvider>
         );
     }
 }
-
-export default injectStripe(Subscribe);
