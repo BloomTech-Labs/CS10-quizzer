@@ -70,7 +70,7 @@ class Query(graphene.ObjectType):
             '''
             grabs every class that contains a teacher with this email address
 
-            << tableName >>__<< field >>__<< contains >> = << value to search for >>
+            << tableName >>__<< field >>__contains = << value to search for >>
             NOTE: these are double underscores between each field
             '''
             return Class.objects.filter(
