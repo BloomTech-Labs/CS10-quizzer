@@ -28,7 +28,6 @@ DEBUG = config('DEBUG', cast = bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -60,7 +59,7 @@ ROOT_URLCONF = 'quizzer.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [ os.path.join(BASE_DIR, 'client/build') ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -129,9 +128,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'client/build/static') ]
+
 
 # Graphene Django (GraphQL)
 
