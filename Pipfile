@@ -10,12 +10,12 @@ python_version = "3.6"
 django = "*"
 python-decouple = "*"
 graphene-django = "*"
-pyjwt = "*"
 django-cors-headers = "*"
 gunicorn = "*"
 "psycopg2-binary" = "*"
 dj-database-url = "*"
 whitenoise = "*"
 bcrypt = "*"
+django-graphql-jwt = "*"
 
 [dev-packages]
