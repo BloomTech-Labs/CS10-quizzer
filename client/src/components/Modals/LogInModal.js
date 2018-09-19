@@ -37,37 +37,39 @@ class LogInModal extends Component {
         </ModalHeader>
         <Mutation mutation={userLoginQueryMutation}>
           {(loginUser, { loading, error, data }) => (
-            <form onSubmit={event => {
-              event.preventDefault()
-              loginUser({ variables: { TeacherEmail: email, TeacherPW: password } })
-              this.setState({
-                email: '',
-                password: ''
-              })
-            }}>
-              <ModalBody className='signup_login_modal_body'>
-                {loading ? <span>Checking Credentials. Please Wait...</span>
-                  : <div>
-                    <div className='modal_div'>
-                      <span>EMAIL</span>
-                      <input type='email' name='email' value={email} onChange={this.handleInputChange} required />
-                      {(data || error) && this.props.attemptLogIn(data, error)}
+            <div>
+              <form onSubmit={event => {
+                event.preventDefault()
+                loginUser({ variables: { TeacherEmail: email, TeacherPW: password } })
+                this.setState({
+                  email: '',
+                  password: ''
+                })
+              }}>
+                <ModalBody className='signup_login_modal_body'>
+                  {loading ? <span>Checking Credentials. Please Wait...</span>
+                    : <div>
+                      <div className='modal_div'>
+                        <span>EMAIL</span>
+                        <input type='email' name='email' value={email} onChange={this.handleInputChange} required />
+                        {(data || error) && this.props.attemptLogIn(data, error)}
+                      </div>
+                      <div className='modal_div'>
+                        <span>PASSWORD</span>
+                        <input type='password' name='password' value={password} onChange={this.handleInputChange} required />
+                        {(data || error) && this.props.attemptLogIn(data, error)}
+                      </div>
+                      <div className='modal_div'>
+                        <Button type='submit' color='info' className='signup_login_modal_button'>Log in</Button>
+                      </div>
                     </div>
-                    <div className='modal_div'>
-                      <span>PASSWORD</span>
-                      <input type='password' name='password' value={password} onChange={this.handleInputChange} required />
-                      {(data || error) && this.props.attemptLogIn(data, error)}
-                    </div>
-                    <div className='modal_div'>
-                      <Button type='submit' color='info' className='signup_login_modal_button'>Log in</Button>
-                    </div>
-                  </div>
-                }
-              </ModalBody>
-              {loading ? null : <ModalFooter className='signup_login_modal_footer'>
-                <span className='modal_text'>Remember to log out on shared devices. <span>Forgot password?</span></span>
-              </ModalFooter>}
-            </form>
+                  }
+                </ModalBody>
+                {loading ? null : <ModalFooter className='signup_login_modal_footer'>
+                  <span className='modal_text'>Remember to log out on shared devices. <span>Forgot password?</span></span>
+                </ModalFooter>}
+              </form>
+            </div>
           )}
         </Mutation>
       </Modal>

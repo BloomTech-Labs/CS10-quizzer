@@ -31,13 +31,6 @@ class SignUpModal extends Component {
     this.setState({ [event.target.name]: event.target.value })
   }
 
-  handleOnSubmit = event => {
-    event.preventDefault()
-    if (this.state.password !== this.state.confirmPassword) {
-      this.setState({ passwordError: 'Passwords do not match.' })
-    }
-  }
-
   render () {
     const { name, email, password, confirmPassword } = this.state
     return (
@@ -49,12 +42,18 @@ class SignUpModal extends Component {
           {(createNewUser, { loading, error, data }) => (
             <form onSubmit={event => {
               event.preventDefault()
-              createNewUser({ variables: { TeacherName: name, TeacherEmail: email, TeacherPW: password } })
-              this.setState({
-                name: '',
-                email: '',
-                password: ''
-              })
+              if (this.state.password !== this.state.confirmPassword) {
+                this.setState({ passwordError: 'Passwords do not match.' })
+              } else {
+                createNewUser({ variables: { TeacherName: name, TeacherEmail: email, TeacherPW: password } })
+                this.setState({
+                  name: '',
+                  email: '',
+                  password: '',
+                  confirmPassword: '',
+                  passwordError: false
+                })
+              }
             }}>
               <ModalBody className='signup_login_modal_body'>
                 {loading ? <span>Checking information. Please wait...</span>
@@ -66,16 +65,17 @@ class SignUpModal extends Component {
                     <div className='modal_div'>
                       <span>EMAIL</span>
                       <input type='email' name='email' value={email} onChange={this.handleInputChange} required />
+                      {(data || error) && this.props.attemptSignUp(data, error)}
                     </div>
                     <div className='modal_div'>
                       <span>PASSWORD</span>
                       <input type='password' name='password' value={password} onChange={this.handleInputChange} required />
-                      {this.state.passwordError ? <span>{this.state.passwordError}</span> : null}
+                      {this.state.passwordError ? <span className='error'>{this.state.passwordError}</span> : null}
                     </div>
                     <div className='modal_div'>
                       <span>CONFIRM PASSWORD</span>
                       <input type='password' name='confirmPassword' value={confirmPassword} onChange={this.handleInputChange} required />
-                      {this.state.passwordError ? <span>{this.state.passwordError}</span> : null}
+                      {this.state.passwordError ? <span className='error'>{this.state.passwordError}</span> : null}
                     </div>
                     <div className='modal_div'>
                       <span className='modal_text'>By clicking Sign up, you accept Quizzer's <span>Terms of Service</span> and <span>Privacy Policy</span></span>
@@ -88,8 +88,6 @@ class SignUpModal extends Component {
                 <span>Already have an account? <span className='signup_login_modal_login'>Log in</span></span>
               </ModalFooter>}
             </form>
-            // {loading && <p>Saving new user...</p>}
-            // {(data || error) && this.props.attemptLogIn(data, error)}
           )}
         </Mutation>
       </Modal>
@@ -99,7 +97,8 @@ class SignUpModal extends Component {
 
 SignUpModal.propTypes = {
   signUpModal: PropTypes.bool,
-  toggleSignUp: PropTypes.func
+  toggleSignUp: PropTypes.func,
+  attemptSignUp: PropTypes.func
 }
 
 export default SignUpModal

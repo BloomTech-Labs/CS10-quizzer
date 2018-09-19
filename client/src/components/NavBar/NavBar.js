@@ -12,7 +12,8 @@ class NavBar extends Component {
     this.state = {
       signUpModal: false,
       logInModal: false,
-      redirect: false
+      redirectSign: false,
+      redirectLog: false
     }
   }
 
@@ -33,9 +34,15 @@ class NavBar extends Component {
     this.forceUpdate()
   }
 
+  attemptSignUp = (data, error) => {
+    if (error) {
+      return this.state.logInModal ? <span className='error'>Email Already Exists</span> : null
+    }
+  }
+
   attemptLogIn = (data, error) => {
     if (error) {
-      return this.state.logInModal ? <span className='error'>Invalid Credentials</span> : <span className='error'>An error occurred, please try again.</span>
+      return this.state.logInModal ? <span className='error'>Invalid Credentials</span> : <span className='error'>An error occurred. Please try again.</span>
     }
 
     if (data) {
@@ -43,15 +50,10 @@ class NavBar extends Component {
         localStorage.setItem('token', data.queryTeacher.jwtString)
         localStorage.setItem('id', data.queryTeacher.teacher.TeacherID)
         this.setState({
-          redirect: true
+          redirectLog: true
         })
       } else if (data.queryTeacher && !data.queryTeacher.jwtString) {
         return <span className='error'>Invalid Credentials</span>
-      } else if (data.createTeacher) {
-        this.setState({
-          signUpModal: false,
-          logInModal: true
-        })
       }
     }
   }
@@ -61,9 +63,9 @@ class NavBar extends Component {
       <div className='nav_container'>
         <NavContainerLeft toggleSignUp={this.toggleSignUp} />
         <NavContainerRight logOut={this.logOut} toggleLogIn={this.toggleLogIn} toggleSignUp={this.toggleSignUp} />
-        <SignUpModal signUpModal={this.state.signUpModal} toggleSignUp={this.toggleSignUp} handleInputChange={this.handleInputChange} attemptLogIn={this.attemptLogIn} />
+        <SignUpModal signUpModal={this.state.signUpModal} toggleSignUp={this.toggleSignUp} attemptSignUp={this.attemptSignUp} />
         <LogInModal logInModal={this.state.logInModal} toggleLogIn={this.toggleLogIn} attemptLogIn={this.attemptLogIn} />
-        {this.state.redirect ? <Redirect to={`/rocketlist/${localStorage.getItem('id')}`} /> : null}
+        {this.state.redirectLog ? <Redirect to={`/rocketlist/${localStorage.getItem('id')}`} /> : null}
       </div>
     )
   }
