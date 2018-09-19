@@ -6,7 +6,7 @@ import time
 
 from decouple import config
 from graphql import GraphQLError
-from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student
+from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student, Class_Quiz
 
 
 '''
@@ -163,20 +163,24 @@ start CreateQuiz
 class CreateQuiz(graphene.Mutation):
     class Arguments:
         QuizName = graphene.String()
+        ClassID  = graphene.String()
         Public   = graphene.Boolean()
         encJWT   = graphene.String()
 
     quiz = graphene.Field(lambda: CreateQuizMutation)
 
     @staticmethod
-    def mutate(self, info, QuizName, Public, encJWT):
-        secret    = config('SECRET_KEY')
-        algorithm = 'HS256'
-        decJWT    = jwt.decode(encJWT, secret, algorithms=[ algorithm ])
-        teacherID = decJWT[ 'sub' ][ 'id' ]
-        teacher   = Teacher.objects.get(TeacherID=teacherID)
+    def mutate(self, info, QuizName, ClassID, Public, encJWT):
+        secret     = config('SECRET_KEY')
+        algorithm  = 'HS256'
+        decJWT     = jwt.decode(encJWT, secret, algorithms=[ algorithm ])
+        teacherID  = decJWT[ 'sub' ][ 'id' ]
+        teacher    = Teacher.objects.get(TeacherID=teacherID)
+        quiz       = Quiz.objects.create(TeacherID=teacher, QuizName=QuizName, Public=Public)
 
-        quiz = Quiz.objects.create(TeacherID=teacher, QuizName=QuizName, Public=Public)
+        if ClassID:
+            get_class = Class.objects.get(ClassID=ClassID)
+            class_quiz = Class_Quiz.objects.create(ClassID=get_class, QuizID=quiz)
 
         return CreateQuiz(quiz=quiz)
 
