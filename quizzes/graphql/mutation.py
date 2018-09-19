@@ -176,11 +176,15 @@ class CreateQuiz(graphene.Mutation):
         decJWT     = jwt.decode(encJWT, secret, algorithms=[ algorithm ])
         teacherID  = decJWT[ 'sub' ][ 'id' ]
         teacher    = Teacher.objects.get(TeacherID=teacherID)
-        quiz       = Quiz.objects.create(TeacherID=teacher, QuizName=QuizName, Public=Public)
 
         if ClassID:
-            get_class = Class.objects.get(ClassID=ClassID)
-            class_quiz = Class_Quiz.objects.create(ClassID=get_class, QuizID=quiz)
+            classroom = Class.objects.get(ClassID=ClassID)
+            quiz      = Quiz(Teacher=teacher, Classes=classroom, QuizName=QuizName, Public=Public)
+
+        else:
+            quiz = Quiz(Teacher=teacher, QuizName=QuizName, Public=Public)
+
+        quiz.save()
 
         return CreateQuiz(quiz=quiz)
 
@@ -193,4 +197,47 @@ class CreateQuizMutation(graphene.ObjectType):
     last_modified = graphene.String()
 '''
 end CreateQuiz
+'''
+
+
+'''
+start CreateQuestion
+'''
+class CreateQuestion(graphene.Mutation):
+    class Arguments:
+        QuizID   = graphene.String()
+        QuestionText = graphene.String()
+        isMajor  = graphene.Boolean()
+        encJWT   = graphene.String()
+
+    question = graphene.Field(lambda: CreateQuestionMutation)
+
+    @staticmethod
+    def mutate(self, info, QuizID, QuestionText, isMajor, encJWT):
+        secret     = config('SECRET_KEY')
+        algorithm  = 'HS256'
+        decJWT     = jwt.decode(encJWT, secret, algorithms=[ algorithm ])
+        teacherID  = decJWT[ 'sub' ][ 'id' ]
+        teacher    = Teacher.objects.get(TeacherID=teacherID)
+
+        # check if JWT is expire
+        # check if teacher exists
+
+        print(type(isMajor))
+        
+        quiz     = Quiz.objects.get(QuizID=QuizID)
+        question = Question.objects.create(QuizID=quiz, Question=QuestionText, isMajor=isMajor)
+
+        return CreateQuestion(question=question)
+
+
+class CreateQuestionMutation(graphene.ObjectType):
+    QuestionID    = graphene.String()
+    QuizID        = graphene.String()
+    Question      = graphene.String()
+    isMajor       = graphene.String()
+    created_at    = graphene.String()
+    last_modified = graphene.String()
+'''
+end CreateQuestion
 '''
