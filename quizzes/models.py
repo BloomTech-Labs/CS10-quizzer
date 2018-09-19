@@ -1,8 +1,3 @@
-'''
-a: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOnsiaWQiOiJkODEzZmFjMC1iMmU3LTRiZWYtODVlZS1kZWMxMGExZWJiNmYiLCJ1c2VybmFtZSI6ImEiLCJlbWFpbCI6ImEifSwiaWF0IjoxNTM3MzgwOTQwLjI4NDEwMjIsImV4cCI6MTUzNzQ2NzM0MC4yODQxMDI3fQ.8Y5gWsh2cxa-JZM2mfAJA1TFzhXQN1PQVxdSxg2jsZQ"
-b: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOnsiaWQiOiI2YTRmNTVkNC02YmZmLTRlZTctYjE1My03Mzc0MWVjMzcyNTQiLCJ1c2VybmFtZSI6ImIiLCJlbWFpbCI6ImIifSwiaWF0IjoxNTM3MzgwOTc5LjIyMTIzOSwiZXhwIjoxNTM3NDY3Mzc5LjIyMTI0fQ.cBR5-32pP6zKeDC7vtqbKh1MWt48BcmnjvJFgC81mxg"
-'''
-
 from django.db import models
 from uuid import uuid4
 
@@ -36,7 +31,6 @@ class Quiz(models.Model):
     QuizID        = models.UUIDField(primary_key=True, default = uuid4, editable = False)
     QuizName      = models.CharField(max_length = 100, blank = False)
     Teacher       = models.ForeignKey('Teacher', on_delete=models.CASCADE)
-    # Classes       = models.ForeignKey('Class', on_delete=models.CASCADE, null=True)
     Classes       = models.ManyToManyField(Class)
     Public        = models.BooleanField(default=True)
     created_at    = models.DateTimeField(auto_now_add = True)
@@ -63,10 +57,10 @@ class Question(models.Model):
 class Choice(models.Model):
     ChoiceID      = models.UUIDField(primary_key=True, default = uuid4, editable = False)
     QuestionID    = models.ForeignKey('Question', on_delete = models.CASCADE)
-    Choice        = models.TextField(blank = False)
+    ChoiceText    = models.TextField(blank = False)
     isCorrect     = models.BooleanField()
-    created_at    = models.DateTimeField(auto_now_add = True)
-    last_modified = models.DateTimeField(auto_now = True)
+    created_at    = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table            = 'Choices'
