@@ -1,16 +1,17 @@
 import graphene
 import jwt
 import time
+import graphql
 
 from decouple import config
 from graphene_django import DjangoObjectType
-from graphql import GraphQLError
+from graphql import GraphQLError, GraphQLObjectType, GraphQLList
 from quizzes.graphql.mutation import CreateTeacher, QueryTeacher, CreateStudent, CreateQuiz
 from quizzes.graphql.mutations.classes import CreateClass
-from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student
+from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student, Student_Quiz, Class_Quiz
 
 from quizzes.graphql.query import (
-    ClassType, QuizType, QuestionType, ChoiceType, TeacherType, StudentType
+    ClassType, QuizType, QuestionType, ChoiceType, TeacherType, StudentType, Class_QuizType
 )
 
 
@@ -31,12 +32,13 @@ class Query(graphene.ObjectType):
     '''
     Allows us to make GET/Query requests from the DB using GraphQL
     '''
-    classes   = graphene.List(ClassType, enc_jwt=graphene.String())
-    quizzes   = graphene.List(QuizType)
-    questions = graphene.List(QuestionType)
-    choices   = graphene.List(ChoiceType)
-    teachers  = graphene.List(TeacherType)
-    students  = graphene.List(StudentType)
+    classes          = graphene.List(ClassType, enc_jwt=graphene.String())
+    public_quizzes   = graphene.List(QuizType)
+    questions        = graphene.List(QuestionType)
+    choices          = graphene.List(ChoiceType)
+    teachers         = graphene.List(TeacherType)
+    students         = graphene.List(StudentType)
+    class_quizzes    = graphene.List(Class_QuizType, ClassID=graphene.String())
 
     teacher = graphene.Field(
         TeacherType,
@@ -80,8 +82,8 @@ class Query(graphene.ObjectType):
         except:
             raise GraphQLError('Please supply a valid JWT')
 
-    def resolve_quizzes(self, info):
-        return Quiz.objects.all()
+    def resolve_public_quizzes(self, info):
+        return Quiz.objects.filter(Public=True)
 
     def resolve_questions(self, info):
         return Question.objects.all()
@@ -135,6 +137,14 @@ class Query(graphene.ObjectType):
 
     def resolve_students(self, info):
         return Student.objects.all()
+
+    def resolve_class_quizzes(self, info, **kwargs):
+        if 'ClassID' not in kwargs:
+            return GraphQLError('Please supply a valid ClassID')
+
+        class_id = kwargs.get('ClassID')
+
+        return Class_Quiz.objects.filter(ClassID=class_id)
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
