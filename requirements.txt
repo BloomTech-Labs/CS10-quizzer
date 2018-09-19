@@ -1,7 +1,7 @@
 django
 python-decouple
 graphene-django
-pyjwt
+django-graphql-jwt
 django-cors-headers
 gunicorn
 psycopg2-binary
