@@ -10,7 +10,7 @@ from quizzes.graphql.mutations.classes import CreateClass
 from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student, Student_Quiz, Class_Quiz
 
 from quizzes.graphql.mutation import (
-    CreateTeacher, QueryTeacher, CreateStudent, CreateQuiz, CreateQuestion
+    CreateTeacher, QueryTeacher, CreateStudent, CreateQuiz, CreateQuestion, CreateChoice
 )
 
 from quizzes.graphql.query import (
@@ -30,6 +30,7 @@ class Mutation(graphene.ObjectType):
     create_student  = CreateStudent.Field()
     create_quiz     = CreateQuiz.Field()
     create_question = CreateQuestion.Field()
+    create_choice   = CreateChoice.Field()
 
 
 class Query(graphene.ObjectType):
@@ -37,20 +38,20 @@ class Query(graphene.ObjectType):
     Allows us to make GET/Query requests from the DB using GraphQL
     '''
     classes         = graphene.List(ClassType, enc_jwt=graphene.String())
+
     public_quizzes  = graphene.List(QuizType)
     class_quizzes   = graphene.List(QuizType, ClassID=graphene.String())
     teacher_quizzes = graphene.List(QuizType, enc_jwt=graphene.String())
+    
+    quiz_questions  = graphene.List(QuestionType, QuizID=graphene.String())
     questions       = graphene.List(QuestionType)
+    
     choices         = graphene.List(ChoiceType)
-    teachers        = graphene.List(TeacherType)
-    students        = graphene.List(StudentType)
-    # class_quizzes    = graphene.List(Class_QuizType, ClassID=graphene.String())
 
-    teacher = graphene.Field(
-        TeacherType,
-        email=graphene.String(),
-        password=graphene.String()
-    )
+    teachers        = graphene.List(TeacherType)
+    teacher         = graphene.List(TeacherType, enc_jwt=graphene.String())
+    
+    students        = graphene.List(StudentType)
 
     '''
     Each method, resolve_<< name >>, is named after what we want to return.
@@ -58,6 +59,16 @@ class Query(graphene.ObjectType):
     `resolve_` method `resolve_classes()` which will then return our query
     to `Class.objects.all()` from the DB
     '''
+    def resolve_teacher(self, info, **kwargs):
+        enc_jwt    = kwargs.get('enc_jwt').encode('utf-8')
+        secret     = config('SECRET_KEY')
+        algorithm  = 'HS256'
+        dec_jwt    = jwt.decode(enc_jwt, secret, algorithms=[ algorithm ])
+        teacherID  = dec_jwt[ 'sub' ][ 'id' ]
+        teacher    = Teacher.objects.filter(TeacherID=teacherID)
+        
+        return teacher
+    
     def resolve_classes(self, info, **kwargs):
         '''
         if an enc_jwt argument is supplied to the classes query
@@ -116,6 +127,18 @@ class Query(graphene.ObjectType):
 
         return GraphQLError('Please supply a valid JWT')
 
+    def resolve_quiz_questions(self, info, **kwargs):
+        invalid_quiz = GraphQLError('Please supply a valid QuizID')
+        
+        if 'QuizID' in kwargs:
+            quizID = kwargs.get('QuizID')
+
+            if quizID:
+                quiz = Quiz.objects.get(QuizID=quizID)
+                return quiz.question_set.all()
+            
+        raise invalid_quiz
+
     def resolve_questions(self, info):
         return Question.objects.all()
 
@@ -124,47 +147,6 @@ class Query(graphene.ObjectType):
 
     def resolve_teachers(self, info):
         return Teacher.objects.all()
-
-    '''
-    Searches for a single teacher by their email address provided by login form
-
-    ** NOTE THIS DOES NOT WORK
-    ** THIS IS HERE FOR FUTURE TESTING
-    ** MAYBE WE CAN MAKE THIS WORK
-    '''
-    def resolve_teacher(self, info, **kwargs):
-        teacher_email = kwargs.get('email')
-        teacher_pw    = kwargs.get('password')
-        teacher       = Teacher.objects.get(TeacherEmail=teacher_email)
-
-        if teacher:
-            if teacher_pw == teacher.TeacherPW:
-                # create DATA for JWT
-                secret    = config('SECRET_KEY')
-                algorithm = 'HS256'
-                payload = {
-                    'sub': {
-                        'username': teacher.TeacherName,
-                        'email': teacher.TeacherEmail
-                    },
-                    'iat': time.time(),
-                    'exp': time.time() + 86400
-                }
-
-                # create JWT as a byte string e.g. b'<< JWT >>'
-                enc_jwt = jwt.encode(payload, secret, algorithm=algorithm)
-                # transforms JWT-byte-string into a normal UTF-8 string
-                jwt_string = enc_jwt.decode('utf-8')
-
-                print(jwt_string)
-                return teacher
-
-            else:
-                print('\n\nWRONG PASSWORD\n\n')
-
-        else:
-            print('\n\nTEACHER DOES NOT EXIST\n\n')
-        
 
     def resolve_students(self, info):
         return Student.objects.all()
