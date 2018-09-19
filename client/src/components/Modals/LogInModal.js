@@ -9,7 +9,7 @@ const userLoginQueryMutation = gql`
   mutation LoginUser($TeacherEmail: String!, $TeacherPW: String!) {
     queryTeacher(TeacherEmail: $TeacherEmail, TeacherPW: $TeacherPW) {
       teacher {
-        TeacherEmail
+        TeacherID
       }
       jwtString
     }
@@ -35,39 +35,41 @@ class LogInModal extends Component {
         <ModalHeader className='signup_login_modal_header'>
           <span>Log in</span>
         </ModalHeader>
-        <ModalBody className='signup_login_modal_body'>
-          <Mutation mutation={userLoginQueryMutation}>
-            {(loginUser, { loading, error, data }) => (
-              <div>
-                <form onSubmit={event => {
-                  event.preventDefault()
-                  loginUser({ variables: { TeacherEmail: email, TeacherPW: password } })
-                  this.setState({
-                    email: '',
-                    password: ''
-                  })
-                }}>
-                  <div className='modal_div'>
-                    <span>EMAIL</span>
-                    <input type='email' name='email' value={email} onChange={this.handleInputChange} required />
+        <Mutation mutation={userLoginQueryMutation}>
+          {(loginUser, { loading, error, data }) => (
+            <form onSubmit={event => {
+              event.preventDefault()
+              loginUser({ variables: { TeacherEmail: email, TeacherPW: password } })
+              this.setState({
+                email: '',
+                password: ''
+              })
+            }}>
+              <ModalBody className='signup_login_modal_body'>
+                {loading ? <span>Checking Credentials. Please Wait...</span>
+                  : <div>
+                    <div className='modal_div'>
+                      <span>EMAIL</span>
+                      <input type='email' name='email' value={email} onChange={this.handleInputChange} required />
+                      {(data || error) && this.props.attemptLogIn(data, error)}
+                    </div>
+                    <div className='modal_div'>
+                      <span>PASSWORD</span>
+                      <input type='password' name='password' value={password} onChange={this.handleInputChange} required />
+                      {(data || error) && this.props.attemptLogIn(data, error)}
+                    </div>
+                    <div className='modal_div'>
+                      <Button type='submit' color='info' className='signup_login_modal_button'>Log in</Button>
+                    </div>
                   </div>
-                  <div className='modal_div'>
-                    <span>PASSWORD</span>
-                    <input type='password' name='password' value={password} onChange={this.handleInputChange} required />
-                  </div>
-                  <div className='modal_div'>
-                    <Button type='submit' color='info' className='signup_login_modal_button'>Log in</Button>
-                  </div>
-                </form>
-                {loading && <p>Signing you in...</p>}
-                {(data || error) && this.props.attemptLogIn(data, error)}
-              </div>
-            )}
-          </Mutation>
-        </ModalBody>
-        <ModalFooter className='signup_login_modal_footer'>
-          <span className='modal_text'>Remember to log out on shared devices. <span>Forgot password?</span></span>
-        </ModalFooter>
+                }
+              </ModalBody>
+              {loading ? null : <ModalFooter className='signup_login_modal_footer'>
+                <span className='modal_text'>Remember to log out on shared devices. <span>Forgot password?</span></span>
+              </ModalFooter>}
+            </form>
+          )}
+        </Mutation>
       </Modal>
     )
   }
