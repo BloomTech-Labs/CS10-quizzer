@@ -7,8 +7,9 @@
 
 import React, { Component } from 'react'
 // import gql from 'graphql-tag'
-import { Button } from 'reactstrap'
+import { InputGroup, InputGroupAddon, Input, Button } from 'reactstrap'
 // import Rocketlist
+import './Settings.css'
 
 // GraphQL structures go here. We need to retrieve the current
 // email address and password (for the old password field), and we
@@ -34,12 +35,20 @@ class Settings extends Component {
     const { email, oldPassword, newPassword } = this.state
     return (
       <div className='settings_container'>
-        <span>Email:</span>
-        <input type='email' name='email' value={email} onChange={this.handleInputChange} />
-        <span>Old Password:</span>
-        <input type='password' name='oldPassword' value={oldPassword} onChange={this.handleInputChange} />
-        <span>New Password:</span>
-        <input type='password' name='newPassword' value={newPassword} onChange={this.handleInputChange} />
+        <InputGroup>
+          <InputGroupAddon addonType='prepend'>Email:</InputGroupAddon>
+          <Input type='email' name='email' value={email} onChange={this.handleInputChange} />
+        </InputGroup>
+        <br />
+        <InputGroup>
+          <InputGroupAddon addonType='prepend'>Old Password: </InputGroupAddon>
+          <Input type='password' name='oldPassword' value={oldPassword} onChange={this.handleInputChange} />
+        </InputGroup>
+        <br />
+        <InputGroup>
+          <InputGroupAddon addonType='prepend'>New Password: </InputGroupAddon>
+          <Input type='password' name='newPassword' value={newPassword} onChange={this.handleInputChange} />
+        </InputGroup>
         <Button type='submit' color='info' className='settings_save_button'>Save</Button>
       </div>
     )
