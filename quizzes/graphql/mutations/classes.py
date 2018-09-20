@@ -47,19 +47,19 @@ class CreateClass(graphene.Mutation):
 
         # `user` variable needs to be changed to use the ID given by the JWT
         # for now JWT does NOT return a userID
-        user = Teacher.objects.get(TeacherEmail=dec_jwt[ 'sub' ][ 'email' ])
+        teacherID = dec_jwt[ 'sub' ][ 'id' ]
+        teacher = Teacher.objects.get(TeacherID=teacherID)
         
-        # if token is expired return expiration error to user
+        # if token is expired return expiration error to teacher
         if dec_jwt[ 'exp' ] < time.time():
             raise GraphQLError('Token has expired.')
         
-        # if user does not exist in the database return error
-        if not user:
-            raise GraphQLError('This user does not exist')
+        # if teacher does not exist in the database return error
+        if not teacher:
+            raise GraphQLError('This teacher does not exist')
         
-        teacher = user.TeacherName
         # this portion is unreachable if any of the above conditions are true
-        new_class = Class.objects.create(ClassName=ClassName, Teacher=user)
+        new_class = Class.objects.create(ClassName=ClassName, Teacher=teacher)
 
         return CreateClass(new_class=new_class)
 
