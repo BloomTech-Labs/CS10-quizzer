@@ -2,11 +2,23 @@ from django.db import models
 from uuid import uuid4
 
 # Create your models here.
+class Teacher(models.Model):
+    TeacherID     = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    TeacherEmail  = models.CharField(max_length=256, unique=True, blank=False)
+    TeacherName   = models.CharField(max_length=50, blank=False)
+    TeacherPW     = models.CharField(max_length=256, blank=False)
+    created_at    = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table            = 'Teachers'
+        verbose_name_plural = 'teachers'
+
 
 class Class(models.Model):
     ClassID       = models.UUIDField(primary_key=True, default = uuid4, editable = False)
     ClassName     = models.CharField(max_length = 50, blank = False)
-    TeacherID     = models.ForeignKey('Teacher', on_delete=models.CASCADE)
+    Teacher       = models.ForeignKey('Teacher', on_delete=models.CASCADE)
     created_at    = models.DateTimeField(auto_now_add = True)
     last_modified = models.DateTimeField(auto_now = True)
 
@@ -17,8 +29,9 @@ class Class(models.Model):
 
 class Quiz(models.Model):
     QuizID        = models.UUIDField(primary_key=True, default = uuid4, editable = False)
-    TeacherID     = models.ForeignKey('Teacher', on_delete=models.CASCADE)
     QuizName      = models.CharField(max_length = 100, blank = False)
+    Teacher       = models.ForeignKey('Teacher', on_delete=models.CASCADE)
+    Classes       = models.ManyToManyField(Class)
     Public        = models.BooleanField(default=True)
     created_at    = models.DateTimeField(auto_now_add = True)
     last_modified = models.DateTimeField(auto_now = True)
@@ -32,6 +45,7 @@ class Question(models.Model):
     QuestionID    = models.UUIDField(primary_key=True, default = uuid4, editable = False)
     QuizID        = models.ForeignKey('Quiz', on_delete = models.CASCADE)
     Question      = models.TextField(blank = False)
+    isMajor       = models.BooleanField(default=True, blank=False)
     created_at    = models.DateTimeField(auto_now_add = True)
     last_modified = models.DateTimeField(auto_now = True)
 
@@ -43,27 +57,14 @@ class Question(models.Model):
 class Choice(models.Model):
     ChoiceID      = models.UUIDField(primary_key=True, default = uuid4, editable = False)
     QuestionID    = models.ForeignKey('Question', on_delete = models.CASCADE)
-    Choice        = models.TextField(blank = False)
+    ChoiceText    = models.TextField(blank = False)
     isCorrect     = models.BooleanField()
-    created_at    = models.DateTimeField(auto_now_add = True)
-    last_modified = models.DateTimeField(auto_now = True)
-
-    class Meta:
-        db_table            = 'Choices'
-        verbose_name_plural = 'choices'
-
-
-class Teacher(models.Model):
-    TeacherID     = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    TeacherEmail  = models.CharField(max_length=256, unique=True, blank=False)
-    TeacherName   = models.CharField(max_length=50, blank=False)
-    TeacherPW     = models.CharField(max_length=256, blank=False)
     created_at    = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table            = 'Teachers'
-        verbose_name_plural = 'teachers'
+        db_table            = 'Choices'
+        verbose_name_plural = 'choices'
 
 
 class Student(models.Model):
@@ -80,9 +81,11 @@ class Student(models.Model):
 
 
 class Class_Quiz(models.Model):
-    Class_QuizID = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    ClassID      = models.ForeignKey('Class', on_delete=models.CASCADE)
-    QuizID       = models.ForeignKey('Quiz', on_delete=models.CASCADE)
+    Class_QuizID  = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    ClassID       = models.ForeignKey('Class', on_delete=models.CASCADE)
+    QuizID        = models.ForeignKey('Quiz', on_delete=models.CASCADE)
+    created_at    = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table            = 'Class_Quiz'
@@ -94,7 +97,16 @@ class Student_Quiz(models.Model):
     Student        = models.ForeignKey('Student', on_delete=models.CASCADE)
     Quiz           = models.ForeignKey('Quiz', on_delete=models.CASCADE)
     Grade          = models.IntegerField()
+    created_at     = models.DateTimeField(auto_now_add=True)
+    last_modified  = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table            = 'Student_Quiz'
         verbose_name_plural = 'Student_Quiz'
+
+
+class QuizQuestionChoice(models.Model):
+    QQCID    = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    Quiz     = models.ForeignKey('Quiz', on_delete=models.CASCADE)
+    Question = models.ForeignKey('Question', on_delete=models.CASCADE)
+    Choice   = models.ForeignKey('Choice', on_delete=models.CASCADE)
