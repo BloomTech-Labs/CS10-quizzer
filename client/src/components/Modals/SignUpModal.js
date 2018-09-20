@@ -23,7 +23,8 @@ class SignUpModal extends Component {
       email: '',
       password: '',
       confirmPassword: '',
-      passwordError: ''
+      passwordError: '',
+      signUpError: ''
     }
   }
 
@@ -39,19 +40,28 @@ class SignUpModal extends Component {
           <span>Sign up for free to create study sets</span>
         </ModalHeader>
         <Mutation mutation={newUserMutation}>
-          {(createNewUser, { loading, error, data }) => (
+          {(createNewUser, { loading }) => (
             <form onSubmit={event => {
               event.preventDefault()
               if (this.state.password !== this.state.confirmPassword) {
                 this.setState({ passwordError: 'Passwords do not match.' })
               } else {
-                createNewUser({ variables: { TeacherName: name, TeacherEmail: email, TeacherPW: password } })
-                this.setState({
-                  name: '',
-                  email: '',
-                  password: '',
-                  confirmPassword: '',
-                  passwordError: false
+                const createdUser = createNewUser({ variables: { TeacherName: name, TeacherEmail: email, TeacherPW: password } })
+                createdUser.then(() => {
+                  this.setState({
+                    name: '',
+                    email: '',
+                    password: '',
+                    confirmPassword: '',
+                    passwordError: false
+                  })
+                  this.props.toggleSignUp()
+                  this.props.toggleLogIn()
+                }).catch(() => {
+                  this.setState({
+                    signUpError: 'Email Already Exists',
+                    passwordError: ''
+                  })
                 })
               }
             }}>
@@ -65,7 +75,7 @@ class SignUpModal extends Component {
                     <div className='modal_div'>
                       <span>EMAIL</span>
                       <input type='email' name='email' value={email} onChange={this.handleInputChange} required />
-                      {(data || error) && this.props.attemptSignUp(data, error)}
+                      {this.state.signUpError ? <span className='error'>{this.state.signUpError}</span> : null}
                     </div>
                     <div className='modal_div'>
                       <span>PASSWORD</span>
@@ -98,7 +108,7 @@ class SignUpModal extends Component {
 SignUpModal.propTypes = {
   signUpModal: PropTypes.bool,
   toggleSignUp: PropTypes.func,
-  attemptSignUp: PropTypes.func
+  toggleLogIn: PropTypes.func
 }
 
 export default SignUpModal

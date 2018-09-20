@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import NavBar from '../NavBar/NavBar'
 import FirstSection from './FirstSection'
 import Footer from './Footer'
 import GetStartedModal from './GetStartedModal'
 import './Landing.css'
+import Result from '../Result/Result'
 
 class Landing extends Component {
   constructor () {
@@ -31,6 +33,10 @@ class Landing extends Component {
       </div>
     )
   }
+}
+
+Result.propTypes = {
+  location: PropTypes.object
 }
 
 export default Landing

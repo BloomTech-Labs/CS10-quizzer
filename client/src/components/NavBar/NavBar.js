@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Redirect } from 'react-router-dom'
+import { Redirect, withRouter } from 'react-router-dom'
 import NavContainerLeft from './NavContainerLeft'
 import NavContainerRight from './NavContainerRight'
 import LogInModal from '../Modals/LogInModal'
@@ -11,9 +11,7 @@ class NavBar extends Component {
     super(props)
     this.state = {
       signUpModal: false,
-      logInModal: false,
-      redirectSign: false,
-      redirectLog: false
+      logInModal: false
     }
   }
 
@@ -34,12 +32,6 @@ class NavBar extends Component {
     this.forceUpdate()
   }
 
-  attemptSignUp = (data, error) => {
-    if (error) {
-      return this.state.logInModal ? <span className='error'>Email Already Exists</span> : null
-    }
-  }
-
   attemptLogIn = (data, error) => {
     if (error) {
       return this.state.logInModal ? <span className='error'>Invalid Credentials</span> : <span className='error'>An error occurred. Please try again.</span>
@@ -49,9 +41,7 @@ class NavBar extends Component {
       if (data.queryTeacher && data.queryTeacher.jwtString) {
         localStorage.setItem('token', data.queryTeacher.jwtString)
         localStorage.setItem('id', data.queryTeacher.teacher.TeacherID)
-        this.setState({
-          redirectLog: true
-        })
+        return <Redirect to={`/rocketlist/${localStorage.getItem('id')}`} />
       } else if (data.queryTeacher && !data.queryTeacher.jwtString) {
         return <span className='error'>Invalid Credentials</span>
       }
@@ -63,12 +53,11 @@ class NavBar extends Component {
       <div className='nav_container'>
         <NavContainerLeft toggleSignUp={this.toggleSignUp} />
         <NavContainerRight logOut={this.logOut} toggleLogIn={this.toggleLogIn} toggleSignUp={this.toggleSignUp} />
-        <SignUpModal signUpModal={this.state.signUpModal} toggleSignUp={this.toggleSignUp} attemptSignUp={this.attemptSignUp} />
+        <SignUpModal signUpModal={this.state.signUpModal} toggleSignUp={this.toggleSignUp} toggleLogIn={this.toggleLogIn} />
         <LogInModal logInModal={this.state.logInModal} toggleLogIn={this.toggleLogIn} attemptLogIn={this.attemptLogIn} />
-        {this.state.redirectLog ? <Redirect to={`/rocketlist/${localStorage.getItem('id')}`} /> : null}
       </div>
     )
   }
 }
 
-export default NavBar
+export default withRouter(NavBar)
