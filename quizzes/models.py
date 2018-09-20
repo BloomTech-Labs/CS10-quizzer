@@ -70,8 +70,8 @@ class Choice(models.Model):
 class Student(models.Model):
     StudentID     = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     StudentName   = models.CharField(max_length=50, blank=False)
-    StudentEmail  = models.CharField(max_length=256, unique=True, blank=False)
-    ClassID       = models.ForeignKey('Class', on_delete=models.CASCADE)
+    StudentEmail  = models.CharField(max_length=256, blank=False)
+    ClassID       = models.ManyToManyField(Class)
     created_at    = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 
