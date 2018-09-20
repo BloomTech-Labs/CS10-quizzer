@@ -7,7 +7,7 @@
 
 import React, { Component } from 'react'
 // import gql from 'graphql-tag'
-import { InputGroup, InputGroupAddon, Input, Button } from 'reactstrap'
+import { Breadcrumb, BreadcrumbItem, InputGroup, InputGroupAddon, Input, Button } from 'reactstrap'
 // import Rocketlist
 import './Settings.css'
 
@@ -35,6 +35,12 @@ class Settings extends Component {
     const { email, oldPassword, newPassword } = this.state
     return (
       <div className='settings_container'>
+        <div className='settings_breadcrumb_container'>
+          <Breadcrumb tag='nav'>
+            <BreadcrumbItem tag='a' href='#'>Home</BreadcrumbItem>
+            <BreadcrumbItem active tag='span'>Settings</BreadcrumbItem>
+          </Breadcrumb>
+        </div>
         <InputGroup>
           <InputGroupAddon addonType='prepend'>Email:</InputGroupAddon>
           <Input type='email' name='email' value={email} onChange={this.handleInputChange} />

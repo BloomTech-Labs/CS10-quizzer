@@ -5,6 +5,10 @@
   width: 50%;
 }
 
+.settings_breadcrumb_container {
+  align-self: flex-start;
+}
+
 .settings_save_button {
-  width: 10%;
+  width: 64px;
 }
