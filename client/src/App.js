@@ -13,7 +13,7 @@ class App extends Component {
         <Route exact path='/' component={Landing} />
         <Route exact path='/quiz' component={QuizPage} />
         <Route exact path='/result' component={Result} />
-        <Route exact path='/rocketlist/:userId' component={RocketList} />
+        {localStorage.getItem('jwt') && localStorage.getItem('id') ? <Route exact path='/rocketlist/:userId' component={RocketList} /> : null} 
       </div>
     )
   }
