@@ -137,11 +137,13 @@ class CreateStudent(graphene.Mutation):
 
     @staticmethod
     def mutate(self, info, StudentName, StudentEmail, ClassID):
-        ClassID   = Class.objects.get(ClassID=ClassID)
-        student = Student.objects.create(StudentName=StudentName,
-                                         StudentEmail=StudentEmail,
-                                         ClassID=ClassID
-                                        )
+        ClassID = Class.objects.get(ClassID=ClassID)
+        student = Student.objects.create(
+            StudentName=StudentName,
+            StudentEmail=StudentEmail,
+            )
+
+        student.ClassID.add(ClassID)
         
         return CreateStudent(student=student)
 
