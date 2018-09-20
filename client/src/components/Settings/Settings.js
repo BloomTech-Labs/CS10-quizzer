@@ -6,14 +6,26 @@
 */
 
 import React, { Component } from 'react'
-// import gql from 'graphql-tag'
+import { Query } from 'react-apollo'
+import gql from 'graphql-tag'
 import { Breadcrumb, BreadcrumbItem, InputGroup, InputGroupAddon, Input, Button } from 'reactstrap'
 // import Rocketlist
 import './Settings.css'
 
-// GraphQL structures go here. We need to retrieve the current
-// email address and password (for the old password field), and we
-// need a mutation to request a change through the server.
+// GraphQL Query for current user information
+const getCurrentInformation = gql`
+  {
+    teacher(encJwt: "${window.localStorage.getItem('token')}") {
+      TeacherEmail
+    }
+  }`
+
+// GraphQL Mutation to update user information
+// const updateInformation = gql`
+//   {
+//     mutation
+//   }
+// `
 
 class Settings extends Component {
   constructor () {
@@ -41,10 +53,17 @@ class Settings extends Component {
             <BreadcrumbItem active tag='span'>Settings</BreadcrumbItem>
           </Breadcrumb>
         </div>
-        <InputGroup>
-          <InputGroupAddon addonType='prepend'>Email:</InputGroupAddon>
-          <Input type='email' name='email' value={email} onChange={this.handleInputChange} />
-        </InputGroup>
+        <Query query={getCurrentInformation}>
+          {({ error, data }) => {
+            return (
+              <InputGroup>
+                <InputGroupAddon addonType='prepend'>Email:</InputGroupAddon>
+                <Input placeholder={data.teacher ? data.teacher[0].TeacherEmail : 'Loading...'} type='email' name='email' value={email} onChange={this.handleInputChange} />
+                {(error && <span>Error!: {error.message}</span>)}
+              </InputGroup>
+            )
+          }}
+        </Query>
         <br />
         <InputGroup>
           <InputGroupAddon addonType='prepend'>Old Password: </InputGroupAddon>
