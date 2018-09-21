@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
 import NavContainerLeft from './NavContainerLeft'
 import NavContainerRight from './NavContainerRight'
-import LogInModal from './LogInModal'
-import SignUpModal from './SignUpModal'
+import LogInModal from '../Modals/LogInModal'
+import SignUpModal from '../Modals/SignUpModal'
 import './NavBar.css'
 
 class NavBar extends Component {
@@ -27,26 +28,8 @@ class NavBar extends Component {
   }
 
   logOut = () => {
-    window.localStorage.clear()
+    localStorage.clear()
     this.forceUpdate()
-  }
-
-  attemptLogIn = (data, error) => {
-    if (error) {
-      return this.state.logInModal ? <p>Invalid user name or password.</p> : <p>Something went wrong, please try again.</p>
-    }
-
-    if (data) {
-      if (data.queryTeacher && data.queryTeacher.jwtString) {
-        window.localStorage.setItem('token', data.queryTeacher.jwtString)
-        return <p>Successfully signed in!</p>
-      } else if (data.queryTeacher && !data.queryTeacher.jwtString) {
-        return <p>Invalid user name or password</p>
-      } else if (data.createTeacher) {
-        window.localStorage.setItem('token', data.createTeacher.jwtString)
-        return <p>Successfully created new user!</p>
-      }
-    }
   }
 
   render () {
@@ -54,11 +37,11 @@ class NavBar extends Component {
       <div className='nav_container'>
         <NavContainerLeft toggleSignUp={this.toggleSignUp} />
         <NavContainerRight logOut={this.logOut} toggleLogIn={this.toggleLogIn} toggleSignUp={this.toggleSignUp} />
-        <SignUpModal signUpModal={this.state.signUpModal} toggleSignUp={this.toggleSignUp} handleInputChange={this.handleInputChange} attemptLogIn={this.attemptLogIn} />
-        <LogInModal logInModal={this.state.logInModal} toggleLogIn={this.toggleLogIn} attemptLogIn={this.attemptLogIn} />
+        <SignUpModal signUpModal={this.state.signUpModal} toggleSignUp={this.toggleSignUp} toggleLogIn={this.toggleLogIn} />
+        <LogInModal logInModal={this.state.logInModal} toggleLogIn={this.toggleLogIn} />
       </div>
     )
   }
 }
 
-export default NavBar
+export default withRouter(NavBar)
