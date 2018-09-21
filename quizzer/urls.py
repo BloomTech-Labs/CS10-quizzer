@@ -26,6 +26,6 @@ urlpatterns = [
     path('api/payments/', csrf_exempt(api.make_payments), name='payments'),
 
     # REACT URLS
-    path('stripe/' TemplateView.as_view(template_name='index.html')),
+    path('stripe/', TemplateView.as_view(template_name='index.html')),
     path('', TemplateView.as_view(template_name='index.html'))
 ]
