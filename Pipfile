@@ -17,5 +17,6 @@ gunicorn = "*"
 dj-database-url = "*"
 whitenoise = "*"
 bcrypt = "*"
+stripe = "*"
 
 [dev-packages]
