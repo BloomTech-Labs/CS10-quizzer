@@ -1,6 +1,16 @@
 .rocket_list_container {
-    display: flex; 
+    display: flex;
+    flex-direction: column; 
     height: 100%; 
+}
+
+.username {
+    align-self: flex-end;
+    color: #003366;
+    font-family: monospace;
+    font-size: 25px;
+    font-weight: bold;
+    margin: 15px 10% 0 0;
 }
 
 .rocket_list_navbar {
@@ -12,9 +22,9 @@
     font-family: monospace; 
     font-size: 20px; 
     font-weight: bold; 
+    height: 100%; 
     margin: 50px 0 0 2%; 
     width: 20%; 
-    height: 100%; 
 }
 
 .rocket_list_navbar a {
