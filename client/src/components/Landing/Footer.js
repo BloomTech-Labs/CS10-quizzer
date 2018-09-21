@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import facebookIcon from '../../images/facebookIcon.png'
 import instagramIcon from '../../images/instagramIcon.png'
 import twitterIcon from '../../images/twitterIcon.png'
-import './Home.css'
+import './Landing.css'
 
 class Footer extends Component {
   render () {

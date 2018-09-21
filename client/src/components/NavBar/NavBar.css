@@ -142,3 +142,9 @@
 .signup_login_modal_login {
     color: #117a8b; 
 }
+
+.error {
+    color: #ff0000 !important; 
+    font-size: 15px !important; 
+    margin: 0 0 0 20% !important; 
+}
