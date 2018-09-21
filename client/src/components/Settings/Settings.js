@@ -186,6 +186,7 @@ class Settings extends Component {
               </form>
               {loading && <span>Loading...</span>}
               {error && <span>Something went wrong...</span>}
+              {data && <span>Successfully updated!</span>}
             </div>
           )}
         </Mutation>
