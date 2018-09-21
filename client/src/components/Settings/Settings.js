@@ -1,16 +1,8 @@
-/* This page allows a user to change the following:
-  Email address
-  Password
-
-  Should also import the Rocketlist component to provide navigation.
-*/
-
 import React, { Component } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import PropTypes from 'prop-types'
 import gql from 'graphql-tag'
 import { Breadcrumb, BreadcrumbItem, InputGroup, InputGroupAddon, Input, Button } from 'reactstrap'
-// import Rocketlist
 import './Settings.css'
 
 // GraphQL Query for current user information
@@ -104,41 +96,6 @@ QueryComponent.propTypes = {
   handleInputChange: PropTypes.func
 }
 
-// class MutationComponent extends Component {
-//   constructor (props) {
-//     super()
-//     this.state = {
-//       name: props.name,
-//       email: props.email,
-//       oldPassword: props.oldPassword,
-//       newPassword: props.newPassword
-//     }
-//   }
-
-//   render () {
-//     const { name, email, newPassword } = this.state
-//     return (
-//       <Mutation mutation={updateInformation}>
-//         {(updateTeacher, { loading, error, data }) => {
-//           if (loading) return 'Loading...'
-//           if (error) return `Error: ${error.message}`
-
-//           return (
-//             updateTeacher({ variables: { TeacherName: name, TeacherEmail: email, TeacherPW: newPassword } })
-//           )
-//         }}
-//       </Mutation>
-//     )
-//   }
-// }
-
-// MutationComponent.propTypes = {
-//   name: PropTypes.string,
-//   email: PropTypes.string,
-//   oldPassword: PropTypes.string,
-//   newPassword: PropTypes.string
-// }
-
 class Settings extends Component {
   constructor () {
     super()
@@ -150,20 +107,12 @@ class Settings extends Component {
       emptyFields: false
     }
 
-    // this.sendData = this.sendData.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
   }
 
   handleInputChange (event) {
     this.setState({ [event.target.name]: event.target.value })
   }
-
-  // sendData () {
-  //   const { name, email, oldPassword, newPassword } = this.state
-  //   return (
-  //     <MutationComponent name={name} email={email} oldPassword={oldPassword} newPassword={newPassword} />
-  //   )
-  // }
 
   render () {
     const { name, email, oldPassword, newPassword } = this.state
