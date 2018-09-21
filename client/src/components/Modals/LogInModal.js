@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
 import gql from 'graphql-tag'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import PropTypes from 'prop-types'
@@ -20,12 +21,17 @@ class LogInModal extends Component {
     super()
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      logInError: '',
+      redirect: false
     }
   }
 
   handleInputChange = event => {
-    this.setState({ [event.target.name]: event.target.value })
+    this.setState({
+      [event.target.name]: event.target.value,
+      logInError: ''
+    })
   }
 
   render () {
@@ -36,14 +42,27 @@ class LogInModal extends Component {
           <span>Log in</span>
         </ModalHeader>
         <Mutation mutation={userLoginQueryMutation}>
-          {(loginUser, { loading, error, data }) => (
+          {(loginUser, { loading }) => (
             <div>
               <form onSubmit={event => {
                 event.preventDefault()
-                loginUser({ variables: { TeacherEmail: email, TeacherPW: password } })
-                this.setState({
-                  email: '',
-                  password: ''
+                const login = loginUser({ variables: { TeacherEmail: email, TeacherPW: password } })
+                login.then(data => {
+                  const logInData = data.data.queryTeacher
+                  if (logInData) {
+                    localStorage.setItem('token', logInData.jwtString)
+                    localStorage.setItem('id', logInData.teacher.TeacherID)
+                    this.setState({
+                      email: '',
+                      password: '',
+                      logInError: '',
+                      redirect: true
+                    })
+                  }
+                }).catch(() => {
+                  this.setState({
+                    logInError: 'Invalid Credentials'
+                  })
                 })
               }}>
                 <ModalBody className='signup_login_modal_body'>
@@ -51,13 +70,13 @@ class LogInModal extends Component {
                     : <div>
                       <div className='modal_div'>
                         <span>EMAIL</span>
-                        <input type='email' name='email' value={email} onChange={this.handleInputChange} required />
-                        {(data || error) && this.props.attemptLogIn(data, error)}
+                        <input type='email' name='email' value={email} onChange={this.handleInputChange} style={this.state.logInError ? { borderBottom: '1.5px solid red' } : null} required />
+                        {this.state.logInError ? <span className='error'>Invalid Credentials</span> : null}
                       </div>
                       <div className='modal_div'>
                         <span>PASSWORD</span>
-                        <input type='password' name='password' value={password} onChange={this.handleInputChange} required />
-                        {(data || error) && this.props.attemptLogIn(data, error)}
+                        <input type='password' name='password' value={password} onChange={this.handleInputChange} style={this.state.logInError ? { borderBottom: '1.5px solid red' } : null} required />
+                        {this.state.logInError ? <span className='error'>Invalid Credentials</span> : null}
                       </div>
                       <div className='modal_div'>
                         <Button type='submit' color='info' className='signup_login_modal_button'>Log in</Button>
@@ -72,6 +91,7 @@ class LogInModal extends Component {
             </div>
           )}
         </Mutation>
+        {this.state.redirect ? <Redirect to={`/${localStorage.getItem('id')}`} /> : null}
       </Modal>
     )
   }
@@ -79,8 +99,7 @@ class LogInModal extends Component {
 
 LogInModal.propTypes = {
   logInModal: PropTypes.bool,
-  toggleLogIn: PropTypes.func,
-  attemptLogIn: PropTypes.func
+  toggleLogIn: PropTypes.func
 }
 
 export default LogInModal

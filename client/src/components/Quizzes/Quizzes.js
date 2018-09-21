@@ -12,7 +12,6 @@ class Quizzes extends Component {
 
   componentDidMount () {
     const quizzes = quizzesTest.quizzes
-    console.log('Quizzes', quizzes)
   }
 
   render () {

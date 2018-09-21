@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Home from '../Home/Home'
-import { Route, Link } from 'react-router-dom'
+import { Route, Link, withRouter } from 'react-router-dom'
 import './RocketList.css'
 
 class RocketList extends Component {
@@ -19,4 +19,4 @@ class RocketList extends Component {
   }
 }
 
-export default RocketList
+export default withRouter(RocketList)

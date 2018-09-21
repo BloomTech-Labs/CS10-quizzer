@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
 import gql from 'graphql-tag'
 import PropTypes from 'prop-types'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
@@ -9,7 +10,7 @@ const newUserMutation = gql`
   mutation NewUser($TeacherName: String!, $TeacherEmail: String!, $TeacherPW: String!) {
     createTeacher(TeacherName: $TeacherName, TeacherEmail: $TeacherEmail, TeacherPW: $TeacherPW) {
       teacher {
-        TeacherName
+        TeacherID
       }
       jwtString
     }
@@ -24,18 +25,29 @@ class SignUpModal extends Component {
       password: '',
       confirmPassword: '',
       passwordError: '',
-      signUpError: ''
+      signUpError: '',
+      redirect: false
     }
   }
 
   handleInputChange = event => {
-    this.setState({ [event.target.name]: event.target.value })
+    if (event.target.name === 'name' || event.target.name === 'email') {
+      this.setState({
+        [event.target.name]: event.target.value,
+        signUpError: ''
+      })
+    } else if (event.target.name === 'password' || event.target.name === 'confirmPassword') {
+      this.setState({
+        [event.target.name]: event.target.value,
+        passwordError: ''
+      })
+    }
   }
 
   render () {
     const { name, email, password, confirmPassword } = this.state
     return (
-      <Modal className='signup_login_modal' isOpen={this.props.signUpModal} toggle={this.props.toggleSignUp}>
+      <Modal className='signup_login_modal' isOpen={this.props.signUpModal || this.props.getStartedModal} toggle={this.props.toggleSignUp || this.props.toggleGetStarted}>
         <ModalHeader className='signup_login_modal_header'>
           <span>Sign up for free to create study sets</span>
         </ModalHeader>
@@ -47,20 +59,24 @@ class SignUpModal extends Component {
                 this.setState({ passwordError: 'Passwords do not match.' })
               } else {
                 const createdUser = createNewUser({ variables: { TeacherName: name, TeacherEmail: email, TeacherPW: password } })
-                createdUser.then(() => {
-                  this.setState({
-                    name: '',
-                    email: '',
-                    password: '',
-                    confirmPassword: '',
-                    passwordError: false
-                  })
-                  this.props.toggleSignUp()
-                  this.props.toggleLogIn()
+                createdUser.then(data => {
+                  const createdUserData = data.data.createTeacher
+                  if (createdUserData) {
+                    localStorage.setItem('token', createdUserData.jwtString)
+                    localStorage.setItem('id', createdUserData.teacher.TeacherID)
+                    this.setState({
+                      name: '',
+                      email: '',
+                      password: '',
+                      confirmPassword: '',
+                      passwordError: '',
+                      signUpError: '',
+                      redirect: true
+                    })
+                  }
                 }).catch(() => {
                   this.setState({
-                    signUpError: 'Email Already Exists',
-                    passwordError: ''
+                    signUpError: 'An Account Already Exists'
                   })
                 })
               }
@@ -70,21 +86,22 @@ class SignUpModal extends Component {
                   : <div>
                     <div className='modal_div'>
                       <span>NAME</span>
-                      <input type='text' name='name' value={name} onChange={this.handleInputChange} required />
+                      <input type='text' name='name' value={name} onChange={this.handleInputChange} style={this.state.signUpError ? { borderBottom: '1.5px solid red' } : null} required />
+                      {this.state.signUpError ? <span className='error'>{this.state.signUpError}</span> : null}
                     </div>
                     <div className='modal_div'>
                       <span>EMAIL</span>
-                      <input type='email' name='email' value={email} onChange={this.handleInputChange} required />
+                      <input type='email' name='email' value={email} onChange={this.handleInputChange} style={this.state.logInError ? { borderBottom: '1.5px solid red' } : null} required />
                       {this.state.signUpError ? <span className='error'>{this.state.signUpError}</span> : null}
                     </div>
                     <div className='modal_div'>
                       <span>PASSWORD</span>
-                      <input type='password' name='password' value={password} onChange={this.handleInputChange} required />
+                      <input type='password' name='password' value={password} onChange={this.handleInputChange} style={this.state.passwordError ? { borderBottom: '1.5px solid red' } : null} required />
                       {this.state.passwordError ? <span className='error'>{this.state.passwordError}</span> : null}
                     </div>
                     <div className='modal_div'>
                       <span>CONFIRM PASSWORD</span>
-                      <input type='password' name='confirmPassword' value={confirmPassword} onChange={this.handleInputChange} required />
+                      <input type='password' name='confirmPassword' value={confirmPassword} onChange={this.handleInputChange} style={this.state.passwordError ? { borderBottom: '1.5px solid red' } : null} required />
                       {this.state.passwordError ? <span className='error'>{this.state.passwordError}</span> : null}
                     </div>
                     <div className='modal_div'>
@@ -100,6 +117,7 @@ class SignUpModal extends Component {
             </form>
           )}
         </Mutation>
+        {this.state.redirect ? <Redirect to={`/${localStorage.getItem('id')}`} /> : null}
       </Modal>
     )
   }
@@ -107,8 +125,9 @@ class SignUpModal extends Component {
 
 SignUpModal.propTypes = {
   signUpModal: PropTypes.bool,
+  getStartedModal: PropTypes.bool,
   toggleSignUp: PropTypes.func,
-  toggleLogIn: PropTypes.func
+  toggleGetStarted: PropTypes.func
 }
 
 export default SignUpModal
