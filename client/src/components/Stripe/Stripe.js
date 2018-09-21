@@ -4,9 +4,11 @@ import StripeCheckout from 'react-stripe-checkout'
 
 class Stripe extends Component {
   getStripeToken = token => {
+    const apiURI = process.env.NODE_ENV !== 'production' ? 'http://localhost:8000/api/payments/' : '/api/payments/'
+
     const request = {
       method: 'POST',
-      url: 'http://127.0.0.1:8000/api/payments/',
+      url: apiURI,
       data: token
     }
 
@@ -23,6 +25,9 @@ class Stripe extends Component {
        * this component takes a lot of possible attributes but this is all that
        * is needed for now. If we need more options make sure to check the docs
        * at https://github.com/azmenak/react-stripe-checkout
+       *
+       * TODO: dynamically set the currency attribute depending on the users
+       *       location
        */
       <StripeCheckout
         amount={500}
