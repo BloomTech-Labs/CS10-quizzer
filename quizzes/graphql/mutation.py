@@ -62,6 +62,65 @@ class TeacherMutation(graphene.ObjectType):
 end CreateTeacher
 '''
 
+'''
+start UpdateTeacherInformation
+'''
+class UpdateTeacherInformation(graphene.Mutation):
+    class Arguments:
+        TeacherName  = graphene.String()
+        TeacherPW    = graphene.String()
+        TeacherEmail = graphene.String()
+        incoming_jwt = graphene.String()
+
+    jwt_string = graphene.String()
+    teacher    = graphene.Field(lambda: UpdateTeacherInformationMutation)
+
+    @staticmethod
+    def mutate(self, info, incoming_jwt, TeacherName, TeacherEmail, TeacherPW):
+        secret    = config('SECRET_KEY')
+        algorithm = 'HS256'
+        dec_jwt   = jwt.decode(incoming_jwt, secret, algorithms=[ algorithm ])
+
+        teacherID = dec_jwt[ 'sub' ][ 'id' ]
+        teacher = Teacher.objects.get(TeacherID=teacherID)
+        password = TeacherPW.encode('utf-8')
+        hashed = bcrypt.hashpw(password, bcrypt.gensalt()).decode('utf-8')
+        # object.save() cannot take any args, so just change entries first
+        teacher.TeacherName = TeacherName
+        teacher.TeacherEmail = TeacherEmail
+        teacher.TeacherPW = hashed
+        teacher.save()
+
+        # create DATA for new JWT to replace old one now that we maybe changed name or email
+        secret    = config('SECRET_KEY')
+        algorithm = 'HS256'
+        payload = {
+            'sub': {
+                'id': str(teacher.TeacherID),
+                'username': teacher.TeacherName,
+                'email': teacher.TeacherEmail
+            },
+            'iat': time.time(),
+            'exp': time.time() + 86400
+        }
+
+        # create JWT as a byte string e.g. b'<< JWT >>'
+        outgoing_jwt = jwt.encode(payload, secret, algorithm=algorithm)
+        # transforms JWT-byte-string into a normal UTF-8 string
+        jwt_string = outgoing_jwt.decode('utf-8')
+
+        # this is what GraphQL is going to return
+        return UpdateTeacherInformation(teacher=teacher, jwt_string=jwt_string)
+
+
+class UpdateTeacherInformationMutation(graphene.ObjectType):
+    TeacherID    = graphene.String()
+    TeacherEmail = graphene.String()
+    TeacherName  = graphene.String()
+'''
+end UpdateTeacherInformation
+'''
+
 
 '''
 start QueryTeacher
