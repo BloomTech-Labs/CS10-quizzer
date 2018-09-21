@@ -1,21 +1,23 @@
-import jwt
-import time
+import stripe
 
 from decouple import config
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.http import JsonResponse
 
+def make_payments(req):
+    print(req.method)
+    
+    if req.method is 'POST':
+        # sets the stripe API key
+        stripe.api_key = config('STRIPE_SECRET_KEY')
 
-def get_jwt(req):
-    secret = config('SECRET_KEY')
-    algorithm = 'HS256'
-    payload = {
-        'sub': 'username',
-        'iat': time.time(),
-        'exp': time.time() + 86400
-    }
+        # makes a charge for 500 cents ($5.00USD)
+        charge = stripe.Charge.create(
+            amount=500,
+            currency='usd',
+            source='tok_visa',
+            receipt_email='bsquared18@gmail.com'
+        )
 
-    encode_jwt = jwt.encode(payload, secret, algorithm=algorithm)
-    utf8_jwt = encode_jwt.decode('utf-8')
+        return JsonResponse({ 'data': charge })
 
-    return JsonResponse({ 'token': utf8_jwt })
+    return JsonResponse({ 'error': 'An error occurred while maiking a payment' })
