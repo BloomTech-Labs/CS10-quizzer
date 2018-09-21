@@ -1,6 +1,6 @@
 .rocket_list_container {
     display: flex;
-    position: fixed;
+    /* position: fixed; */
     height: 100%;
     width: 150px;
 }
