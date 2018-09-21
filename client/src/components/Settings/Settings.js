@@ -146,7 +146,8 @@ class Settings extends Component {
       name: '',
       email: '',
       oldPassword: '',
-      newPassword: ''
+      newPassword: '',
+      emptyFields: false
     }
 
     // this.sendData = this.sendData.bind(this)
@@ -179,7 +180,16 @@ class Settings extends Component {
             <div>
               <form onSubmit={event => {
                 event.preventDefault()
-                updateTeacher({ variables: { TeacherName: name, TeacherEmail: email, TeacherPW: newPassword } })
+                if (name.length < 1 || email.length < 1 || newPassword.length < 1) {
+                  this.setState({
+                    emptyFields: true
+                  })
+                } else {
+                  this.setState({
+                    emptyFields: false
+                  })
+                  updateTeacher({ variables: { TeacherName: name, TeacherEmail: email, TeacherPW: newPassword } })
+                }
               }}>
                 <QueryComponent name={name} email={email} oldPassword={oldPassword} newPassword={newPassword} handleInputChange={this.handleInputChange} />
                 <Button type='submit' color='info' className='settings_save_button'>Save</Button>
@@ -187,6 +197,7 @@ class Settings extends Component {
               {loading && <span>Loading...</span>}
               {error && <span>Something went wrong...</span>}
               {data && <span>Successfully updated!</span>}
+              {this.state.emptyFields ? <span>Please fill out all fields.</span> : null}
             </div>
           )}
         </Mutation>

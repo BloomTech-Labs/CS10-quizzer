@@ -5,7 +5,6 @@ import Result from './components/Result/Result'
 import Settings from './components/Settings/Settings'
 import RocketList from './components/RocketList/RocketList'
 import { Route, withRouter } from 'react-router-dom'
-import { Button } from 'reactstrap'
 import './App.css'
 
 class App extends Component {
