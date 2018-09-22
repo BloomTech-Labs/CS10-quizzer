@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
+import { Redirect, withRouter } from 'react-router-dom'
 import NavContainerLeft from './NavContainerLeft'
 import NavContainerRight from './NavContainerRight'
 import LogInModal from '../Modals/LogInModal'
@@ -11,7 +11,8 @@ class NavBar extends Component {
     super(props)
     this.state = {
       signUpModal: false,
-      logInModal: false
+      logInModal: false,
+      redirect: false
     }
   }
 
@@ -30,6 +31,9 @@ class NavBar extends Component {
   logOut = () => {
     localStorage.clear()
     this.forceUpdate()
+    this.setState({
+      redirect: true
+    })
   }
 
   render () {
@@ -39,6 +43,7 @@ class NavBar extends Component {
         <NavContainerRight logOut={this.logOut} toggleLogIn={this.toggleLogIn} toggleSignUp={this.toggleSignUp} />
         <SignUpModal signUpModal={this.state.signUpModal} toggleSignUp={this.toggleSignUp} toggleLogIn={this.toggleLogIn} />
         <LogInModal logInModal={this.state.logInModal} toggleLogIn={this.toggleLogIn} />
+        {this.state.redirect ? <Redirect to='/' /> : null }
       </div>
     )
   }
