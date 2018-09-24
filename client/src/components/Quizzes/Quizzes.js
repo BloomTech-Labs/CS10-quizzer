@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import './Quizzes.css'
-// const quizzesTest = require('./quizzesTest.json')
 
 class Quizzes extends Component {
   constructor () {
@@ -8,10 +7,6 @@ class Quizzes extends Component {
     this.state = {
     }
   }
-
-  // componentDidMount () {
-  //   const quizzes = quizzesTest.quizzes
-  // }
 
   render () {
     return (

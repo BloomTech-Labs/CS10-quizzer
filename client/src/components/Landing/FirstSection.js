@@ -14,7 +14,7 @@ class FirstSection extends Component {
   }
 
   toggleGetStarted = () => {
-    if (localStorage.getItem('token') && localStorage.getItem('id')) {
+    if (localStorage.getItem('token')) {
       this.setState({
         redirect: true
       })
