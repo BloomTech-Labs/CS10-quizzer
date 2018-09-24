@@ -19,10 +19,12 @@ from django.urls import path
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from quizzes import api
+from .views import index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('graphiql/', csrf_exempt(GraphQLView.as_view(graphiql=True))),
     path('api/login/', api.get_jwt, name='get_jwt'),
-    path('', TemplateView.as_view(template_name='index.html'))
+    path('', TemplateView.as_view(template_name='index.html')),
+    path('sendgrid/', index, name='sendgrid')
 ]
