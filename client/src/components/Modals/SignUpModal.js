@@ -117,7 +117,7 @@ class SignUpModal extends Component {
             </form>
           )}
         </Mutation>
-        {this.state.redirect ? <Redirect to={`/${localStorage.getItem('id')}`} /> : null}
+        {this.state.redirect ? <Redirect to={`/${localStorage.getItem('id')}/quizzes`} /> : null}
       </Modal>
     )
   }

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import PropTypes from 'prop-types'
 import gql from 'graphql-tag'
-import { Breadcrumb, BreadcrumbItem, InputGroup, InputGroupAddon, Input, Button } from 'reactstrap'
+import { InputGroup, InputGroupAddon, Input, Button } from 'reactstrap'
 import './Settings.css'
 
 // GraphQL Query for current user information
@@ -118,12 +118,6 @@ class Settings extends Component {
     const { name, email, oldPassword, newPassword } = this.state
     return (
       <div className='settings_container'>
-        <div className='settings_breadcrumb_container'>
-          <Breadcrumb tag='nav'>
-            <BreadcrumbItem tag='a' href='#'>Home</BreadcrumbItem>
-            <BreadcrumbItem active tag='span'>Settings</BreadcrumbItem>
-          </Breadcrumb>
-        </div>
         <Mutation mutation={updateInformation}>
           {(updateTeacher, { loading, error, data }) => (
             <div>

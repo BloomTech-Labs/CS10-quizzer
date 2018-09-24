@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 import './Quizzes.css'
-const quizzesTest = require('./quizzesTest.json')
+// const quizzesTest = require('./quizzesTest.json')
 
 class Quizzes extends Component {
   constructor () {
@@ -10,14 +9,14 @@ class Quizzes extends Component {
     }
   }
 
-  componentDidMount () {
-    const quizzes = quizzesTest.quizzes
-  }
+  // componentDidMount () {
+  //   const quizzes = quizzesTest.quizzes
+  // }
 
   render () {
     return (
       <div>
-        <Link>Add a Quiz</Link>
+        <h1>Add a Quiz</h1>
       </div>
     )
   }

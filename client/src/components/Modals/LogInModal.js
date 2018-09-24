@@ -91,7 +91,7 @@ class LogInModal extends Component {
             </div>
           )}
         </Mutation>
-        {this.state.redirect ? <Redirect to={`/${localStorage.getItem('id')}`} /> : null}
+        {this.state.redirect ? <Redirect to={`/${localStorage.getItem('id')}/quizzes`} /> : null}
       </Modal>
     )
   }
