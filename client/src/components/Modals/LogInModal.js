@@ -51,7 +51,6 @@ class LogInModal extends Component {
                   const logInData = data.data.queryTeacher
                   if (logInData) {
                     localStorage.setItem('token', logInData.jwtString)
-                    localStorage.setItem('id', logInData.teacher.TeacherID)
                     this.setState({
                       email: '',
                       password: '',
@@ -91,7 +90,7 @@ class LogInModal extends Component {
             </div>
           )}
         </Mutation>
-        {this.state.redirect ? <Redirect to={`/${localStorage.getItem('id')}/quizzes`} /> : null}
+        {this.state.redirect ? <Redirect to='/rocket/quizzes' /> : null}
       </Modal>
     )
   }

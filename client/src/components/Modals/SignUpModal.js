@@ -63,7 +63,6 @@ class SignUpModal extends Component {
                   const createdUserData = data.data.createTeacher
                   if (createdUserData) {
                     localStorage.setItem('token', createdUserData.jwtString)
-                    localStorage.setItem('id', createdUserData.teacher.TeacherID)
                     this.setState({
                       name: '',
                       email: '',
@@ -117,7 +116,7 @@ class SignUpModal extends Component {
             </form>
           )}
         </Mutation>
-        {this.state.redirect ? <Redirect to={`/${localStorage.getItem('id')}/quizzes`} /> : null}
+        {this.state.redirect ? <Redirect to='/rocket/quizzes' /> : null}
       </Modal>
     )
   }
