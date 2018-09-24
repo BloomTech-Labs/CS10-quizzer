@@ -1,0 +1,14 @@
+.settings_container {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  width: 50%;
+}
+
+.settings_breadcrumb_container {
+  align-self: flex-start;
+}
+
+.settings_save_button {
+  width: 64px;
+}

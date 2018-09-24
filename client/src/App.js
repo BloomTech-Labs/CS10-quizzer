@@ -1,19 +1,19 @@
 import React, { Component } from 'react'
-import Home from './components/Home/Home'
-import QuizPage from './components/QuizPage/QuizPage'
-import Result from './components/Result/Result'
+import Landing from './components/Landing/Landing'
+import RocketList from './components/RocketList/RocketList'
+import { Route, Redirect, withRouter } from 'react-router-dom'
 import Stripe from './components/Stripe/Stripe'
-import { Route, withRouter } from 'react-router-dom'
 import './App.css'
 
 class App extends Component {
   render () {
     return (
-      <div>
-        <Route exact path='/' component={Home} />
-        <Route exact path='/quiz' component={QuizPage} />
-        <Route exact path='/result' component={Result} />
-        <Route path='/stripe' component={Stripe} />
+      <div className='app'>
+        {!localStorage.getItem('token') && !localStorage.getItem('id') ? <Route exact path='/' component={Landing} /> : null }
+        {localStorage.getItem('token') && localStorage.getItem('id') ? <Route exact path='/:userId' component={Landing} /> : null}
+        {localStorage.getItem('token') && localStorage.getItem('id') ? <Route exact path='/:userId/:choice' component={RocketList} /> : null}
+        {localStorage.getItem('token') && localStorage.getItem('id') && window.location.pathname === '/' ? <Redirect to={`/${localStorage.getItem('id')}`} /> : null}
+        {!localStorage.getItem('token') && !localStorage.getItem('id') ? <Route exact path='/' component={Stripe} /> : null }
       </div>
     )
   }

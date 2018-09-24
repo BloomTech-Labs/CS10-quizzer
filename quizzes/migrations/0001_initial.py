@@ -96,10 +96,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('StudentID', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('StudentName', models.CharField(max_length=50)),
-                ('StudentEmail', models.CharField(max_length=256, unique=True)),
+                ('StudentEmail', models.CharField(max_length=256)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('last_modified', models.DateTimeField(auto_now=True)),
-                ('ClassID', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='quizzes.Class')),
+                ('ClassID', models.ManyToManyField(to='quizzes.Class')),
             ],
             options={
                 'verbose_name_plural': 'students',

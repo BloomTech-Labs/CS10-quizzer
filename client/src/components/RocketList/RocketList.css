@@ -1,0 +1,74 @@
+.rocket_list_container {
+    display: flex;
+    flex-direction: column; 
+    height: 100%; 
+    width: 100%
+}
+
+.username {
+    align-self: flex-end;
+    color: #003366;
+    font-family: monospace;
+    font-size: 25px;
+    font-weight: bold;
+    margin: 15px 10% 0 0;
+}
+
+.nav_bread_crumb {
+    margin: 0 0 0 2%;
+}
+
+.breadcrumb {
+    background: none !important;
+    padding-left: 0 !important;
+}
+
+.breadcrumb a {
+    color: #003366;
+    font-family: monospace;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.breadcrumb-item.active {
+    font-family: monospace; 
+    font-size: 20px; 
+}
+
+.rocket_list_main {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+.rocket_list_navbar {
+    align-items: center;
+    background: #003366;
+    border: 3px solid #000000;
+    display: flex;
+    flex-direction: column;
+    font-family: monospace; 
+    font-size: 20px; 
+    font-weight: bold; 
+    height: 100%; 
+    margin: 10px 0 0 2%; 
+    width: 20%; 
+}
+
+.rocket_list_navbar a {
+    color: #fff;
+    display: flex;
+    margin: 20px 0 10px 0;
+}
+
+.rocket_list_navbar a:hover {
+    text-decoration: none;
+    color: #696969;
+}
+
+.logOut {
+    font-family: monospace !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+    margin: 20px 0 0 0;
+}
