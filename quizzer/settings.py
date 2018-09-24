@@ -10,9 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
-import os
-from decouple import config
 import dj_database_url
+import os
+import stripe
+
+from decouple import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -34,6 +36,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'quizzes',
     'graphene_django',
+    'django.contrib.sites',
+    'stripe',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -140,5 +144,14 @@ STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'client/build/static') ]
 GRAPHENE = {
     'SCHEMA': 'quizzes.schema.schema'
 }
+
+
+# SITE ID
+SITE_ID = 1
+
+# STRIPE KEYS
+STRIPE_PUBLIC_KEY = config('STRIPE_PUBLIC_KEY')
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
+
 
 CORS_ORIGIN_ALLOW_ALL = True
