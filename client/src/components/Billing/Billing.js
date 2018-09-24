@@ -1,26 +1,10 @@
 import React, { Component } from 'react'
-import axios from 'axios'
 
 import Stripe from '../Stripe/Stripe'
 
 import './Billing.css'
 
 class Billing extends Component {
-  getStripeToken = token => {
-    const apiURI = process.env.NODE_ENV !== 'production' ? 'http://localhost:8000/api/payments/' : '/api/payments/'
-
-    const request = {
-      method: 'POST',
-      url: apiURI,
-      data: token
-    }
-
-    // TODO: figure out what to do when this request returns
-    axios(request)
-      .then(data => console.log(data))
-      .catch(err => console.log(err))
-  }
-  
   render () {
     return (
       <div>
