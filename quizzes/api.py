@@ -26,6 +26,9 @@ def make_payments(req):
             receipt_email='bsquared18@gmail.com'
         )
 
-        return JsonResponse({ 'data': charge })
+        return JsonResponse({
+            'statusText': 'OK',
+            'statusCode': 200
+        })
 
     return JsonResponse({ 'error': 'An error occurred while maiking a payment' })
