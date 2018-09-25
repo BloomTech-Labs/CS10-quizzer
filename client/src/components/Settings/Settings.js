@@ -131,7 +131,12 @@ class Settings extends Component {
                   this.setState({
                     emptyFields: false
                   })
-                  updateTeacher({ variables: { TeacherName: name, TeacherEmail: email, OldPassword: oldPassword, NewPassword: newPassword } })
+                  const updatedInfo = updateTeacher({ variables: { TeacherName: name, TeacherEmail: email, OldPassword: oldPassword, NewPassword: newPassword } })
+                  updatedInfo.then(res => {
+                    window.localStorage.setItem('token', res.data.updateTeacher.jwtString)
+                  }).catch(() => {
+                    return <span>Something went wrong!</span>
+                  })
                 }
               }}>
                 <QueryComponent name={name} email={email} oldPassword={oldPassword} newPassword={newPassword} handleInputChange={this.handleInputChange} />
