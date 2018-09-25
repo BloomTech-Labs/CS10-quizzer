@@ -12,6 +12,7 @@ class App extends Component {
         <Switch>
           <Route exact path='/' component={Landing} />
           {localStorage.getItem('token') ? <Route exact path='/rocket/:page' component={RocketList} /> : null}
+          {localStorage.getItem('token') ? <Route exact path='/rocket/:page/:subpage' component={RocketList} /> : null}
           {localStorage.getItem('token') && (window.location.pathname === '/rocket' || window.location.pathname === '/rocket/') ? <Redirect to='/rocket/quizzes' /> : null}
           <Route component={PageError} />
         </Switch>
