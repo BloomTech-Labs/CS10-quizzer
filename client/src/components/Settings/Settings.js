@@ -16,8 +16,8 @@ const getCurrentInformation = gql`
 
 // GraphQL Mutation to update user information
 const updateInformation = gql`
-  mutation UpdateTeacher($TeacherName: String!, $TeacherEmail: String!, $TeacherPW: String!) {
-    updateTeacher(incomingJwt: "${window.localStorage.getItem('token')}", TeacherName: $TeacherName, TeacherEmail: $TeacherEmail, TeacherPW: $TeacherPW) {
+  mutation UpdateTeacher($TeacherName: String!, $TeacherEmail: String!, $OldPassword: String!, $NewPassword: String!) {
+    updateTeacher(incomingJwt: "${window.localStorage.getItem('token')}", TeacherName: $TeacherName, TeacherEmail: $TeacherEmail, OldPassword: $OldPassword, NewPassword: $NewPassword) {
       teacher {
         TeacherName
         TeacherEmail
@@ -131,14 +131,14 @@ class Settings extends Component {
                   this.setState({
                     emptyFields: false
                   })
-                  updateTeacher({ variables: { TeacherName: name, TeacherEmail: email, TeacherPW: newPassword } })
+                  updateTeacher({ variables: { TeacherName: name, TeacherEmail: email, OldPassword: oldPassword, NewPassword: newPassword } })
                 }
               }}>
                 <QueryComponent name={name} email={email} oldPassword={oldPassword} newPassword={newPassword} handleInputChange={this.handleInputChange} />
                 <Button type='submit' color='info' className='settings_save_button'>Save</Button>
               </form>
               {loading && <span>Loading...</span>}
-              {error && <span>Something went wrong...</span>}
+              {error && <span>Error: {error.message}</span>}
               {data && <span>Successfully updated!</span>}
               {this.state.emptyFields ? <span>Please fill out all fields.</span> : null}
             </div>
