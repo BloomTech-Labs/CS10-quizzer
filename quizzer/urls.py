@@ -21,11 +21,14 @@ from graphene_django.views import GraphQLView
 from quizzes import api, views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('sms/', api.send_sms_notification, name='sms'),
+    path('sendgrid/', api.send_email, name='sendgrid'),
     path('graphiql/', csrf_exempt(GraphQLView.as_view(graphiql=True))),
     path('api/payments/', csrf_exempt(api.make_payments), name='payments'),
+    path('admin/', admin.site.urls),
 
     # REACT URLS
     path('stripe/', TemplateView.as_view(template_name='index.html')),
+    path('billing/', TemplateView.as_view(template_name='index.html')),
     path('', TemplateView.as_view(template_name='index.html'))
 ]
