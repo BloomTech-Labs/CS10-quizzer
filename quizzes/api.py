@@ -42,7 +42,7 @@ def send_sms_notification(req):
 
 def send_email(req):
     sg = sendgrid.SendGridAPIClient(
-    apikey = config('SENDGRID_API_KEY')
+        apikey = config('SENDGRID_API_KEY')
     )
 
     from_email = Email('test@example.com')
