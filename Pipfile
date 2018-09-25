@@ -17,6 +17,8 @@ gunicorn = "*"
 dj-database-url = "*"
 whitenoise = "*"
 bcrypt = "*"
+sendgrid = "*"
 twilio = "*"
+stripe = "*"
 
 [dev-packages]
