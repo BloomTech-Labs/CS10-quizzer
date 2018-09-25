@@ -10,3 +10,4 @@ whitenoise
 bcrypt
 sendgrid
 twilio
+stripe

@@ -310,6 +310,14 @@
             "index": "pypi",
             "version": "==6.17.0"
         },
+        "stripe": {
+          "hashes": [
+              "sha256:8f556bb9af0b0714753567b1ec8e31649bc9af96980333bffc903155db276c7f",
+              "sha256:984b45d3c56242f23a1f3ad5a43cdaf07353b924193dd97bf8bc30203d4f541b"
+          ],
+          "index": "pypi",
+          "version": "==2.8.1"
+        },
         "typing": {
             "hashes": [
                 "sha256:4027c5f6127a6267a435201981ba156de91ad0d1d98e9ddc2aa173453453492d",
@@ -323,6 +331,10 @@
                 "sha256:a68ac5e15e76e7e5dd2b8f94007233e01effe3e50e8daddf69acfd81cb686baf",
                 "sha256:b5725a0bd4ba422ab0e66e89e030c806576753ea3ee08554382c14e685d117b5"
             ],
+<<<<<<< HEAD
+            "markers": "python_version >= '2.6' and python_version < '4' and python_version != '3.1.*' and python_version != '3.3.*' and python_version != '3.2.*' and python_version != '3.0.*'",
+=======
+>>>>>>> 80720570226edfb0e27060b4495c1a8bee4e13cd
             "version": "==1.23"
         },
         "whitenoise": {
