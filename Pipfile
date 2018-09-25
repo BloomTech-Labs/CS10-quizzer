@@ -19,5 +19,6 @@ whitenoise = "*"
 bcrypt = "*"
 sendgrid = "*"
 twilio = "*"
+stripe = "*"
 
 [dev-packages]

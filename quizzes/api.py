@@ -1,6 +1,7 @@
 import jwt
 import time
 import sendgrid
+import stripe
 
 from decouple import config
 from django.http import HttpResponse, JsonResponse
@@ -9,17 +10,37 @@ from twilio.rest import Client
 from decouple import config
 from sendgrid.helpers.mail import *
 
-def get_jwt(req):
-    secret = config('SECRET_KEY')
-    algorithm = 'HS256'
-    payload = {
-        'sub': 'username',
-        'iat': time.time(),
-        'exp': time.time() + 86400
-    }
 
-    encode_jwt = jwt.encode(payload, secret, algorithm=algorithm)
-    utf8_jwt = encode_jwt.decode('utf-8')
+def make_payments(req):
+    '''
+    TODO: prevent requests that are not authenticated from making transactions
+          this can be accomplished by checking req.body. From there we will
+          most likely want to check the JWT or some header that we can send
+          from the client
+
+    TODO: dynamically set: amount, recept_email
+
+    TODO: find out how to set currency depending on the users location
+    '''
+    if req.method == 'POST':
+        # sets the stripe API key
+        stripe.api_key = config('STRIPE_SECRET_KEY')
+
+        # makes a charge for 500 cents ($5.00USD)
+        charge = stripe.Charge.create(
+            amount=500,
+            currency='usd',
+            source='tok_visa',
+            receipt_email='bsquared18@gmail.com'
+        )
+
+        return JsonResponse({
+            'statusText': 'OK',
+            'statusCode': 200
+        })
+
+    return JsonResponse({ 'error': 'An error occurred while maiking a payment' })
+
 
     return JsonResponse({ 'token': utf8_jwt })
 
@@ -39,6 +60,7 @@ def send_sms_notification(req):
         'statusText': 'OK',
         'statusCode': 200
     })
+
 
 def send_email(req):
     sg = sendgrid.SendGridAPIClient(
