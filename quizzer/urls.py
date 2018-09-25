@@ -22,9 +22,10 @@ from quizzes import api
 from .views import index
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('sms/', api.send_sms_notification, name='sms'),
     path('graphiql/', csrf_exempt(GraphQLView.as_view(graphiql=True))),
     path('api/login/', api.get_jwt, name='get_jwt'),
-    path('', TemplateView.as_view(template_name='index.html')),
-    path('sendgrid/', index, name='sendgrid')
+    path('admin/', admin.site.urls),
+    path('sendgrid/', index, name='sendgrid'),
+    path('', TemplateView.as_view(template_name='index.html'))
 ]
