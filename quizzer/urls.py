@@ -22,6 +22,7 @@ from quizzes import api
 
 urlpatterns = [
     path('sms/', api.send_sms_notification, name='sms'),
+    path('sendgrid/', api.send_email, name='sendgrid'),
     path('graphiql/', csrf_exempt(GraphQLView.as_view(graphiql=True))),
     path('api/login/', api.get_jwt, name='get_jwt'),
     path('admin/', admin.site.urls),
