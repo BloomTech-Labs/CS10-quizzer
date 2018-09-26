@@ -1,3 +1,4 @@
+import json
 import jwt
 import time
 import sendgrid
@@ -25,24 +26,37 @@ def make_payments(req):
     if req.method == 'POST':
         # sets the stripe API key
         stripe.api_key = config('STRIPE_SECRET_KEY')
+        products = stripe.Product().list()
+
+        print(req.body)
+
+
+        # TODO: write two different endpoints
+        #       one will be for 'Quizzer Basic' product
+        #       other will be for 'Quizzer Premium' product
+        
+
+        # for i in range(len(products.data)):
+        #     if products.data[i]['name'] == 'Quizzer Basic':
+        #         print(products.data[i]['id'])
 
         # makes a charge for 500 cents ($5.00USD)
-        charge = stripe.Charge.create(
-            amount=500,
-            currency='usd',
-            source='tok_visa',
-            receipt_email='bsquared18@gmail.com'
-        )
+        # charge = stripe.Charge.create(
+        #     amount=500,
+        #     currency='usd',
+        #     source='tok_visa',
+        #     receipt_email='bsquared18@gmail.com'
+        # )
 
-        return JsonResponse({
-            'statusText': 'OK',
-            'statusCode': 200
-        })
+        return JsonResponse(json.loads(req.body.decode('utf-8')))
+        
+        # return JsonResponse({
+        #     'statusText': 'OK',
+        #     'statusCode': 200
+        # })
 
     return JsonResponse({ 'error': 'An error occurred while maiking a payment' })
 
-
-    return JsonResponse({ 'token': utf8_jwt })
 
 def send_sms_notification(req):
     account_sid = config('TWILIO_SID')
