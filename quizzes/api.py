@@ -7,12 +7,75 @@ import stripe
 from decouple import config
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from quizzes.models import Teacher
 from twilio.rest import Client
-from decouple import config
 from sendgrid.helpers.mail import *
 
 
-def make_payments(req):
+class CreateSubscription:
+    def __init__(self, stripe_secret_key, body, plan, sub):
+        self.stripe_secret_key = stripe_secret_key
+        self.body              = body
+        self.plan              = plan
+        self.sub               = sub
+        self.jwt               = None
+        self.id                = None
+        self.email             = None
+        self.customer          = None
+        self.Teacher           = None
+
+    def get_teacher(self):
+        secret       = config('SECRET_KEY')
+        algorithm    = 'HS256'
+        decJWT       = jwt.decode(self.jwt, secret, algorithms=[ algorithm ])
+        teacherID    = decJWT['sub']['id']
+        self.Teacher = Teacher.objects.get(TeacherID=teacherID)
+
+        return self.Teacher
+
+    def check_if_customer_exists(self):
+        teacher = self.get_teacher()
+        customerID = teacher.CustomerID
+        
+        if bool(teacher):
+            return True
+
+        return False
+
+    def set_api_key(self):
+        stripe.api_key = self.stripe_secret_key
+
+    def parse_body(self):
+        self.body  = json.loads(self.body.decode('utf-8'))
+        self.id    = self.body['token']['id']
+        self.email = self.body['token']['email']
+        self.jwt   = self.body['jwt']
+
+    def create_customer(self):
+        self.set_api_key()
+        
+        self.customer = stripe.Customer.create(
+            email=self.email,
+            source=self.id
+        )
+
+    def update_teacher(self):
+        self.create_customer()
+        self.Teacher.CustomerID = self.customer.id
+        self.Teacher.Subscription = self.sub
+        print(self.Teacher.CustomerID)
+        self.Teacher.save(update_fields=['CustomerID'])
+
+    def create_subscription(self):
+        self.update_teacher()
+        
+        stripe.Subscription.create(
+            customer=self.customer.id,
+            items=[{ 'plan': self.plan }]
+        )
+
+
+def basic_subscription(req):
     '''
     TODO: prevent requests that are not authenticated from making transactions
           this can be accomplished by checking req.body. From there we will
@@ -24,36 +87,56 @@ def make_payments(req):
     TODO: find out how to set currency depending on the users location
     '''
     if req.method == 'POST':
-        # sets the stripe API key
-        stripe.api_key = config('STRIPE_SECRET_KEY')
-        products = stripe.Product().list()
+        create_subscription = CreateSubscription(
+            config('STRIPE_SECRET_KEY'),
+            req.body,
+            'plan_Dfqkao8AaFuGrC',
+            'Basic'
+            )
 
-        print(req.body)
+        create_subscription.parse_body()
+        customer_exists = create_subscription.check_if_customer_exists()
+
+        if bool(customer_exists):
+            return JsonResponse({
+                'error': 'Please cancel your current subscription before starting a new one',
+                'customer': customer_exists
+            })
+
+        create_subscription.create_subscription()
+
+        return JsonResponse({
+            'statusText': 'OK',
+            'statusCode': 200
+        })
+
+    return JsonResponse({ 'error': 'An error occurred while maiking a payment' })
 
 
-        # TODO: write two different endpoints
-        #       one will be for 'Quizzer Basic' product
-        #       other will be for 'Quizzer Premium' product
-        
+def premium_subscription(req):
+    if req.method == 'POST':
+        create_subscription = CreateSubscription(
+            config('STRIPE_SECRET_KEY'),
+            req.body,
+            'plan_Dg2R9ddEFH3x95',
+            'Premium'
+            )
 
-        # for i in range(len(products.data)):
-        #     if products.data[i]['name'] == 'Quizzer Basic':
-        #         print(products.data[i]['id'])
+        create_subscription.parse_body()
+        customer_exists = create_subscription.check_if_customer_exists()
 
-        # makes a charge for 500 cents ($5.00USD)
-        # charge = stripe.Charge.create(
-        #     amount=500,
-        #     currency='usd',
-        #     source='tok_visa',
-        #     receipt_email='bsquared18@gmail.com'
-        # )
+        if bool(customer_exists):
+            return JsonResponse({
+                'error': 'Please cancel your current subscription before starting a new one',
+                'customer': customer_exists
+            })
 
-        return JsonResponse(json.loads(req.body.decode('utf-8')))
-        
-        # return JsonResponse({
-        #     'statusText': 'OK',
-        #     'statusCode': 200
-        # })
+        create_subscription.create_subscription()
+
+        return JsonResponse({
+            'statusText': 'OK',
+            'statusCode': 200
+        })
 
     return JsonResponse({ 'error': 'An error occurred while maiking a payment' })
 

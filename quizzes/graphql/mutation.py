@@ -252,7 +252,7 @@ class CreateQuiz(graphene.Mutation):
 class CreateQuizMutation(graphene.ObjectType):
     QuizID        = graphene.String()
     QuizName      = graphene.String()
-    TeacherID     = graphene.String()
+    Teacher       = graphene.String()
     Public        = graphene.String()
     created_at    = graphene.String()
     last_modified = graphene.String()

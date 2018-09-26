@@ -23,12 +23,15 @@ class Stripe extends Component {
 
   // getStripeToken
   getStripeToken = token => {
-    const apiURI = process.env.NODE_ENV !== 'production' ? 'http://localhost:8000/api/payments/' : '/api/payments/'
+    const { subscriptionType } = this.state
+
+    let apiURI = process.env.NODE_ENV !== 'production' ? 'http://localhost:8000/api/payments/' : '/api/payments/'
+    apiURI += subscriptionType === 'premium_subscription' ? 'premium' : 'basic'
 
     const request = {
       method: 'POST',
       url: apiURI,
-      data: token
+      data: { token, jwt: localStorage.getItem('token') }
     }
 
     // TODO: figure out what to do when this request returns
@@ -72,7 +75,7 @@ class Stripe extends Component {
           currency='USD'
           name='Quizzer'
           token={this.getStripeToken}
-          stripeKey='pk_test_6pRNASCoBOKtIshFeQd4XMUh'
+          stripeKey='pk_test_sm2QijqfOE0vqBK0c7W0CYGV'
         />
       </React.Fragment>
     )
