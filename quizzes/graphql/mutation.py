@@ -68,7 +68,7 @@ start UpdateTeacherInformation
 class UpdateTeacherInformation(graphene.Mutation):
     class Arguments:
         TeacherName  = graphene.String()
-        OldPassword  = graphene.String()
+        OldPassword  = graphene.String(required=True)
         NewPassword  = graphene.String()
         TeacherEmail = graphene.String()
         incoming_jwt = graphene.String()
@@ -94,9 +94,9 @@ class UpdateTeacherInformation(graphene.Mutation):
                     hashed_new_pw = bcrypt.hashpw(new_password, bcrypt.gensalt()).decode('utf-8')
 
                     # object.save() cannot take any args, so just change entries first
-                    teacher.TeacherName = TeacherName
-                    teacher.TeacherEmail = TeacherEmail
-                    teacher.TeacherPW = hashed_new_pw
+                    teacher.TeacherName = TeacherName if len(TeacherName) > 0 else teacher.TeacherName
+                    teacher.TeacherEmail = TeacherEmail if len(TeacherEmail) > 0 else teacher.TeacherEmail
+                    teacher.TeacherPW = hashed_new_pw if len(hashed_new_pw) > 0 else hashed_old_pw
                     teacher.save()
 
                     # create DATA for new JWT to replace old one now that we maybe changed name or email
