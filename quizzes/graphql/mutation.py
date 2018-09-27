@@ -7,6 +7,7 @@ import time
 from decouple import config
 from graphql import GraphQLError
 from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student, Class_Quiz
+from uuid import UUID
 
 
 '''
@@ -239,28 +240,19 @@ start CreateQuiz
 class CreateQuiz(graphene.Mutation):
     class Arguments:
         QuizName = graphene.String()
-        ClassID  = graphene.String()
         Public   = graphene.Boolean()
         encJWT   = graphene.String()
 
     quiz = graphene.Field(lambda: CreateQuizMutation)
 
     @staticmethod
-    def mutate(self, info, QuizName, ClassID, Public, encJWT):
+    def mutate(self, info, QuizName, Public, encJWT):
         secret     = config('SECRET_KEY')
         algorithm  = 'HS256'
         decJWT     = jwt.decode(encJWT, secret, algorithms=[ algorithm ])
         teacherID  = decJWT[ 'sub' ][ 'id' ]
         teacher    = Teacher.objects.get(TeacherID=teacherID)
-
-        if ClassID:
-            classroom = Class.objects.get(ClassID=ClassID)
-            quiz      = Quiz.objects.create(Teacher=teacher, QuizName=QuizName, Public=Public)
-
-            quiz.Classes.add(classroom)
-
-        else:
-            quiz = Quiz.objects.create(Teacher=teacher, QuizName=QuizName, Public=Public)
+        quiz       = Quiz.objects.create(Teacher=teacher, QuizName=QuizName, Public=Public)
 
         return CreateQuiz(quiz=quiz)
 
@@ -273,6 +265,45 @@ class CreateQuizMutation(graphene.ObjectType):
     last_modified = graphene.String()
 '''
 end CreateQuiz
+'''
+
+
+'''
+start AddQuizToClass
+'''
+class AddQuizToClass(graphene.Mutation):
+    class Arguments:
+        QuizID     = graphene.String()
+        Classroom  = graphene.String()
+        encJWT     = graphene.String()
+
+    quiz = graphene.Field(lambda: AddQuizToClassMutation)
+
+    @staticmethod
+    def mutate(self, info, QuizID, Classroom, encJWT):
+        secret     = config('SECRET_KEY')
+        algorithm  = 'HS256'
+        decJWT     = jwt.decode(encJWT, secret, algorithms=[ algorithm ])
+        teacherID  = decJWT[ 'sub' ][ 'id' ]
+        teacher    = Teacher.objects.get(TeacherID=teacherID)
+        classroom  = Class.objects.get(ClassID=Classroom)
+        quiz       = Quiz.objects.get(QuizID=QuizID)
+
+        quiz.Classes.add(classroom)
+        quiz.save()
+
+        return AddQuizToClass(quiz=quiz)
+
+
+class AddQuizToClassMutation(graphene.ObjectType):
+    QuizID        = graphene.String()
+    QuizName      = graphene.String()
+    Teacher       = graphene.String()
+    Public        = graphene.String()
+    created_at    = graphene.String()
+    last_modified = graphene.String()
+'''
+end AddQuizToClass
 '''
 
 
