@@ -17,7 +17,7 @@ const InputForm = (props) => {
       <br />
       <InputGroup>
         <InputGroupAddon addonType='prepend'>Old Password: </InputGroupAddon>
-        <Input type='password' name='oldPassword' value={props.oldPassword} onChange={props.handleInputChange} />
+        <Input type='password' name='oldPassword' value={props.oldPassword} onChange={props.handleInputChange} required />
       </InputGroup>
       <br />
       <InputGroup>

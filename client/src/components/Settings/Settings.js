@@ -7,7 +7,7 @@ import './Settings.css'
 
 // GraphQL Mutation to update user information
 const updateInformation = gql`
-  mutation UpdateTeacher($TeacherName: String!, $TeacherEmail: String!, $OldPassword: String!, $NewPassword: String!) {
+  mutation UpdateTeacher($TeacherName: String, $TeacherEmail: String, $OldPassword: String!, $NewPassword: String) {
     updateTeacher(incomingJwt: "${window.localStorage.getItem('token')}", TeacherName: $TeacherName, TeacherEmail: $TeacherEmail, OldPassword: $OldPassword, NewPassword: $NewPassword) {
       teacher {
         TeacherName
@@ -23,9 +23,8 @@ class Settings extends Component {
     this.state = {
       name: '',
       email: '',
-      oldPassword: '',
-      newPassword: '',
-      emptyFields: false
+      oldPassword: null,
+      newPassword: ''
     }
 
     this.handleInputChange = this.handleInputChange.bind(this)
@@ -44,29 +43,20 @@ class Settings extends Component {
             <div>
               <form onSubmit={event => {
                 event.preventDefault()
-                if (name.length < 1 || email.length < 1 || newPassword.length < 1) {
-                  this.setState({
-                    emptyFields: true
-                  })
-                } else {
-                  this.setState({
-                    emptyFields: false
-                  })
-                  const updatedInfo = updateTeacher({ variables: { TeacherName: name, TeacherEmail: email, OldPassword: oldPassword, NewPassword: newPassword } })
-                  updatedInfo.then(res => {
-                    window.localStorage.setItem('token', res.data.updateTeacher.jwtString)
-                  }).catch(() => {
-                    return <span>Something went wrong!</span>
-                  })
-                }
-              }}>
+                const updatedInfo = updateTeacher({ variables: { TeacherName: name, TeacherEmail: email, OldPassword: oldPassword, NewPassword: newPassword } })
+                updatedInfo.then(res => {
+                  window.localStorage.setItem('token', res.data.updateTeacher.jwtString)
+                }).catch(() => {
+                  return <span>Something went wrong!</span>
+                })
+              }
+              }>
                 <QueryComponent name={name} email={email} oldPassword={oldPassword} newPassword={newPassword} handleInputChange={this.handleInputChange} />
                 <Button type='submit' color='info' className='settings_save_button'>Save</Button>
               </form>
               {loading && <span>Loading...</span>}
-              {error && <span>Error: {error.message}</span>}
+              {error && <span>{error.message}</span>}
               {data && <span>Successfully updated!</span>}
-              {this.state.emptyFields ? <span>Please fill out all fields.</span> : null}
             </div>
           )}
         </Mutation>
