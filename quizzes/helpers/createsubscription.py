@@ -17,7 +17,12 @@ class CreateSubscription:
         self.customer          = None
         self.Teacher           = None
 
+    def set_api_key(self):
+        stripe.api_key = self.stripe_secret_key
+
     def get_teacher(self):
+        self.set_api_key()
+
         secret       = config('SECRET_KEY')
         algorithm    = 'HS256'
         decJWT       = jwt.decode(self.jwt, secret, algorithms=[ algorithm ])
@@ -30,14 +35,13 @@ class CreateSubscription:
         teacher = self.get_teacher()
         customerID = teacher.CustomerID
         
-        if bool(customerID):
+        try:
+            stripe.Customer.retrieve(id=customerID)['subscriptions']['data']
             return True
 
-        return False
-
-    def set_api_key(self):
-        stripe.api_key = self.stripe_secret_key
-
+        except:
+            return False
+        
     def parse_body(self):
         self.body  = json.loads(self.body.decode('utf-8'))
         self.id    = self.body['token']['id']
@@ -45,8 +49,6 @@ class CreateSubscription:
         self.jwt   = self.body['jwt']
 
     def create_customer(self):
-        self.set_api_key()
-        
         self.customer = stripe.Customer.create(
             email=self.email,
             source=self.id
