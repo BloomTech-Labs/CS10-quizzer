@@ -37,7 +37,7 @@ class CreateSubscription:
         teacher = self.get_teacher()
         customerID = teacher.CustomerID
         
-        if bool(teacher):
+        if bool(customerID):
             return True
 
         return False
