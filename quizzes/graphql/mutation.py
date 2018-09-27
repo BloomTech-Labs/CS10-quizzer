@@ -239,30 +239,22 @@ start CreateQuiz
 class CreateQuiz(graphene.Mutation):
     class Arguments:
         QuizName = graphene.String()
-        ClassID  = graphene.String()
         Public   = graphene.Boolean()
         encJWT   = graphene.String()
 
     quiz = graphene.Field(lambda: CreateQuizMutation)
 
     @staticmethod
-    def mutate(self, info, QuizName, ClassID, Public, encJWT):
+    def mutate(self, info, QuizName, Public, encJWT):
         secret     = config('SECRET_KEY')
         algorithm  = 'HS256'
         decJWT     = jwt.decode(encJWT, secret, algorithms=[ algorithm ])
         teacherID  = decJWT[ 'sub' ][ 'id' ]
         teacher    = Teacher.objects.get(TeacherID=teacherID)
-
-        if ClassID:
-            classroom = Class.objects.get(ClassID=ClassID)
-            quiz      = Quiz.objects.create(Teacher=teacher, QuizName=QuizName, Public=Public)
-
-            quiz.Classes.add(classroom)
-
-        else:
-            quiz = Quiz.objects.create(Teacher=teacher, QuizName=QuizName, Public=Public)
+        quiz       = Quiz.objects.create(Teacher=teacher, QuizName=QuizName, Public=Public)
 
         return CreateQuiz(quiz=quiz)
+        
 
 class CreateQuizMutation(graphene.ObjectType):
     QuizID        = graphene.String()
