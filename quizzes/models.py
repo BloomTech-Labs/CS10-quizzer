@@ -7,6 +7,8 @@ class Teacher(models.Model):
     TeacherEmail  = models.CharField(max_length=256, unique=True, blank=False)
     TeacherName   = models.CharField(max_length=50, blank=False)
     TeacherPW     = models.CharField(max_length=256, blank=False)
+    CustomerID    = models.CharField(max_length=256, blank=True)
+    Subscription  = models.CharField(max_length=256, blank=True)
     created_at    = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 

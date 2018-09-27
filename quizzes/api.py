@@ -1,3 +1,4 @@
+import json
 import jwt
 import time
 import sendgrid
@@ -6,12 +7,13 @@ import stripe
 from decouple import config
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from quizzes.helpers.createsubscription import CreateSubscription
+from quizzes.models import Teacher
 from twilio.rest import Client
-from decouple import config
 from sendgrid.helpers.mail import *
 
 
-def make_payments(req):
+def basic_subscription(req):
     '''
     TODO: prevent requests that are not authenticated from making transactions
           this can be accomplished by checking req.body. From there we will
@@ -23,16 +25,23 @@ def make_payments(req):
     TODO: find out how to set currency depending on the users location
     '''
     if req.method == 'POST':
-        # sets the stripe API key
-        stripe.api_key = config('STRIPE_SECRET_KEY')
+        create_subscription = CreateSubscription(
+            config('STRIPE_SECRET_KEY'),
+            req.body,
+            'plan_Dfqkao8AaFuGrC',
+            'Basic'
+            )
 
-        # makes a charge for 500 cents ($5.00USD)
-        charge = stripe.Charge.create(
-            amount=500,
-            currency='usd',
-            source='tok_visa',
-            receipt_email='bsquared18@gmail.com'
-        )
+        create_subscription.parse_body()
+        customer_exists = create_subscription.check_if_customer_exists()
+
+        if bool(customer_exists):
+            return JsonResponse({
+                'error': 'Please cancel your current subscription before starting a new one',
+                'customer': customer_exists
+            })
+
+        create_subscription.create_subscription()
 
         return JsonResponse({
             'statusText': 'OK',
@@ -42,7 +51,33 @@ def make_payments(req):
     return JsonResponse({ 'error': 'An error occurred while maiking a payment' })
 
 
-    return JsonResponse({ 'token': utf8_jwt })
+def premium_subscription(req):
+    if req.method == 'POST':
+        create_subscription = CreateSubscription(
+            config('STRIPE_SECRET_KEY'),
+            req.body,
+            'plan_Dg2R9ddEFH3x95',
+            'Premium'
+            )
+
+        create_subscription.parse_body()
+        customer_exists = create_subscription.check_if_customer_exists()
+
+        if bool(customer_exists):
+            return JsonResponse({
+                'error': 'Please cancel your current subscription before starting a new one',
+                'customer': customer_exists
+            })
+
+        create_subscription.create_subscription()
+
+        return JsonResponse({
+            'statusText': 'OK',
+            'statusCode': 200
+        })
+
+    return JsonResponse({ 'error': 'An error occurred while maiking a payment' })
+
 
 def send_sms_notification(req):
     account_sid = config('TWILIO_SID')
