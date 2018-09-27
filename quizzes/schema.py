@@ -10,7 +10,8 @@ from quizzes.graphql.mutations.classes import CreateClass
 from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student, Student_Quiz, Class_Quiz
 
 from quizzes.graphql.mutation import (
-    CreateTeacher, QueryTeacher, CreateStudent, CreateQuiz, CreateQuestion, CreateChoice, UpdateTeacherInformation
+    CreateTeacher, QueryTeacher, CreateStudent, CreateQuiz, CreateQuestion,
+    CreateChoice, UpdateTeacherInformation, AddQuizToClass
 )
 
 from quizzes.graphql.query import (
@@ -24,14 +25,15 @@ class Mutation(graphene.ObjectType):
     Mutation class allows us to make POST/Mutation requests to create new
     fields
     '''
-    create_class    = CreateClass.Field()
-    create_teacher  = CreateTeacher.Field()
-    update_teacher  = UpdateTeacherInformation.Field()
-    query_teacher   = QueryTeacher.Field()
-    create_student  = CreateStudent.Field()
-    create_quiz     = CreateQuiz.Field()
-    create_question = CreateQuestion.Field()
-    create_choice   = CreateChoice.Field()
+    create_class      = CreateClass.Field()
+    create_teacher    = CreateTeacher.Field()
+    update_teacher    = UpdateTeacherInformation.Field()
+    query_teacher     = QueryTeacher.Field()
+    create_student    = CreateStudent.Field()
+    create_quiz       = CreateQuiz.Field()
+    create_question   = CreateQuestion.Field()
+    create_choice     = CreateChoice.Field()
+    add_quiz_to_class = AddQuizToClass.Field()
 
 
 class Query(graphene.ObjectType):
