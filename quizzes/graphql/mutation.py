@@ -68,7 +68,8 @@ start UpdateTeacherInformation
 class UpdateTeacherInformation(graphene.Mutation):
     class Arguments:
         TeacherName  = graphene.String()
-        TeacherPW    = graphene.String()
+        OldPassword  = graphene.String(required=True)
+        NewPassword  = graphene.String()
         TeacherEmail = graphene.String()
         incoming_jwt = graphene.String()
 
@@ -76,41 +77,55 @@ class UpdateTeacherInformation(graphene.Mutation):
     teacher    = graphene.Field(lambda: UpdateTeacherInformationMutation)
 
     @staticmethod
-    def mutate(self, info, incoming_jwt, TeacherName, TeacherEmail, TeacherPW):
+    def mutate(self, info, incoming_jwt, TeacherName, TeacherEmail, OldPassword, NewPassword):
         secret    = config('SECRET_KEY')
         algorithm = 'HS256'
         dec_jwt   = jwt.decode(incoming_jwt, secret, algorithms=[ algorithm ])
-
         teacherID = dec_jwt[ 'sub' ][ 'id' ]
         teacher = Teacher.objects.get(TeacherID=teacherID)
-        password = TeacherPW.encode('utf-8')
-        hashed = bcrypt.hashpw(password, bcrypt.gensalt()).decode('utf-8')
-        # object.save() cannot take any args, so just change entries first
-        teacher.TeacherName = TeacherName
-        teacher.TeacherEmail = TeacherEmail
-        teacher.TeacherPW = hashed
-        teacher.save()
 
-        # create DATA for new JWT to replace old one now that we maybe changed name or email
-        secret    = config('SECRET_KEY')
-        algorithm = 'HS256'
-        payload = {
-            'sub': {
-                'id': str(teacher.TeacherID),
-                'username': teacher.TeacherName,
-                'email': teacher.TeacherEmail
-            },
-            'iat': time.time(),
-            'exp': time.time() + 86400
-        }
+        old_pw = OldPassword.encode('utf-8')
+        hashed_old_pw = teacher.TeacherPW.encode('utf-8')
 
-        # create JWT as a byte string e.g. b'<< JWT >>'
-        outgoing_jwt = jwt.encode(payload, secret, algorithm=algorithm)
-        # transforms JWT-byte-string into a normal UTF-8 string
-        jwt_string = outgoing_jwt.decode('utf-8')
+        if old_pw:
+            if teacher:
+                if bcrypt.checkpw(old_pw, hashed_old_pw):
+                    new_password = NewPassword.encode('utf-8')
+                    hashed_new_pw = bcrypt.hashpw(new_password, bcrypt.gensalt()).decode('utf-8')
 
-        # this is what GraphQL is going to return
-        return UpdateTeacherInformation(teacher=teacher, jwt_string=jwt_string)
+                    # object.save() cannot take any args, so just change entries first
+                    teacher.TeacherName = TeacherName if len(TeacherName) > 0 else teacher.TeacherName
+                    teacher.TeacherEmail = TeacherEmail if len(TeacherEmail) > 0 else teacher.TeacherEmail
+                    teacher.TeacherPW = hashed_new_pw if len(hashed_new_pw) > 0 else hashed_old_pw
+                    teacher.save()
+
+                    # create DATA for new JWT to replace old one now that we maybe changed name or email
+                    secret    = config('SECRET_KEY')
+                    algorithm = 'HS256'
+                    payload = {
+                        'sub': {
+                            'id': str(teacher.TeacherID),
+                            'username': teacher.TeacherName,
+                            'email': teacher.TeacherEmail
+                        },
+                        'iat': time.time(),
+                        'exp': time.time() + 86400
+                    }
+
+                    # create JWT as a byte string e.g. b'<< JWT >>'
+                    outgoing_jwt = jwt.encode(payload, secret, algorithm=algorithm)
+                    # transforms JWT-byte-string into a normal UTF-8 string
+                    jwt_string = outgoing_jwt.decode('utf-8')
+
+                    # this is what GraphQL is going to return
+                    return UpdateTeacherInformation(teacher=teacher, jwt_string=jwt_string)
+
+                else:
+                    raise GraphQLError('Incorrect password provided!')
+            else:
+                raise GraphQLError('Incorrect password provided!')
+        else:
+            raise GraphQLError('Incorrect password provided!')
 
 
 class UpdateTeacherInformationMutation(graphene.ObjectType):
