@@ -29,7 +29,6 @@ urlpatterns = [
 
     # REACT URLS
     path('rocket/', TemplateView.as_view(template_name='index.html')),
-    # path('stripe/', TemplateView.as_view(template_name='index.html')),
     path('rocket/quizzes/', TemplateView.as_view(template_name='index.html')),
     path('rocket/classes/', TemplateView.as_view(template_name='index.html')),
     path('rocket/billing/', TemplateView.as_view(template_name='index.html')),
