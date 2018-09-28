@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
+import ClassCard from './ClassCard'
 import NewClassCard from './NewClassCard'
 import gql from 'graphql-tag'
 import './Classes.css'
@@ -16,6 +17,7 @@ const GET_CLASSES_INFORMATION = gql`
           StudentEmail
         }
         quizSet {
+          QuizID
           QuizName
         }
       }
@@ -36,9 +38,22 @@ class Classes extends Component {
           {({ loading, error, data }) => {
             if (loading) return 'Getting your classes...'
             if (error) return `Error: ${error.message}`
+            const classSet = data.teacher[0].classSet
+            console.log(classSet)
 
             return (
-              <NewClassCard />
+              <ul>
+                {classSet.length > 0
+                  ? classSet.map((classItem, index) => {
+                    return (
+                      <ClassCard
+                        key={index}
+                        classItem={classItem} />
+                    )
+                  })
+                  : null}
+                <NewClassCard />
+              </ul>
             )
           }}
         </Query>

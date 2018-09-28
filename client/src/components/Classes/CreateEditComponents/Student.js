@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
 
-// Props contains the students name
+// Props contains the students name, and functions to display results and
+// delete student.
+// Should quiz results be a modal?
 
 class Student extends Component {
   constructor (props) {
