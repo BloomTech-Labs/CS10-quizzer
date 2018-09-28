@@ -7,7 +7,7 @@ import './Billing.css'
 class Billing extends Component {
   render () {
     return (
-      <div>
+      <div className='billing_container'>
         <h1>Add Billing Statement</h1>
 
         {/**

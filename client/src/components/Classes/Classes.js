@@ -4,7 +4,7 @@ import './Classes.css'
 class Classes extends Component {
   render () {
     return (
-      <div>
+      <div className='classes_container'>
         <h1>Add Classes</h1>
       </div>
     )
