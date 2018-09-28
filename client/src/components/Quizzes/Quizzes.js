@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import gql from 'graphql-tag'
 import { Query } from 'react-apollo'
 
+import ViewQuizOrClass from '../ViewQuizOrClass/ViewQuizOrClass'
+
 import './Quizzes.css'
 
 const getCurrentInformation = gql`
@@ -32,6 +34,39 @@ class Quizzes extends Component {
     this.state = {}
   }
 
+  renderQuizComponent = data => {
+    console.log(data)
+    const { quizSet } = data.teacher[0]
+
+    const quizData = quizSet.map(quiz => {
+      const { QuizID, QuizName, Classes } = quiz
+      const amountOfClasses = Classes.length
+
+      return (
+        <div key={QuizID}>
+
+          <ViewQuizOrClass
+            QuizID={QuizID}
+            QuizName={QuizName}
+            amountOfClasses={amountOfClasses}
+          >
+            <p>{QuizName}</p>
+            <p>Classes Assigned: {amountOfClasses}</p>
+
+            <button
+              onClick={() => console.log(`EDIT ${quiz.QuizName}`)}
+            >
+              Edit
+            </button>
+          </ViewQuizOrClass>
+
+        </div>
+      )
+    })
+
+    return quizData
+  }
+
   render () {
     return (
       <div>
@@ -43,28 +78,35 @@ class Quizzes extends Component {
             if (error) return `Error: ${error.message}`
 
             if (data) {
-              console.log(data.teacher[0])
-              const { quizSet } = data.teacher[0]
+              return this.renderQuizComponent(data)
 
-              const quizData = quizSet.map(quiz => {
-                const { QuizID, QuizName, Classes } = quiz
-                const amountOfClasses = Classes.length
+              // const { quizSet } = data.teacher[0]
 
-                return (
-                  <div key={QuizID}>
-                    <p>{QuizName}</p>
-                    <p>Classes Assigned: {amountOfClasses}</p>
+              // const quizData = quizSet.map(quiz => {
+              //   const { QuizID, QuizName, Classes } = quiz
+              //   const amountOfClasses = Classes.length
 
-                    <button
-                      onClick={() => console.log(`EDIT ${quiz.QuizName}`)}
-                    >
-                      Edit
-                    </button>
-                  </div>
-                )
-              })
+              //   return (
+              //     <div key={QuizID}>
 
-              return quizData
+              //       <ViewQuizOrClass
+              //         QuizID={QuizID}
+              //         QuizName={QuizName}
+              //         amountOfClasses={amountOfClasses}
+              //       >
+              //         <p>{QuizName}</p>
+              //         <p>Classes Assigned: {amountOfClasses}</p>
+
+              //         <button
+              //           onClick={() => console.log(`EDIT ${quiz.QuizName}`)}
+              //         >
+              //           Edit
+              //         </button>
+              //       </ViewQuizOrClass>
+
+              //     </div>
+              //   )
+              // })
             }
           }}
         </Query>
