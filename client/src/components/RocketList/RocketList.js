@@ -87,10 +87,10 @@ class RocketList extends Component {
           : null }
         <div className='rocket_list_main'>
           <div className='rocket_list_navbar'>
-            <Link to='/rocket/quizzes'>Quizzes</Link>
-            <Link to='/rocket/classes'>Classes</Link>
-            <Link to='/rocket/billing'>Billing</Link>
-            <Link to='/rocket/settings'>Settings</Link>
+            <Link to='/rocket/quizzes/'>Quizzes</Link>
+            <Link to='/rocket/classes/'>Classes</Link>
+            <Link to='/rocket/billing/'>Billing</Link>
+            <Link to='/rocket/settings/'>Settings</Link>
             <Button color='warning' className='logOut' onClick={this.logOut}>Log Out</Button>
           </div>
           <Switch>

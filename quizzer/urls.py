@@ -24,11 +24,15 @@ urlpatterns = [
     path('sms/', api.send_sms_notification, name='sms'),
     path('sendgrid/', api.send_email, name='sendgrid'),
     path('graphiql/', csrf_exempt(GraphQLView.as_view(graphiql=True))),
-    path('api/payments/', csrf_exempt(api.make_payments), name='payments'),
+    path('api/payments/basic', csrf_exempt(api.basic_subscription), name='basic_subscription'),
+    path('api/payments/premium', csrf_exempt(api.premium_subscription), name='premium_subscription'),
     path('admin/', admin.site.urls),
 
     # REACT URLS
-    path('stripe/', TemplateView.as_view(template_name='index.html')),
-    path('billing/', TemplateView.as_view(template_name='index.html')),
+    path('rocket/', TemplateView.as_view(template_name='index.html')),
+    path('rocket/quizzes/', TemplateView.as_view(template_name='index.html')),
+    path('rocket/classes/', TemplateView.as_view(template_name='index.html')),
+    path('rocket/billing/', TemplateView.as_view(template_name='index.html')),
+    path('rocket/settings/', TemplateView.as_view(template_name='index.html')),
     path('', TemplateView.as_view(template_name='index.html'))
 ]
