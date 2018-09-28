@@ -7,8 +7,8 @@ import './Billing.css'
 class Billing extends Component {
   render () {
     return (
-      <div>
-        <h1>Billing</h1>
+      <div className='billing_container'>
+        <h1>Add Billing Statement</h1>
 
         {/**
           * this is a component brought in by react-stripe-checkout

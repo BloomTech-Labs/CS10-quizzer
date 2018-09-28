@@ -1,2 +1,27 @@
+.quizzes_container {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 78%;
+}
 
+.quizzes_container span {
+    font-family: monospace;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 50px 0 0 10px;
+}
 
+.add_quiz_button {
+    border-radius: 30px !important;
+    font-family: monospace !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+    height: 60px;
+    width: 7% !important;
+}
+
+.add_quiz_button span {
+    margin: 0
+}
