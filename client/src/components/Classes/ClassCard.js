@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 // Props should contain the class ID, class name, number of students, average grade,
@@ -6,14 +7,13 @@ import PropTypes from 'prop-types'
 // Clicking on a ClassCard should open the Create/Edit page for that class
 
 function ClassCard (props) {
-  console.log(props.classItem)
   return (
-    <div>
+    <Link to={{ pathname: '/rocket/classes/createeditclass/', state: { classItem: props.classItem } }}>
       <h4>{props.classItem.ClassName}</h4>
       <p>Students: {props.classItem.studentSet.length}</p>
       <p>Average Grade: Number</p>
       <p>Quizzes: {props.classItem.quizSet.length}</p>
-    </div>
+    </Link>
   )
 }
 
