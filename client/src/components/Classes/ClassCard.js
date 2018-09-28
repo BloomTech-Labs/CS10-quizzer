@@ -7,7 +7,7 @@ import React from 'react'
 function ClassCard (props) {
   return (
     <div>
-      <h3>Class Name</h3>
+      <h4>Class Name</h4>
       <p>Students: Number</p>
       <p>Average Grade: Number</p>
       <p>Quizzes: Number</p>

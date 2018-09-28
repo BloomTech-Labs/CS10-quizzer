@@ -4,6 +4,7 @@ import Classes from '../Classes/Classes'
 import Billing from '../Billing/Billing'
 import Settings from '../Settings/Settings'
 import PageError from '../PageError/PageError'
+import CreateEditClass from '../Classes/CreateEditClass'
 import { Breadcrumb, BreadcrumbItem, Button } from 'reactstrap'
 import { Route, Switch, Link, Redirect, withRouter } from 'react-router-dom'
 import './RocketList.css'
@@ -64,6 +65,7 @@ class RocketList extends Component {
           <Switch>
             <Route exact path='/rocket/quizzes/' component={Quizzes} />
             <Route exact path='/rocket/classes/' component={Classes} />
+            <Route exact path='/rocket/createeditclass/' component={CreateEditClass} />
             <Route exact path='/rocket/billing/' component={Billing} />
             <Route exact path='/rocket/settings/' component={Settings} />
             <Route component={PageError} />

@@ -1,9 +1,12 @@
 import React from 'react'
 
+// GraphQL query to get full list of students. Alternatively, have parent component make
+// query and then receive students in props.
+
 function StudentList (props) {
   return (
     <div>
-      <h3>Student List</h3>
+      <h4>Student List</h4>
       <ul>
         Big ol list here
       </ul>

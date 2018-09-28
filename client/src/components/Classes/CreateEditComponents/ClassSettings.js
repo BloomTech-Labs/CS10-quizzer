@@ -1,14 +1,15 @@
 import React from 'react'
-import { InputGroup, Input } from 'reactstrap'
+import { InputGroup, Input, Button } from 'reactstrap'
 
 function ClassSettings (props) {
   return (
     <div>
-      <h3>Settings</h3>
+      <h4>Settings</h4>
       <InputGroup>
         <Input placeholder={'Class Name'} />
-        <Input type='checkbox'>CC Me on Class Emails</Input>
-        <Input type='button'>Import CSV</Input>
+        <Input type='checkbox' />
+        <p>CC Me on Class Emails</p>
+        <Button>Import CSV</Button>
       </InputGroup>
     </div>
   )

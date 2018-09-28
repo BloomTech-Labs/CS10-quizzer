@@ -5,10 +5,10 @@ import QuizCard from './QuizCard'
 // Each student needs to be a dropdown to either display a list of their quizzes and results,
 // or provide an option to delete them from the class.
 
-function StudentList (props) {
+function QuizList (props) {
   return (
     <div>
-      <h3>Student List</h3>
+      <h4>Quizzes</h4>
       <ul>
         <QuizCard />
       </ul>
@@ -16,4 +16,4 @@ function StudentList (props) {
   )
 }
 
-export default StudentList
+export default QuizList

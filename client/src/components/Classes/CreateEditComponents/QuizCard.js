@@ -5,7 +5,7 @@ import React from 'react'
 function QuizCard (props) {
   return (
     <div>
-      <h3>Quiz Name</h3>
+      <h4>Quiz Name</h4>
       <p>Completed: Number</p>
       <p>Assigned: Date field</p>
     </div>
