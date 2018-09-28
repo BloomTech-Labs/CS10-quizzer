@@ -26,8 +26,8 @@ class CreateEditClass extends Component {
         <h1>{this.state.classItem ? `Editing ${this.state.classItem.ClassName}` : ' Creating New Class'}</h1>
         <AddStudents />
         <ClassSettings />
-        <StudentList />
-        <QuizList />
+        <StudentList students={this.state.classItem ? this.state.classItem.studentSet : null} />
+        <QuizList quizzes={this.state.classItem ? this.state.classItem.quizSet : null} />
       </div>
     )
   }

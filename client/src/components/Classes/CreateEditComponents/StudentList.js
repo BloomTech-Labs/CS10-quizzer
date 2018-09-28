@@ -5,6 +5,7 @@ import Student from './Student'
 // query and then receive students in props.
 
 function StudentList (props) {
+  console.log(props)
   return (
     <div>
       <h4>Student List</h4>
