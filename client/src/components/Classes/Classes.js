@@ -46,7 +46,7 @@ class Classes extends Component {
   render () {
     return (
       <div className='quizzes_container'>
-        <span>Add a new Quiz</span>
+        <span>Add a new Class</span>
 
         <Query query={getClasses}>
           {({ loading, data, err }) => {
