@@ -10,12 +10,6 @@ import './Quizzes.css'
 const getCurrentInformation = gql`
  {
     teacher(encJwt: "${window.localStorage.getItem('token')}") {
-      TeacherID
-      TeacherName
-      TeacherEmail
-      CustomerID
-      Subscription
-
       quizSet {
         QuizID
         QuizName
