@@ -32,7 +32,7 @@ class Classes extends Component {
 
   render () {
     return (
-      <div>
+      <div className='classes_container'>
         <h1>Add Classes</h1>
         <Query query={GET_CLASSES_INFORMATION} variables={{ token: localStorage.getItem('token') }}>
           {({ loading, error, data }) => {

@@ -10,7 +10,7 @@ function NewClassCard (props) {
   return (
     <div>
       <h4>Class Name</h4>
-      <Link to='/rocket/createeditclass'><Button>+</Button></Link>
+      <Link to='/rocket/classes/createeditclass'><Button>+</Button></Link>
     </div>
   )
 }

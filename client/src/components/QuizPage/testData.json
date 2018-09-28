@@ -14,24 +14,28 @@
           "choices": [
             {
               "type": "checkbox",
+              "checked": false,
               "name": "graphs",
               "id": "uda",
               "label": "Unweighted, Directed, Acyclic"
             },
             {
               "type": "checkbox",
+              "checked": false,
               "name": "graphs",
               "id": "dwa",
               "label": "Directed, Weighted, Acyclic"
             },
             {
               "type": "checkbox",
+              "checked": false,
               "name": "graphs",
               "id": "dua",
               "label": "Directed, Unweighted, Acyclic"
             },
             {
               "type": "checkbox",
+              "checked": false,
               "name": "graphs",
               "id": "duc",
               "label": "Directed, Unweighted, Cyclic"
@@ -44,30 +48,35 @@
             "choices": [
               {
                 "type": "radio",
+                "checked": false,
                 "name": "science",
                 "id": "gagarin",
                 "label": "Gagarin"
               },
               {
                 "type": "radio",
+                "checked": false,
                 "name": "science",
                 "id": "haywood",
                 "label": "Haywood"
               },
               {
                 "type": "radio",
+                "checked": false,
                 "name": "science",
                 "id": "eddy",
                 "label": "Eddy"
               },
               {
                 "type": "radio",
+                "checked": false,
                 "name": "science",
                 "id": "Daniel",
                 "label": "Daniel"
               },
               {
-                "type": "radio", 
+                "type": "radio",
+                "checked": false, 
                 "name": "science", 
                 "id": "brandon", 
                 "label": "Brandon"
