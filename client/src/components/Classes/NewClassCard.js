@@ -9,7 +9,7 @@ import { Button } from 'reactstrap'
 function NewClassCard (props) {
   return (
     <div>
-      <h4>Class Name</h4>
+      <h4>New Class</h4>
       <Link to='/rocket/classes/createeditclass'><Button>+</Button></Link>
     </div>
   )
