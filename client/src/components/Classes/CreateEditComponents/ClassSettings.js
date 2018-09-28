@@ -7,10 +7,12 @@ function ClassSettings (props) {
       <h4>Settings</h4>
       <InputGroup>
         <Input placeholder={'Class Name'} />
+      </InputGroup>
+      <InputGroup>
         <Input type='checkbox' />
         <p>CC Me on Class Emails</p>
-        <Button>Import CSV</Button>
       </InputGroup>
+      <Button>Import CSV</Button>
     </div>
   )
 }
