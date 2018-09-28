@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
+
 import gql from 'graphql-tag'
 import { Query } from 'react-apollo'
+import { Redirect } from 'react-router-dom'
+import { Button } from 'reactstrap'
 
 import ViewQuizOrClass from '../ViewQuizOrClass/ViewQuizOrClass'
 import QuizList from './QuizList'
@@ -26,7 +29,9 @@ const getCurrentInformation = gql`
 class Quizzes extends Component {
   constructor () {
     super()
-    this.state = {}
+    this.state = {
+      redirect: false
+    }
   }
 
   renderQuizComponent = data => {
@@ -53,10 +58,16 @@ class Quizzes extends Component {
     return quizData
   }
 
+  createQuiz = () => {
+    this.setState({
+      redirect: true
+    })
+  }
+
   render () {
     return (
-      <div>
-        <h1>Add a Quiz</h1>
+      <div className='quizzes_container'>
+        <span>Add a new Quiz</span>
 
         <Query query={getCurrentInformation}>
           {({ loading, error, data }) => {
@@ -68,6 +79,12 @@ class Quizzes extends Component {
             }
           }}
         </Query>
+
+        <Button color='warning' className='add_quiz_button' onClick={this.createQuiz}>
+          <span role='img' aria-labelledby='Plus Symbol'>&#x2795;</span>
+        </Button>
+
+        {this.state.redirect ? <Redirect from='/rocket/quizzes' to='/rocket/quizzes/createquiz' /> : null}
       </div>
     )
   }

@@ -1,5 +1,5 @@
 .app {
     display: flex;
     flex-flow: row nowrap;
-    height: 100%;
+    min-height: 100vh;
 }
