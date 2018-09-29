@@ -17,7 +17,7 @@ function StudentList (props) {
                 studentName={student.StudentName} />
             )
           })
-          : null}
+          : <p>No students in this class yet.</p>}
       </ul>
     </div>
   )

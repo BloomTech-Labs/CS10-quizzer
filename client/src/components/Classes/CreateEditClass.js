@@ -20,16 +20,21 @@ class CreateEditClass extends Component {
   }
 
   render () {
-    // if (this.state.classItem) console.log(this.state.classItem)
-    return (
-      <div>
-        <h1>{this.state.classItem ? `Editing ${this.state.classItem.ClassName}` : ' Creating New Class'}</h1>
-        <AddStudents />
-        <ClassSettings />
-        <StudentList students={this.state.classItem ? this.state.classItem.studentSet : null} />
-        <QuizList quizzes={this.state.classItem ? this.state.classItem.quizSet : null} />
-      </div>
-    )
+    if (this.state.classItem) {
+      const { ClassName, quizSet, studentSet } = this.state.classItem
+
+      return (
+        <div>
+          <h1>{ClassName ? `Editing ${ClassName}` : ' Creating New Class'}</h1>
+          <AddStudents />
+          <ClassSettings className={ClassName} />
+          <StudentList students={studentSet} />
+          <QuizList quizzes={quizSet} />
+        </div>
+      )
+    } else {
+      return <h1>Loading...</h1>
+    }
   }
 }
 

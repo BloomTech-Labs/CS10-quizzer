@@ -1,12 +1,15 @@
 import React from 'react'
 import { InputGroup, Input, Button } from 'reactstrap'
+import { string } from 'prop-types'
 
 function ClassSettings (props) {
+  const { className } = props
+
   return (
     <div>
       <h4>Settings</h4>
       <InputGroup>
-        <Input placeholder={'Class Name'} />
+        <Input placeholder={className} />
       </InputGroup>
       <InputGroup>
         <Input type='checkbox' />
@@ -15,6 +18,10 @@ function ClassSettings (props) {
       <Button>Import CSV</Button>
     </div>
   )
+}
+
+ClassSettings.propTypes = {
+  className: string
 }
 
 export default ClassSettings
