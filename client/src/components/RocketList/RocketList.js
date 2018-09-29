@@ -22,7 +22,6 @@ class RocketList extends Component {
   constructor () {
     super()
     this.state = {
-      username: '',
       redirect: false
     }
   }

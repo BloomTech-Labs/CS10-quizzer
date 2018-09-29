@@ -23,7 +23,12 @@ class CreateQuiz extends Component {
     const questionsArr = Object.assign([], this.state.questions)
     const choicesArr = Object.assign([], this.state.choices)
     questionsArr.push('')
-    choicesArr.push({ '1': '', '2': '', '3': ['', true], '4': ['', true] })
+    choicesArr.push([
+      ['', false],
+      ['', false],
+      ['', false, true],
+      ['', false, true]
+    ])
     this.setState({
       questions: questionsArr,
       choices: choicesArr
@@ -51,10 +56,63 @@ class CreateQuiz extends Component {
     })
   }
 
-  // enableOrDisable = (event) => {
-  //   const index = Number(event.target.name)
+  choiceChange = (event) => {
+    const choicesArr = Object.assign([], this.state.choices)
+    const index = Number(event.target.name)
+    const choice = Number(event.target.id)
+    choicesArr[index][choice][0] = event.target.value
+    this.setState({
+      choices: choicesArr
+    })
+  }
 
-  // }
+  check = (event) => {
+    const choicesArr = Object.assign([], this.state.choices)
+    const index = Number(event.target.name)
+    const choice = Number(event.target.id)
+
+    if (choicesArr[index][choice][1] === false) {
+      choicesArr[index][choice][1] = true
+
+      switch (choice) {
+        case 0:
+          choicesArr[index][1][1] = false
+          choicesArr[index][2][1] = false
+          choicesArr[index][3][1] = false
+          break
+        case 1:
+          choicesArr[index][0][1] = false
+          choicesArr[index][2][1] = false
+          choicesArr[index][3][1] = false
+          break
+        case 2:
+          choicesArr[index][0][1] = false
+          choicesArr[index][1][1] = false
+          choicesArr[index][3][1] = false
+          break
+        default:
+          choicesArr[index][0][1] = false
+          choicesArr[index][1][1] = false
+          choicesArr[index][2][1] = false
+          break
+      }
+    }
+
+    this.setState({
+      choices: choicesArr
+    })
+  }
+
+  enableOrDisable = (event) => {
+    const choicesArr = Object.assign([], this.state.choices)
+    const index = Number(event.target.name)
+    const choice = Number(event.target.attributes.choice.nodeValue)
+    choicesArr[index][choice][1] = false
+    choicesArr[index][choice][2] = !choicesArr[index][choice][2]
+    this.setState({
+      choices: choicesArr
+    })
+  }
 
   render () {
     return (
@@ -70,22 +128,25 @@ class CreateQuiz extends Component {
               <textarea cols='50' className='question' name={index} placeholder={`Question ${index + 1}`} onChange={this.questionChange} rows='5' required value={question} />
               <fieldset className='question_fieldset'>
                 <div>
-                  <input type='radio' />
-                  <input className='question_choices' placeholder='Choice 1' type='text' />
+                  <input checked={this.state.choices[index][0][1]} name={index} id='0' onChange={this.check} type='radio' />
+                  <input className='question_choices' name={index} placeholder='Choice 1' onChange={this.choiceChange} type='text' />
                 </div>
                 <div>
-                  <input type='radio' />
-                  <input className='question_choices' placeholder='Choice 2' type='text' />
+                  <input checked={this.state.choices[index][1][1]} name={index} id='1' onChange={this.check} type='radio' />
+                  <input className='question_choices' name={index} placeholder='Choice 2' onChange={this.choiceChange} type='text' />
                 </div>
                 <div>
-                  <input disabled={this.state.choices[index]['3'][1]} type='radio' />
-                  <input className='question_choices' disabled={this.state.choices[index]['3'][1]} placeholder='Choice 3' type='text' />
-                  <Button name={index} id='3' className='enable_answer' onClick={this.enableOrDisable}>Enable Answer</Button>
-                </div>
+                  <input checked={this.state.choices[index][2][1]} disabled={this.state.choices[index][2][2]} id='2' name={index} onChange={this.check} type='radio' />
+                  <input className='question_choices' disabled={this.state.choices[index][2][2]} placeholder='Choice 3' onChange={this.choiceChange} type='text' />
+                  {this.state.choices[index][2][2]
+                    ? <Button choice='2' className='enable_disable_choice' name={index} onClick={this.enableOrDisable}>Enable Choice</Button>
+                    : <Button choice='2' color='info' className='enable_disable_choice' name={index} onClick={this.enableOrDisable}>Disable Choice</Button>}           </div>
                 <div>
-                  <input disabled={this.state.choices[index]['4'][1]} type='radio' />
-                  <input className='question_choices' disabled={this.state.choices[index]['4'][1]} placeholder='Choice 4' type='text' />
-                  <Button name={index} id='4' className='enable_answer' onClick={this.enableOrDisable}>Enable Answer</Button>
+                  <input checked={this.state.choices[index][3][1]} disabled={this.state.choices[index][3][2]} id='3' name={index} onChange={this.check} type='radio' />
+                  <input className='question_choices' disabled={this.state.choices[index][3][2]} placeholder='Choice 4' onChange={this.choiceChange} type='text' />
+                  {this.state.choices[index][3][2]
+                    ? <Button choice='3' name={index} className='enable_disable_choice' onClick={this.enableOrDisable}>Enable Choice</Button>
+                    : <Button choice='3' color='info' className='enable_disable_choice' name={index} onClick={this.enableOrDisable}>Disable Choice</Button>}
                 </div>
               </fieldset>
               <Button color='danger' className='delete_question' name={index} onClick={this.deleteQuestion}>Delete Question</Button>
