@@ -8,7 +8,16 @@ import PropTypes from 'prop-types'
 class CreateEditClass extends Component {
   constructor (props) {
     super(props)
-    this.state = {}
+    this.state = {
+      name: '',
+      email: ''
+    }
+
+    this.handleInputChange = this.handleInputChange.bind(this)
+  }
+
+  handleInputChange (event) {
+    this.setState({ [event.target.name]: event.target.value })
   }
 
   componentDidMount () {
@@ -21,12 +30,12 @@ class CreateEditClass extends Component {
 
   render () {
     if (this.state.classItem) {
-      const { ClassName, quizSet, studentSet } = this.state.classItem
+      const { ClassID, ClassName, quizSet, studentSet } = this.state.classItem
 
       return (
         <div>
           <h1>{ClassName ? `Editing ${ClassName}` : ' Creating New Class'}</h1>
-          <AddStudents />
+          <AddStudents classID={ClassID} name={this.state.name} email={this.state.email} handleInputChange={this.handleInputChange} />
           <ClassSettings className={ClassName} />
           <StudentList students={studentSet} />
           <QuizList quizzes={quizSet} />
