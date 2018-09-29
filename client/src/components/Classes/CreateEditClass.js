@@ -12,12 +12,6 @@ class CreateEditClass extends Component {
       name: '',
       email: ''
     }
-
-    this.handleInputChange = this.handleInputChange.bind(this)
-  }
-
-  handleInputChange (event) {
-    this.setState({ [event.target.name]: event.target.value })
   }
 
   componentDidMount () {
@@ -35,7 +29,7 @@ class CreateEditClass extends Component {
       return (
         <div>
           <h1>{ClassName ? `Editing ${ClassName}` : ' Creating New Class'}</h1>
-          <AddStudents classID={ClassID} name={this.state.name} email={this.state.email} handleInputChange={this.handleInputChange} />
+          <AddStudents classID={ClassID} />
           <ClassSettings className={ClassName} />
           <StudentList students={studentSet} />
           <QuizList quizzes={quizSet} />
