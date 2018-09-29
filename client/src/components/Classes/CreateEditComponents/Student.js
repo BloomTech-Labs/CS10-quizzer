@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
-
-// Props contains the students name, and functions to display results and
-// delete student.
-// Should quiz results be a modal?
+import { string } from 'prop-types'
 
 class Student extends Component {
   constructor (props) {
@@ -22,11 +19,12 @@ class Student extends Component {
   }
 
   render () {
+    const { studentName } = this.props
     return (
       <div>
         <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
           <DropdownToggle caret>
-            Student Name
+            {studentName}
           </DropdownToggle>
           <DropdownMenu>
             <DropdownItem>Quiz Results</DropdownItem>
@@ -36,6 +34,10 @@ class Student extends Component {
       </div>
     )
   }
+}
+
+Student.propTypes = {
+  studentName: string
 }
 
 export default Student

@@ -1,19 +1,30 @@
 import React from 'react'
 import Student from './Student'
-
-// GraphQL query to get full list of students. Alternatively, have parent component make
-// query and then receive students in props.
+import { array } from 'prop-types'
 
 function StudentList (props) {
-  console.log(props)
+  const { students } = props
+
   return (
     <div>
       <h4>Student List</h4>
       <ul>
-        <Student />
+        {students && students.length > 0
+          ? students.map(student => {
+            return (
+              <Student
+                key={student.StudentID}
+                studentName={student.StudentName} />
+            )
+          })
+          : null}
       </ul>
     </div>
   )
+}
+
+StudentList.propTypes = {
+  students: array
 }
 
 export default StudentList
