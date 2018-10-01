@@ -225,7 +225,8 @@ class CreateStudent(graphene.Mutation):
         for quiz in quizzes:
             QuizScores.objects.create(
                 StudentID=student.StudentID,
-                QuizID=quiz.QuizID
+                QuizID=quiz.QuizID,
+                ClassID=ClassID
             )
             student.Quizzes.add(quiz)
         
