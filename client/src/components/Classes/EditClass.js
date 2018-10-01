@@ -29,7 +29,7 @@ class EditClass extends Component {
       return (
         <div>
           <h1>{ClassName ? `Editing ${ClassName}` : ' Creating New Class'}</h1>
-          <ClassSettings className={ClassName} />
+          <ClassSettings classID={ClassID} className={ClassName} />
           <StudentPanel classID={ClassID} />
           <QuizList quizzes={quizSet} />
         </div>
