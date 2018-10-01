@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import AddStudents from './CreateEditComponents/AddStudents'
+import StudentPanel from './CreateEditComponents/StudentPanel'
 import ClassSettings from './CreateEditComponents/ClassSettings'
 import QuizList from './CreateEditComponents/QuizList'
-import StudentList from './CreateEditComponents/StudentList'
 import PropTypes from 'prop-types'
 
 class CreateEditClass extends Component {
@@ -24,14 +23,13 @@ class CreateEditClass extends Component {
 
   render () {
     if (this.state.classItem) {
-      const { ClassID, ClassName, quizSet, studentSet } = this.state.classItem
+      const { ClassID, ClassName, quizSet } = this.state.classItem
 
       return (
         <div>
           <h1>{ClassName ? `Editing ${ClassName}` : ' Creating New Class'}</h1>
-          <AddStudents classID={ClassID} />
           <ClassSettings className={ClassName} />
-          <StudentList students={studentSet} />
+          <StudentPanel classID={ClassID} />
           <QuizList quizzes={quizSet} />
         </div>
       )

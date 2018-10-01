@@ -3,6 +3,7 @@ import { InputGroup, Input, Button } from 'reactstrap'
 import { Mutation } from 'react-apollo'
 import { string } from 'prop-types'
 import gql from 'graphql-tag'
+import StudentList from './StudentList'
 
 const CREATE_NEW_STUDENT = gql`
 mutation CreateNewStudent($ClassID: String!, $StudentName: String!, $StudentEmail: String!) {
@@ -15,17 +16,16 @@ mutation CreateNewStudent($ClassID: String!, $StudentName: String!, $StudentEmai
   }
 }`
 
-class AddStudents extends Component {
+class StudentPanel extends Component {
   constructor (props) {
     super(props)
     this.state = {
       name: '',
       email: ''
     }
-    this.handleInputChange = this.handleInputChange.bind(this)
   }
 
-  handleInputChange (event) {
+  handleInputChange = (event) => {
     this.setState({ [event.target.name]: event.target.value })
   }
 
@@ -41,7 +41,14 @@ class AddStudents extends Component {
               <div>
                 <form onSubmit={event => {
                   event.preventDefault()
-                  createNewStudent({ variables: { ClassID: classID, StudentName: name, StudentEmail: email } })
+                  createNewStudent({
+                    variables: {
+                      ClassID: classID,
+                      StudentName: name,
+                      StudentEmail: email
+                    },
+                    refetchQueries: ['getStudents'] // this query is created in StudentList.js and saved in the Apollo cache, which is where it is called from and why it's a string here.
+                  })
                   this.setState({
                     name: '',
                     email: ''
@@ -58,13 +65,14 @@ class AddStudents extends Component {
             )}
           </Mutation>
         </InputGroup>
+        <StudentList classID={classID} />
       </div>
     )
   }
 }
 
-AddStudents.propTypes = {
+StudentPanel.propTypes = {
   classID: string
 }
 
-export default AddStudents
+export default StudentPanel

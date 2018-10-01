@@ -55,6 +55,7 @@ class Query(graphene.ObjectType):
     teacher         = graphene.List(TeacherType, enc_jwt=graphene.String())
     
     students        = graphene.List(StudentType)
+    class_students  = graphene.List(StudentType, ClassID=graphene.String())
 
     '''
     Each method, resolve_<< name >>, is named after what we want to return.
@@ -154,5 +155,13 @@ class Query(graphene.ObjectType):
     def resolve_students(self, info):
         return Student.objects.all()
 
+    def resolve_class_students(self, info, **kwargs):
+        class_id = kwargs.get('ClassID')
+
+        if class_id:
+            classroom = Class.objects.get(ClassID=class_id)
+            return classroom.student_set.all()
+
+        return GraphQLError('Please supply a valid ClassID')
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
