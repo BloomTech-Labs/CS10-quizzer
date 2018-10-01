@@ -12,7 +12,7 @@ import './Quizzes.css'
 
 const getCurrentInformation = gql`
  {
-    teacher(encJwt: "${window.localStorage.getItem('token')}") {
+    teacher(encJwt: "${localStorage.getItem('token')}") {
       quizSet {
         QuizID
         QuizName
