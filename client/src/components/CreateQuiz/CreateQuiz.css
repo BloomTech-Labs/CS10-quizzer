@@ -1,10 +1,14 @@
 .create_quiz_container {
-    display: flex;
-    flex-direction: column;
     min-height: 100vh;
     margin: 10px 0 0 0;
     width: 78%;
 }
+
+.create_quiz_form {
+    display: flex;
+    flex-direction: column;
+}
+
 .create_quiz_instructions {
     color: #003366;
     font-family: monospace;
@@ -19,7 +23,7 @@
     font-family: monospace;
     font-size: 20px;
     margin: 10px 0 0 5%;
-    padding: 2px 2px 2px;
+    padding: 2px 2px 2px 2px;
     width: 40%;
 }
 
