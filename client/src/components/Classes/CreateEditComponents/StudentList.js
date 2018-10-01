@@ -33,7 +33,8 @@ function StudentList (props) {
                     return (
                       <Student
                         key={student.StudentID}
-                        studentName={student.StudentName} />
+                        studentName={student.StudentName}
+                        studentID={student.StudentID} />
                     )
                   })
                   : <p>No students in this class yet.</p>}

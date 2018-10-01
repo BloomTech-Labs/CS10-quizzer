@@ -11,7 +11,7 @@ from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student, Stud
 
 from quizzes.graphql.mutation import (
     CreateTeacher, QueryTeacher, CreateStudent, CreateQuiz, CreateQuestion,
-    CreateChoice, UpdateTeacherInformation, AddQuizToClass
+    CreateChoice, UpdateTeacherInformation, AddQuizToClass, DeleteStudent
 )
 
 from quizzes.graphql.query import (
@@ -30,6 +30,7 @@ class Mutation(graphene.ObjectType):
     update_teacher    = UpdateTeacherInformation.Field()
     query_teacher     = QueryTeacher.Field()
     create_student    = CreateStudent.Field()
+    delete_student    = DeleteStudent.Field()
     create_quiz       = CreateQuiz.Field()
     create_question   = CreateQuestion.Field()
     create_choice     = CreateChoice.Field()

@@ -233,6 +233,21 @@ class CreateStudentMutation(graphene.ObjectType):
 end CreateStudent
 '''
 
+class DeleteStudent(graphene.Mutation):
+    class Arguments:
+        StudentID = graphene.String()
+
+    student = graphene.Field(lambda: DeleteStudentMutation)
+
+    @staticmethod
+    def mutate(self, info, StudentID):
+        student = Student.objects.get(StudentID=StudentID).delete()
+
+        return DeleteStudent(student=student)
+
+class DeleteStudentMutation(graphene.ObjectType):
+    StudentID = graphene.String()
+
 
 '''
 start CreateQuiz
