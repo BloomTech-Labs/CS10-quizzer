@@ -29,7 +29,7 @@ class NewClassModal extends Component {
     const { name } = this.state
 
     return (
-      <Modal isOpen={this.props.newClassModal} toggle={this.props.toggleNewClassModal}>
+      <Modal isOpen={this.props.openNewClassModal} toggle={this.props.toggleNewClassModal}>
         <ModalHeader>
           <span>Create a New Classroom</span>
         </ModalHeader>
@@ -48,7 +48,6 @@ class NewClassModal extends Component {
                 this.setState({
                   name: ''
                 })
-                this.props.toggleNewClassModal()
               }
             }}>
               <ModalBody>
@@ -71,7 +70,7 @@ class NewClassModal extends Component {
 }
 
 NewClassModal.propTypes = {
-  newClassModal: PropTypes.bool,
+  openNewClassModal: PropTypes.bool,
   toggleNewClassModal: PropTypes.func
 }
 
