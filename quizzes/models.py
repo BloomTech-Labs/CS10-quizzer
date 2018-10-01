@@ -120,7 +120,7 @@ class QuizScores(models.Model):
     QuizScoresID  = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     StudentID     = models.UUIDField(blank=False)
     QuizID        = models.UUIDField(blank=False)
-    ClassID       = models.UUIDField(blank=False)
+    ClassID       = models.ForeignKey('Class', on_delete=models.CASCADE)
     Score         = models.IntegerField(default=0)
     created_at    = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
