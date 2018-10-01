@@ -9,11 +9,12 @@ class CreateEditClass extends Component {
     super(props)
     this.state = {
       name: '',
-      email: ''
+      email: '',
+      classItem: null
     }
   }
 
-  componentDidMount () {
+  componentDidMount = () => {
     if (this.props.location.state) {
       this.setState({
         classItem: this.props.location.state.classItem
