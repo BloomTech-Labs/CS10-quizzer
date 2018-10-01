@@ -37,7 +37,7 @@ class StudentPanel extends Component {
         <h4>Add Students</h4>
         <InputGroup>
           <Mutation mutation={CREATE_NEW_STUDENT}>
-            {(createNewStudent, { loading, error, data }) => (
+            {(createNewStudent, { loading, error }) => (
               <div>
                 <form onSubmit={event => {
                   event.preventDefault()
@@ -60,7 +60,6 @@ class StudentPanel extends Component {
                 </form>
                 {loading && <span>Saving student...</span>}
                 {error && <span>{error.message}</span>}
-                {data && <span>Student saved to class!</span>}
               </div>
             )}
           </Mutation>
