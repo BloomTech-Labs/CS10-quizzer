@@ -6,7 +6,7 @@ import time
 
 from decouple import config
 from graphql import GraphQLError
-from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student, Class_Quiz
+from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student, Class_Quiz, QuizScores
 from uuid import UUID
 
 
@@ -213,12 +213,21 @@ class CreateStudent(graphene.Mutation):
     @staticmethod
     def mutate(self, info, StudentName, StudentEmail, ClassID):
         ClassID = Class.objects.get(ClassID=ClassID)
+        quizzes = ClassID.quiz_set.all()
         student = Student.objects.create(
             StudentName=StudentName,
             StudentEmail=StudentEmail,
             )
 
         student.ClassID.add(ClassID)
+
+        # add every available quiz in this class to this student
+        for quiz in quizzes:
+            QuizScores.objects.create(
+                StudentID=student.StudentID,
+                QuizID=quiz.QuizID
+            )
+            student.Quizzes.add(quiz)
         
         return CreateStudent(student=student)
 
