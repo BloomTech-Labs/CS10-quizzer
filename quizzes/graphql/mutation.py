@@ -299,6 +299,14 @@ class AddQuizToClass(graphene.Mutation):
         classroom  = Class.objects.get(ClassID=Classroom)
         quiz       = Quiz.objects.get(QuizID=QuizID)
 
+        # adds a new record in QuizScores for EACH student
+        for student in classroom.student_set.all():
+            QuizScores.objects.create(
+                StudentID=student.StudentID,
+                QuizID=quiz.QuizID,
+                ClassID=classroom
+            )
+
         quiz.Classes.add(classroom)
         quiz.save()
 
