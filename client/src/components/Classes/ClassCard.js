@@ -8,7 +8,7 @@ import PropTypes from 'prop-types'
 
 function ClassCard (props) {
   return (
-    <Link to={{ pathname: '/rocket/classes/createeditclass/', state: { classItem: props.classItem } }}>
+    <Link to={{ pathname: '/rocket/classes/editclass/', state: { classItem: props.classItem } }}>
       <h4>{props.classItem.ClassName}</h4>
       <p>Students: {props.classItem.studentSet.length}</p>
       <p>Average Grade: Number</p>

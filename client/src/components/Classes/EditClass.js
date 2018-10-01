@@ -4,7 +4,7 @@ import ClassSettings from './CreateEditComponents/ClassSettings'
 import QuizList from './CreateEditComponents/QuizList'
 import PropTypes from 'prop-types'
 
-class CreateEditClass extends Component {
+class EditClass extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -40,8 +40,8 @@ class CreateEditClass extends Component {
   }
 }
 
-CreateEditClass.propTypes = {
+EditClass.propTypes = {
   location: PropTypes.object
 }
 
-export default CreateEditClass
+export default EditClass

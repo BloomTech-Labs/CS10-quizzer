@@ -5,7 +5,7 @@ import Billing from '../Billing/Billing'
 import Settings from '../Settings/Settings'
 import CreateQuiz from '../CreateQuiz/CreateQuiz'
 import PageError from '../PageError/PageError'
-import CreateEditClass from '../Classes/CreateEditClass'
+import EditClass from '../Classes/EditClass'
 import { Breadcrumb, BreadcrumbItem, Button } from 'reactstrap'
 import { Route, Switch, Link, Redirect, withRouter } from 'react-router-dom'
 import gql from 'graphql-tag'
@@ -66,6 +66,13 @@ class RocketList extends Component {
             <BreadcrumbItem active>Classes</BreadcrumbItem>
           </Breadcrumb>
           : null }
+        {window.location.pathname === '/rocket/classes/editclass' || window.location.pathname === '/rocket/classes/editclass/'
+          ? <Breadcrumb tag='nav' className='nav_bread_crumb'>
+            <BreadcrumbItem tag='a' href='/'>Home</BreadcrumbItem>
+            <BreadcrumbItem tag='a' href='/rocket/classes'>Classes</BreadcrumbItem>
+            <BreadcrumbItem active>Edit Class</BreadcrumbItem>
+          </Breadcrumb>
+          : null }
         {window.location.pathname === '/rocket/billing' || window.location.pathname === '/rocket/billing/'
           ? <Breadcrumb tag='nav' className='nav_bread_crumb'>
             <BreadcrumbItem tag='a' href='/'>Home</BreadcrumbItem>
@@ -99,7 +106,7 @@ class RocketList extends Component {
             <Route exact path='/rocket/billing' component={Billing} />
             <Route exact path='/rocket/settings' component={Settings} />
             <Route exact path='/rocket/quizzes/createquiz' component={CreateQuiz} />
-            <Route exact path='/rocket/classes/createeditclass' component={CreateEditClass} />
+            <Route exact path='/rocket/classes/editclass' component={EditClass} />
             <Route component={PageError} />
           </Switch>
         </div>
