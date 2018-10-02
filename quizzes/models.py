@@ -74,6 +74,8 @@ class Student(models.Model):
     StudentName   = models.CharField(max_length=50, blank=False)
     StudentEmail  = models.CharField(max_length=256, blank=False)
     ClassID       = models.ManyToManyField(Class)
+    Quizzes       = models.ManyToManyField(Quiz)
+    created_at    = models.DateTimeField(auto_now_add=True)
     created_at    = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 
@@ -112,3 +114,17 @@ class QuizQuestionChoice(models.Model):
     Quiz     = models.ForeignKey('Quiz', on_delete=models.CASCADE)
     Question = models.ForeignKey('Question', on_delete=models.CASCADE)
     Choice   = models.ForeignKey('Choice', on_delete=models.CASCADE)
+
+
+class QuizScores(models.Model):
+    QuizScoresID  = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    StudentID     = models.UUIDField(blank=False)
+    QuizID        = models.UUIDField(blank=False)
+    ClassID       = models.ForeignKey('Class', on_delete=models.CASCADE)
+    Score         = models.IntegerField(default=0)
+    created_at    = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table            = 'QuizScores'
+        verbose_name_plural = 'QuizScores'
