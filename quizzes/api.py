@@ -80,6 +80,10 @@ def premium_subscription(req):
 
 
 def send_sms_notification(req):
+    '''
+    NOTE: for now this function is not being used and does not have any plans
+          of being used in the future
+    '''
     account_sid = config('TWILIO_SID')
     auth_token = config('TWILIO_AUTH_TOKEN')
 
@@ -98,18 +102,31 @@ def send_sms_notification(req):
 
 
 def send_email(req):
+    body      = json.loads(req.body.decode('utf-8'))
+    teacher   = body['teacherName']
+    className = body['className']
+    quizName  = body['quizName']
+    quizLink  = body['quizLink']
+
     sg = sendgrid.SendGridAPIClient(
-        apikey = config('SENDGRID_API_KEY')
-    )
+        apikey=config('SENDGRID_API_KEY')
+        )
 
     from_email = Email('test@example.com')
-    to_email = Email('test@example.com')
-    subject = 'Sendgrid Test'
-    content = Content(
-        'text/plain',
-        'Test test test'
-    )
-    mail = Mail(from_email, subject, to_email, content)
-    response = sg.client.mail.send.post(request_body=mail.get())
+
+    for student in body['students']:
+        to_email = Email(student)
+        subject  = f'New quiz from {teacher}'
+
+        content = Content(
+            'text/html',
+            f'''
+            <p>You have a new quiz from <b>{teacher}</b> for the class <b>{className}</b><p>
+            <p>To take this quiz follow the link here <a href="{quizLink}">{quizName}</a></p>
+            '''
+            )
+
+        mail     = Mail(from_email, subject, to_email, content)
+        response = sg.client.mail.send.post(request_body=mail.get())
 
     return HttpResponse('Email sent!')
