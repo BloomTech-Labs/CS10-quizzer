@@ -38,7 +38,7 @@ class ClassNameInput extends Component {
                   ClassName: name,
                   encJWT: window.localStorage.getItem('token')
                 },
-                refetchQueries: ['GetSingleClass']
+                refetchQueries: ['GetSingleClass', 'getClasses']
               })
               this.setState({
                 name: ''
