@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import gql from 'graphql-tag'
 import PropTypes from 'prop-types'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, ListGroup } from 'reactstrap'
+import { Redirect } from 'react-router-dom'
 import { Query } from 'react-apollo'
 
 const GET_QUIZZES = gql`
@@ -17,7 +18,8 @@ const GET_QUIZZES = gql`
 
 class QuizSelectModal extends Component {
   state = {
-    value: 'none'
+    value: 'none',
+    redirect: false
   }
 
   handleChange = (event) => {
@@ -26,9 +28,21 @@ class QuizSelectModal extends Component {
     })
   }
 
+  componentDidMount = () => {
+    this.setState({
+      redirect: false
+    })
+  }
+
   handleSubmit = (event) => {
     event.preventDefault()
-    console.log(this.state.value)
+    if (this.state.value === 'none') {
+      this.setState({
+        redirect: true
+      })
+    } else {
+      console.log(this.state.value)
+    }
   }
 
   render () {
@@ -69,6 +83,7 @@ class QuizSelectModal extends Component {
           </Query>
         </ModalBody>
         <ModalFooter />
+        {this.state.redirect ? <Redirect to={'/rocket/quizzes/createquiz/'} /> : null}
       </Modal>
     )
   }
