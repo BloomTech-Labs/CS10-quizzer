@@ -1,7 +1,7 @@
 from graphene_django import DjangoObjectType
 
 from quizzes.models import (
-    Class, Quiz, Question, Choice, Teacher, Student, Class_Quiz
+    Class, Quiz, Question, Choice, Teacher, Student, Class_Quiz, QuizScores
 )
 
 class ClassType(DjangoObjectType):
@@ -58,3 +58,11 @@ class Class_QuizType(DjangoObjectType):
     '''
     class Meta:
         model = Class_Quiz
+
+
+class QuizScoresType(DjangoObjectType):
+    '''
+    QuizScores GraphQL Schema
+    '''
+    class Meta:
+        model = QuizScores

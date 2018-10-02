@@ -6,7 +6,7 @@ import time
 
 from decouple import config
 from graphql import GraphQLError
-from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student, Class_Quiz
+from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student, Class_Quiz, QuizScores
 from uuid import UUID
 
 
@@ -213,12 +213,22 @@ class CreateStudent(graphene.Mutation):
     @staticmethod
     def mutate(self, info, StudentName, StudentEmail, ClassID):
         ClassID = Class.objects.get(ClassID=ClassID)
+        quizzes = ClassID.quiz_set.all()
         student = Student.objects.create(
             StudentName=StudentName,
             StudentEmail=StudentEmail,
             )
 
         student.ClassID.add(ClassID)
+
+        # add every available quiz in this class to this student
+        for quiz in quizzes:
+            QuizScores.objects.create(
+                StudentID=student.StudentID,
+                QuizID=quiz.QuizID,
+                ClassID=ClassID
+            )
+            student.Quizzes.add(quiz)
         
         return CreateStudent(student=student)
 
@@ -232,6 +242,21 @@ class CreateStudentMutation(graphene.ObjectType):
 '''
 end CreateStudent
 '''
+
+class DeleteStudent(graphene.Mutation):
+    class Arguments:
+        StudentID = graphene.String()
+
+    student = graphene.Field(lambda: DeleteStudentMutation)
+
+    @staticmethod
+    def mutate(self, info, StudentID):
+        student = Student.objects.get(StudentID=StudentID).delete()
+
+        return DeleteStudent(student=student)
+
+class DeleteStudentMutation(graphene.ObjectType):
+    StudentID = graphene.String()
 
 
 '''
@@ -288,6 +313,14 @@ class AddQuizToClass(graphene.Mutation):
         teacher    = Teacher.objects.get(TeacherID=teacherID)
         classroom  = Class.objects.get(ClassID=Classroom)
         quiz       = Quiz.objects.get(QuizID=QuizID)
+
+        # adds a new record in QuizScores for EACH student
+        for student in classroom.student_set.all():
+            QuizScores.objects.create(
+                StudentID=student.StudentID,
+                QuizID=quiz.QuizID,
+                ClassID=classroom
+            )
 
         quiz.Classes.add(classroom)
         quiz.save()
@@ -395,3 +428,35 @@ class CreateChoiceMutation(graphene.ObjectType):
 '''
 end CreateChoice
 '''
+
+class UpdateClassName(graphene.Mutation):
+    class Arguments:
+        ClassID = graphene.String(required=True)
+        ClassName = graphene.String(required=True)
+        encJWT = graphene.String(required=True)
+
+    updated_class = graphene.Field(lambda: UpdateClassNameMutation)
+
+    @staticmethod
+    def mutate(self, info, ClassID, ClassName, encJWT):
+        secret    = config('SECRET_KEY')
+        algorithm = 'HS256'
+        dec_jwt   = jwt.decode(encJWT, secret, algorithms=[ algorithm ])
+        teacherID = dec_jwt[ 'sub' ][ 'id' ]
+        teacher = Teacher.objects.get(TeacherID=teacherID)
+        updated_class = Class.objects.get(ClassID=ClassID)
+
+        if teacher and updated_class:
+            # object.save() cannot take any args, so just change entries first
+            updated_class.ClassName = ClassName if len(ClassName) > 0 else updated_class.ClassName
+            updated_class.save()
+
+            # this is what GraphQL is going to return
+            return UpdateClassName(updated_class=updated_class)
+
+        else:
+            raise GraphQLError('Something went wrong.')
+
+class UpdateClassNameMutation(graphene.ObjectType):
+    ClassID = graphene.String()
+    ClassName = graphene.String()
