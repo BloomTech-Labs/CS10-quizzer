@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 import PropTypes from 'prop-types'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, ListGroup } from 'reactstrap'
 import { Redirect } from 'react-router-dom'
-import { Query } from 'react-apollo'
+import { Query, Mutation } from 'react-apollo'
 
 const GET_QUIZZES = gql`
  query GetAllQuizzes($encJwt: String!) {
@@ -12,6 +12,15 @@ const GET_QUIZZES = gql`
         QuizID
         QuizName
         Public
+      }
+    }
+  }`
+
+const ADD_QUIZ_TO_CLASS = gql`
+  mutation AddQuizToClass($Classroom: String!, $QuizID: String!, $encJWT: String!) {
+    addQuizToClass(Classroom: $Classroom, QuizID: $QuizID, encJWT: $encJWT) {
+      quiz {
+        QuizName
       }
     }
   }`
@@ -41,13 +50,17 @@ class QuizSelectModal extends Component {
         redirect: true
       })
     } else {
-      console.log(this.state.value)
+      this.setState({
+        submitInfo: true
+      })
     }
   }
 
   render () {
+    const { classID, isOpen, toggle } = this.props
+
     return (
-      <Modal isOpen={this.props.isOpen} toggle={this.props.toggle}>
+      <Modal isOpen={isOpen} toggle={toggle}>
         <ModalHeader>
           <span>Add a Quiz</span>
         </ModalHeader>
@@ -75,7 +88,31 @@ class QuizSelectModal extends Component {
                         })}
                       </select>
                     </ListGroup>
-                    <Button type='submit' onClick={this.handleSubmit}>{(this.state.value === 'none') ? 'Create New Quiz' : 'Add Quiz to Class'}</Button>
+                    <Mutation mutation={ADD_QUIZ_TO_CLASS}>
+                      {(addQuiztoClass) => (
+                        <Button type='submit' onClick={event => {
+                          event.preventDefault()
+                          if (this.state.value === 'none') {
+                            this.setState({
+                              redirect: true
+                            })
+                          } else {
+                            addQuiztoClass({
+                              variables: {
+                                Classroom: classID,
+                                encJWT: window.localStorage.getItem('token'),
+                                QuizID: this.state.value
+                              },
+                              refetchQueries: ['GetClassQuizzes', 'getClasses']
+                            })
+                            this.setState({
+                              value: 'none'
+                            })
+                            toggle()
+                          }
+                        }}>{(this.state.value === 'none') ? 'Create New Quiz' : 'Add Quiz to Class'}</Button>
+                      )}
+                    </Mutation>
                   </form>
                 )
               }
@@ -83,7 +120,7 @@ class QuizSelectModal extends Component {
           </Query>
         </ModalBody>
         <ModalFooter />
-        {this.state.redirect ? <Redirect to={'/rocket/quizzes/createquiz/'} /> : null}
+        {this.state.redirect ? <Redirect to='/rocket/quizzes/createquiz/' /> : null}
       </Modal>
     )
   }
@@ -91,7 +128,8 @@ class QuizSelectModal extends Component {
 
 QuizSelectModal.propTypes = {
   isOpen: PropTypes.bool,
-  toggle: PropTypes.func
+  toggle: PropTypes.func,
+  classID: PropTypes.string
 }
 
 export default QuizSelectModal

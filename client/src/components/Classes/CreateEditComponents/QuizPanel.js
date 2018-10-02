@@ -15,6 +15,7 @@ query GetClassQuizzes($ClassID: String!) {
 
 function QuizPanel (props) {
   const classID = props.classID
+
   return (
     <div>
       <h4>Quizzes</h4>
@@ -31,6 +32,7 @@ function QuizPanel (props) {
                     return (
                       <QuizCard
                         key={quiz.QuizID}
+                        quizName={quiz.QuizName}
                       />
                     )
                   })}
@@ -42,7 +44,7 @@ function QuizPanel (props) {
           }
         }}
       </Query>
-      <QuizSelector />
+      <QuizSelector classID={classID} />
     </div>
   )
 }
