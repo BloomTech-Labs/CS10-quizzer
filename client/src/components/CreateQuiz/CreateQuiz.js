@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import CreateQuestions from './CreateQuestions'
 import { Redirect } from 'react-router-dom'
 import gql from 'graphql-tag'
 import { Mutation } from 'react-apollo'
@@ -273,42 +274,20 @@ class CreateQuiz extends Component {
                             modalText: 'An error occurred while creating the quiz.'
                           })
                         })
-                      // if (!loadingQuiz && !loadingQuestion && !loadingChoice) {
-                      //   this.props.history.push('/rocket/quizzes')
-                      // }
+                      if (!loadingQuiz && !loadingQuestion && !loadingChoice) {
+                        console.log('You have successfully created a quiz.')
+                        this.setState({
+                          quizName: '',
+                          questions: [],
+                          choices: [],
+                          answerList: [],
+                          createQuizModal: true,
+                          modalText: 'You have successfully created a quiz.'
+                        })
+                      }
                     }}>
-                      <input className='create_quiz_name' name='quizName' onChange={this.handleOnChange} placeholder='Name' type='text' required />
-                      {this.state.questions.map((question, index) => {
-                        return (
-                          <div key={index}>
-                            <textarea cols='50' className='question' name={index} placeholder={`Question ${index + 1}`} onChange={this.questionChange} rows='5' required value={question} />
-                            <fieldset className='question_fieldset'>
-                              <div>
-                                <input checked={this.state.choices[index][0][1]} name={index} id='0' onChange={this.check} required type='radio' />
-                                <input className='question_choices' name={index} placeholder='Choice 1' onChange={this.choiceChange} required type='text' />
-                              </div>
-                              <div>
-                                <input checked={this.state.choices[index][1][1]} name={index} id='1' onChange={this.check} required type='radio' />
-                                <input className='question_choices' name={index} placeholder='Choice 2' onChange={this.choiceChange} required type='text' />
-                              </div>
-                              <div>
-                                <input checked={this.state.choices[index][2][1]} disabled={this.state.choices[index][2][2]} id='2' name={index} onChange={this.check} type='radio' />
-                                <input className='question_choices' disabled={this.state.choices[index][2][2]} placeholder='Choice 3' onChange={this.choiceChange} required type='text' />
-                                {this.state.choices[index][2][2]
-                                  ? <Button choice='2' className='enable_disable_choice' name={index} onClick={this.enableOrDisable}>Enable Choice</Button>
-                                  : <Button choice='2' color='info' className='enable_disable_choice' name={index} onClick={this.enableOrDisable}>Disable Choice</Button>}           </div>
-                              <div>
-                                <input checked={this.state.choices[index][3][1]} disabled={this.state.choices[index][3][2]} id='3' name={index} onChange={this.check} type='radio' />
-                                <input className='question_choices' disabled={this.state.choices[index][3][2]} placeholder='Choice 4' onChange={this.choiceChange} required type='text' />
-                                {this.state.choices[index][3][2]
-                                  ? <Button choice='3' name={index} className='enable_disable_choice' onClick={this.enableOrDisable}>Enable Choice</Button>
-                                  : <Button choice='3' color='info' className='enable_disable_choice' name={index} onClick={this.enableOrDisable}>Disable Choice</Button>}
-                              </div>
-                            </fieldset>
-                            <Button color='danger' className='delete_question' name={index} onClick={this.deleteQuestion} type='button'>Delete Question</Button>
-                          </div>
-                        )
-                      })}
+                      <input className='create_quiz_name' name='quizName' onChange={this.handleOnChange} placeholder='Name' required type='text' value={this.state.quizName} />
+                      <CreateQuestions state={this.state} questionChange={this.questionChange} check={this.check} choiceChange={this.choiceChange} deleteQuestion={this.deleteQuestion} enableOrDisable={this.enableOrDisable} />
                       <Button color='seconday' className='create_quiz_container_button' onClick={this.addQuestion}>Add Question</Button>
                       <Button color='info' className='create_quiz_container_button'>Create Quiz</Button>
                     </form>
