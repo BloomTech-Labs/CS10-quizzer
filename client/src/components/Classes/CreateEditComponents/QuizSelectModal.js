@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import gql from 'graphql-tag'
 import PropTypes from 'prop-types'
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
-import { Query, Mutation } from 'react-apollo'
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, ListGroup } from 'reactstrap'
+import { Query } from 'react-apollo'
 
 const GET_QUIZZES = gql`
  query GetAllQuizzes($encJwt: String!) {
@@ -24,21 +24,30 @@ class QuizSelectModal extends Component {
         <ModalHeader>
           <span>Add a Quiz</span>
         </ModalHeader>
-        <Query query={GET_QUIZZES} variables={{ encJwt: localStorage.getItem('token') }}>
-          {({ loading, error, data }) => (
-            <div>
-              <ModalBody>
-                Temp
-              </ModalBody>
-              <Button type='submit'>Add Quiz to Class</Button>
-              <ModalFooter>
-                {loading && <span>Saving new class...</span>}
-                {error && <span>{error.message}</span>}
-                {data && <span>Data Get!</span>}
-              </ModalFooter>
-            </div>
-          )}
-        </Query>
+        <ModalBody>
+          <Query query={GET_QUIZZES} variables={{ encJwt: localStorage.getItem('token') }}>
+            {({ loading, error, data }) => {
+              if (loading) return 'Loading...'
+              if (error) return error.message
+              if (data) {
+                const quizzes = data.teacher[0].quizSet
+                return (
+                  <ListGroup>
+                    <select name='test' size='5'>
+                      {quizzes.map((quiz) => {
+                        return (
+                          <option key={quiz.QuizID}>{quiz.QuizName}</option>
+                        )
+                      })}
+                    </select>
+                  </ListGroup>
+                )
+              }
+            }}
+          </Query>
+        </ModalBody>
+        <Button type='submit'>Add Quiz to Class</Button>
+        <ModalFooter />
       </Modal>
     )
   }
