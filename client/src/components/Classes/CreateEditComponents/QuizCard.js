@@ -1,13 +1,12 @@
 import React from 'react'
-
-// Should take in a quiz name, completion date, and assignment date on props
+import { Button } from 'reactstrap'
 
 function QuizCard (props) {
   return (
     <div>
       <h4>Quiz Name</h4>
       <p>Completed: Number</p>
-      <p>Assigned: Date field</p>
+      <Button>Email to Students</Button>
     </div>
   )
 }
