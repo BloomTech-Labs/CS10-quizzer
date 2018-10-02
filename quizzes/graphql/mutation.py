@@ -243,6 +243,21 @@ class CreateStudentMutation(graphene.ObjectType):
 end CreateStudent
 '''
 
+class DeleteStudent(graphene.Mutation):
+    class Arguments:
+        StudentID = graphene.String()
+
+    student = graphene.Field(lambda: DeleteStudentMutation)
+
+    @staticmethod
+    def mutate(self, info, StudentID):
+        student = Student.objects.get(StudentID=StudentID).delete()
+
+        return DeleteStudent(student=student)
+
+class DeleteStudentMutation(graphene.ObjectType):
+    StudentID = graphene.String()
+
 
 '''
 start CreateQuiz
@@ -413,3 +428,35 @@ class CreateChoiceMutation(graphene.ObjectType):
 '''
 end CreateChoice
 '''
+
+class UpdateClassName(graphene.Mutation):
+    class Arguments:
+        ClassID = graphene.String(required=True)
+        ClassName = graphene.String(required=True)
+        encJWT = graphene.String(required=True)
+
+    updated_class = graphene.Field(lambda: UpdateClassNameMutation)
+
+    @staticmethod
+    def mutate(self, info, ClassID, ClassName, encJWT):
+        secret    = config('SECRET_KEY')
+        algorithm = 'HS256'
+        dec_jwt   = jwt.decode(encJWT, secret, algorithms=[ algorithm ])
+        teacherID = dec_jwt[ 'sub' ][ 'id' ]
+        teacher = Teacher.objects.get(TeacherID=teacherID)
+        updated_class = Class.objects.get(ClassID=ClassID)
+
+        if teacher and updated_class:
+            # object.save() cannot take any args, so just change entries first
+            updated_class.ClassName = ClassName if len(ClassName) > 0 else updated_class.ClassName
+            updated_class.save()
+
+            # this is what GraphQL is going to return
+            return UpdateClassName(updated_class=updated_class)
+
+        else:
+            raise GraphQLError('Something went wrong.')
+
+class UpdateClassNameMutation(graphene.ObjectType):
+    ClassID = graphene.String()
+    ClassName = graphene.String()

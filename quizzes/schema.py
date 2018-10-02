@@ -11,7 +11,8 @@ from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student, Stud
 
 from quizzes.graphql.mutation import (
     CreateTeacher, QueryTeacher, CreateStudent, CreateQuiz, CreateQuestion,
-    CreateChoice, UpdateTeacherInformation, AddQuizToClass
+    CreateChoice, UpdateTeacherInformation, AddQuizToClass, DeleteStudent,
+    UpdateClassName
 )
 
 from quizzes.graphql.query import (
@@ -26,10 +27,12 @@ class Mutation(graphene.ObjectType):
     fields
     '''
     create_class      = CreateClass.Field()
+    update_class      = UpdateClassName.Field()
     create_teacher    = CreateTeacher.Field()
     update_teacher    = UpdateTeacherInformation.Field()
     query_teacher     = QueryTeacher.Field()
     create_student    = CreateStudent.Field()
+    delete_student    = DeleteStudent.Field()
     create_quiz       = CreateQuiz.Field()
     create_question   = CreateQuestion.Field()
     create_choice     = CreateChoice.Field()
@@ -41,6 +44,7 @@ class Query(graphene.ObjectType):
     Allows us to make GET/Query requests from the DB using GraphQL
     '''
     classes         = graphene.List(ClassType, enc_jwt=graphene.String())
+    single_class    = graphene.String(ClassID=graphene.String())
 
     public_quizzes  = graphene.List(QuizType)
     class_quizzes   = graphene.List(QuizType, ClassID=graphene.String())
@@ -55,6 +59,7 @@ class Query(graphene.ObjectType):
     teacher         = graphene.List(TeacherType, enc_jwt=graphene.String())
     
     students        = graphene.List(StudentType)
+    class_students  = graphene.List(StudentType, ClassID=graphene.String())
 
     '''
     Each method, resolve_<< name >>, is named after what we want to return.
@@ -154,5 +159,22 @@ class Query(graphene.ObjectType):
     def resolve_students(self, info):
         return Student.objects.all()
 
+    def resolve_class_students(self, info, **kwargs):
+        class_id = kwargs.get('ClassID')
+
+        if class_id:
+            classroom = Class.objects.get(ClassID=class_id)
+            return classroom.student_set.all()
+
+        return GraphQLError('Please supply a valid ClassID')
+
+    def resolve_single_class(self, info, **kwargs):
+        class_id = kwargs.get('ClassID')
+
+        if class_id:
+            classroom = Class.objects.get(ClassID=class_id)
+            return classroom.ClassName
+        
+        return GraphQLError('Please supply a valid ClassID')
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

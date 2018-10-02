@@ -1,24 +1,29 @@
 import React from 'react'
-import { string } from 'prop-types'
+import PropTypes from 'prop-types'
+import ClassCard from './ClassCard'
+import NewClassCard from './NewClassCard'
 
 const ClassList = props => {
-  const { ClassName } = props
+  const { classSet } = props
 
   return (
     <React.Fragment>
-      <p>{ClassName}</p>
-
-      <button
-        onClick={() => console.log(`EDIT ${ClassName}`)}
-      >
-        Edit
-      </button>
+      {props.classSet.length > 0
+        ? classSet.map(classItem => {
+          return (
+            <ClassCard
+              key={classItem.ClassID}
+              classItem={classItem} />
+          )
+        })
+        : null}
+      <NewClassCard />
     </React.Fragment>
   )
 }
 
 ClassList.propTypes = {
-  ClassName: string
+  classSet: PropTypes.array
 }
 
 export default ClassList
