@@ -37,7 +37,6 @@ class EditClass extends Component {
 
       return (
         <div>
-          <h1>Editing {ClassName}</h1>
           <ClassSettings classID={ClassID} className={ClassName} />
           <StudentPanel classID={ClassID} />
           <QuizList quizzes={quizSet} />

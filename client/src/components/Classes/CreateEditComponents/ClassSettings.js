@@ -1,70 +1,50 @@
 import React, { Component } from 'react'
-import gql from 'graphql-tag'
-import { Mutation } from 'react-apollo'
+import ClassNameInput from './ClassNameInput'
 import { InputGroup, Input, Button } from 'reactstrap'
+import { Query } from 'react-apollo'
 import { string } from 'prop-types'
+import gql from 'graphql-tag'
 
-const UPDATE_CLASS_NAME = gql`
-mutation UpdateClassName($ClassID: String!, $ClassName: String!, $encJWT: String!){
-  updateClass(ClassID: $ClassID, ClassName: $ClassName, encJWT: $encJWT) {
-    updatedClass {
-      ClassID
-      ClassName
-    }
-  }
-}`
+const GET_SINGLE_CLASS = gql`
+  query GetSingleClass($ClassID: String!) {
+    singleClass(ClassID: $ClassID)
+  }`
 
 class ClassSettings extends Component {
   state = {
     name: ''
   }
 
-  handleInputChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value })
-  }
-
   render () {
-    const { className, classID } = this.props
-    const { name } = this.state
+    const { classID } = this.props
 
     return (
-      <div>
-        <h4>Settings</h4>
-        <Mutation mutation={UPDATE_CLASS_NAME}>
-          {(updateClassName, { loading, error }) => (
-            <div>
-              <form onSubmit={event => {
-                event.preventDefault()
-                updateClassName({
-                  variables: {
-                    ClassID: classID,
-                    ClassName: name,
-                    encJWT: window.localStorage.getItem('token')
-                  },
-                  refetchQueries: ['getClasses']
-                })
-              }}>
+      <Query query={GET_SINGLE_CLASS} variables={{ ClassID: classID }}>
+        {({ loading, error, data }) => {
+          if (loading) return <span>Loading...</span>
+          if (error) return <span>{error.message}</span>
+          if (data) {
+            const className = data.singleClass
+            return (
+              <div>
+                <h1>Editing {className}</h1>
+                <h4>Settings</h4>
+                <ClassNameInput className={className} classID={classID} />
                 <InputGroup>
-                  <Input type='text' name='name' value={name} placeholder={className} onChange={this.handleInputChange} />
+                  <Input type='checkbox' />
+                  <p>CC Me on Class Emails</p>
                 </InputGroup>
-              </form>
-              {loading && <span>Saving changes...</span>}
-              {error && <span>{error.message}</span>}
-            </div>
-          )}
-        </Mutation>
-        <InputGroup>
-          <Input type='checkbox' />
-          <p>CC Me on Class Emails</p>
-        </InputGroup>
-        <Button>Import CSV</Button>
-      </div>
+                <Button>Import CSV</Button>
+              </div>
+            )
+          }
+        }}
+      </Query>
     )
   }
 }
 
 ClassSettings.propTypes = {
-  className: string,
   classID: string
 }
 

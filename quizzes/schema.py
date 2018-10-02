@@ -44,6 +44,7 @@ class Query(graphene.ObjectType):
     Allows us to make GET/Query requests from the DB using GraphQL
     '''
     classes         = graphene.List(ClassType, enc_jwt=graphene.String())
+    single_class    = graphene.String(ClassID=graphene.String())
 
     public_quizzes  = graphene.List(QuizType)
     class_quizzes   = graphene.List(QuizType, ClassID=graphene.String())
@@ -165,6 +166,15 @@ class Query(graphene.ObjectType):
             classroom = Class.objects.get(ClassID=class_id)
             return classroom.student_set.all()
 
+        return GraphQLError('Please supply a valid ClassID')
+
+    def resolve_single_class(self, info, **kwargs):
+        class_id = kwargs.get('ClassID')
+
+        if class_id:
+            classroom = Class.objects.get(ClassID=class_id)
+            return classroom.ClassName
+        
         return GraphQLError('Please supply a valid ClassID')
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
