@@ -13,12 +13,9 @@ const GET_CLASSES_INFORMATION = gql`
         ClassName
         studentSet {
           StudentID
-          StudentName
-          StudentEmail
         }
         quizSet {
           QuizID
-          QuizName
         }
       }
     }

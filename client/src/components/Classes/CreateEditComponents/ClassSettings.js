@@ -41,7 +41,7 @@ class ClassSettings extends Component {
                     ClassName: name,
                     encJWT: window.localStorage.getItem('token')
                   },
-                  refetchQueries: ['getClasses']
+                  refetchQueries: ['GetClassNames']
                 })
               }}>
                 <InputGroup>

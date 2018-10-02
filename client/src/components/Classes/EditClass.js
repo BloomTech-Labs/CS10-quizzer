@@ -1,8 +1,17 @@
 import React, { Component } from 'react'
+// import gql from 'graphql-tag'
 import StudentPanel from './CreateEditComponents/StudentPanel'
 import ClassSettings from './CreateEditComponents/ClassSettings'
 import QuizList from './CreateEditComponents/QuizList'
 import PropTypes from 'prop-types'
+
+// const GET_CLASS_NAMES = gql`
+// query GetClassNames($encJwt: String!) {
+//   classes(encJwt: $encJwt) {
+//     ClassID
+//     ClassName
+//   }
+// }`
 
 class EditClass extends Component {
   constructor (props) {
@@ -28,7 +37,7 @@ class EditClass extends Component {
 
       return (
         <div>
-          <h1>{ClassName ? `Editing ${ClassName}` : ' Creating New Class'}</h1>
+          <h1>Editing {ClassName}</h1>
           <ClassSettings classID={ClassID} className={ClassName} />
           <StudentPanel classID={ClassID} />
           <QuizList quizzes={quizSet} />
