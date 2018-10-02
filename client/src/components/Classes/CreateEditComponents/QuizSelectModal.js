@@ -17,7 +17,7 @@ const GET_QUIZZES = gql`
 
 class QuizSelectModal extends Component {
   state = {
-    value: ''
+    value: 'none'
   }
 
   handleChange = (event) => {
@@ -48,6 +48,7 @@ class QuizSelectModal extends Component {
                   <form>
                     <ListGroup>
                       <select name='quizlist' onChange={this.handleChange} size='10'>
+                        <option value='none'>Create New Quiz?</option>
                         {quizzes.map((quiz) => {
                           return (
                             <option
@@ -60,7 +61,7 @@ class QuizSelectModal extends Component {
                         })}
                       </select>
                     </ListGroup>
-                    <Button type='submit' onClick={this.handleSubmit}>Add Quiz to Class</Button>
+                    <Button type='submit' onClick={this.handleSubmit}>{(this.state.value === 'none') ? 'Create New Quiz' : 'Add Quiz to Class'}</Button>
                   </form>
                 )
               }
