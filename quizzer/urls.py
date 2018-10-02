@@ -22,7 +22,7 @@ from quizzes import api, views
 
 urlpatterns = [
     path('sms/', api.send_sms_notification, name='sms'),
-    path('sendgrid/', api.send_email, name='sendgrid'),
+    path('sendgrid/', csrf_exempt(api.send_email), name='sendgrid'),
     path('graphiql/', csrf_exempt(GraphQLView.as_view(graphiql=True))),
     path('api/payments/basic', csrf_exempt(api.basic_subscription), name='basic_subscription'),
     path('api/payments/premium', csrf_exempt(api.premium_subscription), name='premium_subscription'),
