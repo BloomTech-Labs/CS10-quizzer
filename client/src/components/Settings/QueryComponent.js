@@ -6,8 +6,8 @@ import InputForm from './InputForm'
 
 // GraphQL Query for current user information
 const getCurrentInformation = gql`
-  {
-    teacher(encJwt: "${window.localStorage.getItem('token')}") {
+  query GetCurrentInformation($encJwt: String!) {
+    teacher(encJwt: $encJwt) {
       TeacherName
       TeacherEmail
     }
@@ -26,7 +26,7 @@ class QueryComponent extends Component {
 
   render () {
     return (
-      <Query query={getCurrentInformation}>
+      <Query query={getCurrentInformation} variables={{ encJwt: window.localStorage.getItem('token') }}>
         {({ loading, error, data }) => {
           if (loading) return 'Loading...'
           if (error) return `Error: ${error.message}`

@@ -43,7 +43,15 @@ class Settings extends Component {
             <div>
               <form onSubmit={event => {
                 event.preventDefault()
-                const updatedInfo = updateTeacher({ variables: { TeacherName: name, TeacherEmail: email, OldPassword: oldPassword, NewPassword: newPassword } })
+                const updatedInfo = updateTeacher({
+                  variables:
+                  { TeacherName: name,
+                    TeacherEmail: email,
+                    OldPassword: oldPassword,
+                    NewPassword: newPassword
+                  },
+                  refetchQueries: ['GetCurrentInformation']
+                })
                 updatedInfo.then(res => {
                   window.localStorage.setItem('token', res.data.updateTeacher.jwtString)
                 }).catch(() => {
