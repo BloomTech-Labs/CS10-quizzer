@@ -119,14 +119,11 @@ def send_email(req):
         subject  = f'New quiz from {teacher}'
 
         content = Content(
-            'text/plain',
-            f'''You have a new quiz from {teacher} for the class {className}
-
-            To take this quiz follow the link here <a href="{quizLink}">{quizName}</a>
-
-            This email was sent to {student}
-
-            If this is not your email then please ignore this'''
+            'text/html',
+            f'''
+            <p>You have a new quiz from <b>{teacher}</b> for the class <b>{className}</b><p>
+            <p>To take this quiz follow the link here <a href="{quizLink}">{quizName}</a></p>
+            '''
             )
 
         mail     = Mail(from_email, subject, to_email, content)
