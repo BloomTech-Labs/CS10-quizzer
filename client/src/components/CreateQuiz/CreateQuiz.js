@@ -48,8 +48,7 @@ class CreateQuiz extends Component {
       answerList: [],
       createQuizModal: false,
       modalText: '',
-      token: '',
-      redirect: false
+      token: ''
     }
   }
 
@@ -267,11 +266,6 @@ class CreateQuiz extends Component {
                                 })
                               })
                           })
-                          if (!loadingQuiz && !loadingQuestion && !loadingChoice) {
-                            this.setState({
-                              redirect: true
-                            })
-                          }
                         })
                         .catch(() => {
                           this.setState({
@@ -279,6 +273,9 @@ class CreateQuiz extends Component {
                             modalText: 'An error occurred while creating the quiz.'
                           })
                         })
+                      // if (!loadingQuiz && !loadingQuestion && !loadingChoice) {
+                      //   this.props.history.push('/rocket/quizzes')
+                      // }
                     }}>
                       <input className='create_quiz_name' name='quizName' onChange={this.handleOnChange} placeholder='Name' type='text' required />
                       {this.state.questions.map((question, index) => {
