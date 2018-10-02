@@ -16,7 +16,20 @@ const GET_QUIZZES = gql`
   }`
 
 class QuizSelectModal extends Component {
-  state = {}
+  state = {
+    value: ''
+  }
+
+  handleChange = (event) => {
+    this.setState({
+      value: event.target.value
+    })
+  }
+
+  handleSubmit = (event) => {
+    event.preventDefault()
+    console.log(this.state.value)
+  }
 
   render () {
     return (
@@ -32,21 +45,28 @@ class QuizSelectModal extends Component {
               if (data) {
                 const quizzes = data.teacher[0].quizSet
                 return (
-                  <ListGroup>
-                    <select name='test' size='5'>
-                      {quizzes.map((quiz) => {
-                        return (
-                          <option key={quiz.QuizID}>{quiz.QuizName}</option>
-                        )
-                      })}
-                    </select>
-                  </ListGroup>
+                  <form>
+                    <ListGroup>
+                      <select name='quizlist' onChange={this.handleChange} size='10'>
+                        {quizzes.map((quiz) => {
+                          return (
+                            <option
+                              key={quiz.QuizID}
+                              value={quiz.QuizID}
+                              required>
+                              {quiz.QuizName}
+                            </option>
+                          )
+                        })}
+                      </select>
+                    </ListGroup>
+                    <Button type='submit' onClick={this.handleSubmit}>Add Quiz to Class</Button>
+                  </form>
                 )
               }
             }}
           </Query>
         </ModalBody>
-        <Button type='submit'>Add Quiz to Class</Button>
         <ModalFooter />
       </Modal>
     )
