@@ -26,11 +26,9 @@ class Settings extends Component {
       oldPassword: null,
       newPassword: ''
     }
-
-    this.handleInputChange = this.handleInputChange.bind(this)
   }
 
-  handleInputChange (event) {
+  handleInputChange = (event) => {
     this.setState({ [event.target.name]: event.target.value })
   }
 
