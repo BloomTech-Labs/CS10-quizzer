@@ -1,61 +1,41 @@
 import React, { Component } from 'react'
-
 import gql from 'graphql-tag'
 import { Query } from 'react-apollo'
-import { Redirect } from 'react-router-dom'
+import { Redirect, withRouter } from 'react-router-dom'
 import { Button } from 'reactstrap'
-
 import ViewQuizOrClass from '../ViewQuizOrClass/ViewQuizOrClass'
 import QuizList from './QuizList'
-
 import './Quizzes.css'
 
 const getCurrentInformation = gql`
- {
-    teacher(encJwt: "${localStorage.getItem('token')}") {
+  query getCurrentInformation($token: String!) {
+    teacher(encJwt: $token) {
       quizSet {
         QuizID
         QuizName
         Public
-
         Classes {
-          ClassID
+          ClassID 
           ClassName
         }
       }
     }
-  }`
+  }
+`
 
 class Quizzes extends Component {
   constructor () {
     super()
     this.state = {
-      redirect: false
+      redirect: false,
+      token: null
     }
   }
 
-  renderQuizComponent = data => {
-    const { quizSet } = data.teacher[0]
-    const quizData = quizSet.map(quiz => {
-      const { QuizID, QuizName, Classes } = quiz
-      const amountOfClasses = Classes.length
-
-      return (
-        <div key={QuizID}>
-          <ViewQuizOrClass
-            render={() => (
-              <QuizList
-                QuizName={QuizName}
-                QuizID={QuizID}
-                amountOfClasses={amountOfClasses}
-              />
-            )}
-          />
-        </div>
-      )
+  componentWillMount () {
+    this.setState({
+      token: localStorage.getItem('token')
     })
-
-    return quizData
   }
 
   createQuiz = () => {
@@ -67,27 +47,50 @@ class Quizzes extends Component {
   render () {
     return (
       <div className='quizzes_container'>
-        <span>Add a new Quiz</span>
-
-        <Query query={getCurrentInformation}>
+        <div className='add_quiz_container'>
+          <span>Add a new Quiz</span>
+          <Button color='warning' className='add_quiz_button' onClick={this.createQuiz}>
+            <span role='img' aria-labelledby='Plus Symbol'>&#x2795;</span>
+          </Button>
+        </div>
+        <Query query={getCurrentInformation} variables={{ token: this.state.token }}>
           {({ loading, error, data }) => {
-            if (loading) return 'Loading...'
-            if (error) return `Error: ${error.message}`
+            console.log('Test')
+            if (loading) {
+              return <span>Loading...</span>
+            }
+
+            if (error) {
+              return <span>{`Error: ${error.message}`}</span>
+            }
 
             if (data) {
-              return this.renderQuizComponent(data)
+              const { quizSet } = data.teacher[0]
+              return quizSet.map(quiz => {
+                const { QuizID, QuizName, Classes } = quiz
+                const amountOfClasses = Classes.length
+                return (
+                  <div key={QuizID}>
+                    <ViewQuizOrClass render={() => {
+                      return (
+                        <QuizList
+                          QuizName={QuizName}
+                          QuizID={QuizID}
+                          amountOfClasses={amountOfClasses}
+                        />
+                      )
+                    }}
+                    />
+                  </div>
+                )
+              })
             }
           }}
         </Query>
-
-        <Button color='warning' className='add_quiz_button' onClick={this.createQuiz}>
-          <span role='img' aria-labelledby='Plus Symbol'>&#x2795;</span>
-        </Button>
-
         {this.state.redirect ? <Redirect from='/rocket/quizzes' to='/rocket/quizzes/createquiz' /> : null}
       </div>
     )
   }
 }
 
-export default Quizzes
+export default withRouter(Quizzes)

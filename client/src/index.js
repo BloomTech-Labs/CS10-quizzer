@@ -10,7 +10,7 @@ import ApolloClient from 'apollo-boost'
 
 const apiURI = process.env.NODE_ENV !== 'production' ? 'http://localhost:8000/graphiql/' : '/graphiql/'
 
-const client = new ApolloClient({
+export const client = new ApolloClient({
   uri: apiURI
 })
 

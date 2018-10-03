@@ -4,6 +4,7 @@ import NavContainerLeft from './NavContainerLeft'
 import NavContainerRight from './NavContainerRight'
 import LogInModal from '../Modals/LogInModal'
 import SignUpModal from '../Modals/SignUpModal'
+import { client } from '../../index'
 import './NavBar.css'
 
 class NavBar extends Component {
@@ -29,6 +30,7 @@ class NavBar extends Component {
   }
 
   logOut = () => {
+    client.clearStore()
     localStorage.clear()
     this.forceUpdate()
     this.setState({
