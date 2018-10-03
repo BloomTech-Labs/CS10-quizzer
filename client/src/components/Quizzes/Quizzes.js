@@ -27,15 +27,8 @@ class Quizzes extends Component {
   constructor () {
     super()
     this.state = {
-      redirect: false,
-      token: null
+      redirect: false
     }
-  }
-
-  componentWillMount () {
-    this.setState({
-      token: localStorage.getItem('token')
-    })
   }
 
   createQuiz = () => {
@@ -53,9 +46,8 @@ class Quizzes extends Component {
             <span role='img' aria-labelledby='Plus Symbol'>&#x2795;</span>
           </Button>
         </div>
-        <Query query={getCurrentInformation} variables={{ token: this.state.token }}>
+        <Query query={getCurrentInformation} variables={{ token: localStorage.getItem('token') }}>
           {({ loading, error, data }) => {
-            console.log('Test')
             if (loading) {
               return <span>Loading...</span>
             }
