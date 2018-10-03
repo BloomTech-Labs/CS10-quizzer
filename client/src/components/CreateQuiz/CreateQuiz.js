@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Redirect } from 'react-router-dom'
+import CreateQuestions from './CreateQuestions'
+import ModalMessage from '../Modals/ModalMessage'
 import gql from 'graphql-tag'
 import { Mutation } from 'react-apollo'
 import { Button } from 'reactstrap'
@@ -46,10 +47,11 @@ class CreateQuiz extends Component {
       questions: [],
       choices: [],
       answerList: [],
-      createQuizModal: false,
+      modalMessage: false,
+      modalTitle: '',
       modalText: '',
-      token: '',
-      redirect: false
+      modalSuccess: false,
+      token: ''
     }
   }
 
@@ -185,6 +187,12 @@ class CreateQuiz extends Component {
     })
   }
 
+  toggleModalMessage = () => {
+    this.setState({
+      modalMessage: !this.state.modalMessage
+    })
+  }
+
   render () {
     return (
       <div className='create_quiz_container'>
@@ -200,16 +208,16 @@ class CreateQuiz extends Component {
                     <form className='create_quiz_form' onSubmit={event => {
                       event.preventDefault()
                       if (this.state.questions.length === 0) {
-                        console.log('You need questions!')
                         this.setState({
-                          createQuizModal: true,
+                          modalMessage: true,
+                          modalTitle: 'Information',
                           modalText: 'To create a quiz, you must add at least one question.'
                         })
                         return
                       } else if (this.state.answerList.indexOf(null) > -1) {
-                        console.log('You need answers!')
                         this.setState({
-                          createQuizModal: true,
+                          modalMessage: true,
+                          modalTitle: 'Information',
                           modalText: 'To create a quiz, you must choose an answer for each question you add.'
                         })
                         return
@@ -220,7 +228,8 @@ class CreateQuiz extends Component {
                             Public: false,
                             QuizName: this.state.quizName,
                             encJWT: this.state.token
-                          }
+                          },
+                        refetchQueries: ['getCurrentInformation']
                       })
                       createdQuiz
                         .then(data => {
@@ -232,7 +241,8 @@ class CreateQuiz extends Component {
                                 QuizID: quizId,
                                 encJWT: this.state.token,
                                 isMajor: false
-                              }
+                              },
+                              refetchQueries: ['getCurrentInformation']
                             })
                             createdQuestion
                               .then(data => {
@@ -245,15 +255,17 @@ class CreateQuiz extends Component {
                                         QuestionID: questionId,
                                         encJWT: this.state.token,
                                         isCorrect: choice[1]
-                                      }
+                                      },
+                                      refetchQueries: ['getCurrentInformation']
                                     })
                                     createdChoice
                                       .then(() => {
-                                        console.log('Successfully created choice!')
+                                        console.log('Successfully created choice.')
                                       })
                                       .catch(() => {
                                         this.setState({
-                                          createQuizModal: true,
+                                          modalMessage: true,
+                                          modalTitle: 'Error',
                                           modalText: 'An error occurred while creating the quiz.'
                                         })
                                       })
@@ -262,56 +274,33 @@ class CreateQuiz extends Component {
                               })
                               .catch(() => {
                                 this.setState({
-                                  createQuizModal: true,
+                                  modalMessage: true,
                                   modalText: 'An error occurred while creating the quiz.'
                                 })
                               })
                           })
-                          if (!loadingQuiz && !loadingQuestion && !loadingChoice) {
-                            this.setState({
-                              redirect: true
-                            })
-                          }
                         })
                         .catch(() => {
                           this.setState({
-                            createQuizModal: true,
+                            modalMessage: true,
                             modalText: 'An error occurred while creating the quiz.'
                           })
                         })
+                      if (!loadingQuiz && !loadingQuestion && !loadingChoice) {
+                        this.setState({
+                          quizName: '',
+                          questions: [],
+                          choices: [],
+                          answerList: [],
+                          modalMessage: true,
+                          modalTitle: 'Success',
+                          modalText: 'You have successfully created a quiz. Do you want to go to the quizzes page?',
+                          modalSuccess: true
+                        })
+                      }
                     }}>
-                      <input className='create_quiz_name' name='quizName' onChange={this.handleOnChange} placeholder='Name' type='text' required />
-                      {this.state.questions.map((question, index) => {
-                        return (
-                          <div key={index}>
-                            <textarea cols='50' className='question' name={index} placeholder={`Question ${index + 1}`} onChange={this.questionChange} rows='5' required value={question} />
-                            <fieldset className='question_fieldset'>
-                              <div>
-                                <input checked={this.state.choices[index][0][1]} name={index} id='0' onChange={this.check} required type='radio' />
-                                <input className='question_choices' name={index} placeholder='Choice 1' onChange={this.choiceChange} required type='text' />
-                              </div>
-                              <div>
-                                <input checked={this.state.choices[index][1][1]} name={index} id='1' onChange={this.check} required type='radio' />
-                                <input className='question_choices' name={index} placeholder='Choice 2' onChange={this.choiceChange} required type='text' />
-                              </div>
-                              <div>
-                                <input checked={this.state.choices[index][2][1]} disabled={this.state.choices[index][2][2]} id='2' name={index} onChange={this.check} type='radio' />
-                                <input className='question_choices' disabled={this.state.choices[index][2][2]} placeholder='Choice 3' onChange={this.choiceChange} required type='text' />
-                                {this.state.choices[index][2][2]
-                                  ? <Button choice='2' className='enable_disable_choice' name={index} onClick={this.enableOrDisable}>Enable Choice</Button>
-                                  : <Button choice='2' color='info' className='enable_disable_choice' name={index} onClick={this.enableOrDisable}>Disable Choice</Button>}           </div>
-                              <div>
-                                <input checked={this.state.choices[index][3][1]} disabled={this.state.choices[index][3][2]} id='3' name={index} onChange={this.check} type='radio' />
-                                <input className='question_choices' disabled={this.state.choices[index][3][2]} placeholder='Choice 4' onChange={this.choiceChange} required type='text' />
-                                {this.state.choices[index][3][2]
-                                  ? <Button choice='3' name={index} className='enable_disable_choice' onClick={this.enableOrDisable}>Enable Choice</Button>
-                                  : <Button choice='3' color='info' className='enable_disable_choice' name={index} onClick={this.enableOrDisable}>Disable Choice</Button>}
-                              </div>
-                            </fieldset>
-                            <Button color='danger' className='delete_question' name={index} onClick={this.deleteQuestion} type='button'>Delete Question</Button>
-                          </div>
-                        )
-                      })}
+                      <input className='create_quiz_name' name='quizName' onChange={this.handleOnChange} placeholder='Name' required type='text' value={this.state.quizName} />
+                      <CreateQuestions state={this.state} questionChange={this.questionChange} check={this.check} choiceChange={this.choiceChange} deleteQuestion={this.deleteQuestion} enableOrDisable={this.enableOrDisable} />
                       <Button color='seconday' className='create_quiz_container_button' onClick={this.addQuestion}>Add Question</Button>
                       <Button color='info' className='create_quiz_container_button'>Create Quiz</Button>
                     </form>
@@ -321,7 +310,7 @@ class CreateQuiz extends Component {
             </Mutation>
           )}
         </Mutation>
-        {this.state.redirect ? <Redirect to='/rocket/quizzes' /> : null}
+        <ModalMessage modalMessage={this.state.modalMessage} modalTitle={this.state.modalTitle} modalText={this.state.modalText} modalSuccess={this.state.modalSuccess} toggleModalMessage={this.toggleModalMessage} />
       </div>
     )
   }
