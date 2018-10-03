@@ -9,6 +9,7 @@ import EditClass from '../Classes/EditClass'
 import { Breadcrumb, BreadcrumbItem, Button } from 'reactstrap'
 import { Route, Switch, Link, Redirect, withRouter } from 'react-router-dom'
 import gql from 'graphql-tag'
+import { client } from '../../index'
 import { Query } from 'react-apollo'
 import './RocketList.css'
 
@@ -28,6 +29,7 @@ class RocketList extends Component {
   }
 
   logOut = () => {
+    client.clearStore()
     localStorage.clear()
     this.forceUpdate()
     this.setState({
