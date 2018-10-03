@@ -228,7 +228,8 @@ class CreateQuiz extends Component {
                             Public: false,
                             QuizName: this.state.quizName,
                             encJWT: this.state.token
-                          }
+                          },
+                        refetchQueries: ['getCurrentInformation']
                       })
                       createdQuiz
                         .then(data => {
@@ -240,7 +241,8 @@ class CreateQuiz extends Component {
                                 QuizID: quizId,
                                 encJWT: this.state.token,
                                 isMajor: false
-                              }
+                              },
+                              refetchQueries: ['getCurrentInformation']
                             })
                             createdQuestion
                               .then(data => {
@@ -253,7 +255,8 @@ class CreateQuiz extends Component {
                                         QuestionID: questionId,
                                         encJWT: this.state.token,
                                         isCorrect: choice[1]
-                                      }
+                                      },
+                                      refetchQueries: ['getCurrentInformation']
                                     })
                                     createdChoice
                                       .then(() => {

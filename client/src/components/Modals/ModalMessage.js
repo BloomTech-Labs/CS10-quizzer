@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Redirect } from 'react-router-dom'
+import { Redirect, withRouter } from 'react-router-dom'
 import { Button, Modal, ModalHeader, ModalBody } from 'reactstrap'
 
 class ModalMessage extends Component {
@@ -47,4 +47,4 @@ ModalMessage.propTypes = {
   toggleModalMessage: PropTypes.func
 }
 
-export default ModalMessage
+export default withRouter(ModalMessage)
