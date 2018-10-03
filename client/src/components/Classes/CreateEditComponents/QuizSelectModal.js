@@ -39,21 +39,9 @@ class QuizSelectModal extends Component {
 
   componentDidMount = () => {
     this.setState({
+      value: 'none',
       redirect: false
     })
-  }
-
-  handleSubmit = (event) => {
-    event.preventDefault()
-    if (this.state.value === 'none') {
-      this.setState({
-        redirect: true
-      })
-    } else {
-      this.setState({
-        submitInfo: true
-      })
-    }
   }
 
   render () {
@@ -74,7 +62,7 @@ class QuizSelectModal extends Component {
                 return (
                   <form>
                     <ListGroup>
-                      <select name='quizlist' onChange={this.handleChange} size='10'>
+                      <select value={this.state.value} name='quizlist' onChange={this.handleChange} size='10'>
                         <option value='none'>Create New Quiz?</option>
                         {quizzes.map((quiz) => {
                           return (
@@ -89,28 +77,30 @@ class QuizSelectModal extends Component {
                       </select>
                     </ListGroup>
                     <Mutation mutation={ADD_QUIZ_TO_CLASS}>
-                      {(addQuiztoClass) => (
-                        <Button type='submit' onClick={event => {
-                          event.preventDefault()
-                          if (this.state.value === 'none') {
-                            this.setState({
-                              redirect: true
-                            })
-                          } else {
-                            addQuiztoClass({
-                              variables: {
-                                Classroom: classID,
-                                encJWT: window.localStorage.getItem('token'),
-                                QuizID: this.state.value
-                              },
-                              refetchQueries: ['GetClassQuizzes', 'getClasses']
-                            })
-                            this.setState({
-                              value: 'none'
-                            })
-                            toggle()
-                          }
-                        }}>{(this.state.value === 'none') ? 'Create New Quiz' : 'Add Quiz to Class'}</Button>
+                      {(addQuiztoClass, { loading, error }) => (
+                        <div>
+                          <Button type='submit' onClick={event => {
+                            event.preventDefault()
+                            if (this.state.value === 'none') {
+                              this.setState({
+                                redirect: true
+                              })
+                            } else {
+                              addQuiztoClass({
+                                variables: {
+                                  Classroom: classID,
+                                  encJWT: window.localStorage.getItem('token'),
+                                  QuizID: this.state.value
+                                },
+                                refetchQueries: ['GetClassQuizzes', 'getClasses']
+                              })
+                            }
+                          }}>{(this.state.value === 'none') ? 'Create New Quiz' : 'Add Quiz to Class'}</Button>
+                          <ModalFooter>
+                            {loading && <span>Adding to class...</span>}
+                            {error && <span>{error.message}</span>}
+                          </ModalFooter>
+                        </div>
                       )}
                     </Mutation>
                   </form>
@@ -119,7 +109,6 @@ class QuizSelectModal extends Component {
             }}
           </Query>
         </ModalBody>
-        <ModalFooter />
         {this.state.redirect ? <Redirect to='/rocket/quizzes/createquiz/' /> : null}
       </Modal>
     )
