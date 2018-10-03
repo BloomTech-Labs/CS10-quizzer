@@ -5,7 +5,6 @@ import './CreateQuiz.css'
 
 class CreateChoices extends Component {
   render () {
-    console.log(this.props.choice)
     return (
       this.props.choices[this.props.index][Number(this.props.choice)][2]
         ? <Button choice={this.props.choice} className='enable_disable_choice' name={this.props.index} onClick={this.props.enableOrDisable}>Enable Choice</Button>

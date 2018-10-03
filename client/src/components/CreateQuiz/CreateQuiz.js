@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import CreateQuestions from './CreateQuestions'
-import { Redirect } from 'react-router-dom'
+import ModalMessage from '../Modals/ModalMessage'
 import gql from 'graphql-tag'
 import { Mutation } from 'react-apollo'
 import { Button } from 'reactstrap'
@@ -47,8 +47,10 @@ class CreateQuiz extends Component {
       questions: [],
       choices: [],
       answerList: [],
-      createQuizModal: false,
+      modalMessage: false,
+      modalTitle: '',
       modalText: '',
+      modalSuccess: false,
       token: ''
     }
   }
@@ -185,6 +187,12 @@ class CreateQuiz extends Component {
     })
   }
 
+  toggleModalMessage = () => {
+    this.setState({
+      modalMessage: !this.state.modalMessage
+    })
+  }
+
   render () {
     return (
       <div className='create_quiz_container'>
@@ -200,16 +208,16 @@ class CreateQuiz extends Component {
                     <form className='create_quiz_form' onSubmit={event => {
                       event.preventDefault()
                       if (this.state.questions.length === 0) {
-                        console.log('You need questions!')
                         this.setState({
-                          createQuizModal: true,
+                          modalMessage: true,
+                          modalTitle: 'Information',
                           modalText: 'To create a quiz, you must add at least one question.'
                         })
                         return
                       } else if (this.state.answerList.indexOf(null) > -1) {
-                        console.log('You need answers!')
                         this.setState({
-                          createQuizModal: true,
+                          modalMessage: true,
+                          modalTitle: 'Information',
                           modalText: 'To create a quiz, you must choose an answer for each question you add.'
                         })
                         return
@@ -249,11 +257,12 @@ class CreateQuiz extends Component {
                                     })
                                     createdChoice
                                       .then(() => {
-                                        console.log('Successfully created choice!')
+                                        console.log('Successfully created choice.')
                                       })
                                       .catch(() => {
                                         this.setState({
-                                          createQuizModal: true,
+                                          modalMessage: true,
+                                          modalTitle: 'Error',
                                           modalText: 'An error occurred while creating the quiz.'
                                         })
                                       })
@@ -262,7 +271,7 @@ class CreateQuiz extends Component {
                               })
                               .catch(() => {
                                 this.setState({
-                                  createQuizModal: true,
+                                  modalMessage: true,
                                   modalText: 'An error occurred while creating the quiz.'
                                 })
                               })
@@ -270,19 +279,20 @@ class CreateQuiz extends Component {
                         })
                         .catch(() => {
                           this.setState({
-                            createQuizModal: true,
+                            modalMessage: true,
                             modalText: 'An error occurred while creating the quiz.'
                           })
                         })
                       if (!loadingQuiz && !loadingQuestion && !loadingChoice) {
-                        console.log('You have successfully created a quiz.')
                         this.setState({
                           quizName: '',
                           questions: [],
                           choices: [],
                           answerList: [],
-                          createQuizModal: true,
-                          modalText: 'You have successfully created a quiz.'
+                          modalMessage: true,
+                          modalTitle: 'Success',
+                          modalText: 'You have successfully created a quiz. Do you want to go to the quizzes page?',
+                          modalSuccess: true
                         })
                       }
                     }}>
@@ -297,7 +307,7 @@ class CreateQuiz extends Component {
             </Mutation>
           )}
         </Mutation>
-        {this.state.redirect ? <Redirect to='/rocket/quizzes' /> : null}
+        <ModalMessage modalMessage={this.state.modalMessage} modalTitle={this.state.modalTitle} modalText={this.state.modalText} modalSuccess={this.state.modalSuccess} toggleModalMessage={this.toggleModalMessage} />
       </div>
     )
   }
