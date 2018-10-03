@@ -1,14 +1,10 @@
 import React, { Component } from 'react'
 import gql from 'graphql-tag'
 import { Query } from 'react-apollo'
-import { Button, Input, Label } from 'reactstrap'
-import { Redirect } from 'react-router-dom'
 
-import QuizQuestions from './QuizQuestions'
+import QuestionsContainer from './QuestionsContainer'
 
 import './QuizPage.css'
-
-// const testData = require('./testData.json')
 
 const GET_QUIZ = gql`
   query ($quizID: String!, $classID: String!, $studentID: String!) {
@@ -63,7 +59,7 @@ class QuizPage extends Component {
           if (error) return <h1>There was an error</h1>
 
           if (data) {
-            return <QuizQuestions {...data} {...this.props.match.params} history={this.props.history} />
+            return <QuestionsContainer {...data} {...this.props.match.params} history={this.props.history} />
           }
         }}
       </Query>
