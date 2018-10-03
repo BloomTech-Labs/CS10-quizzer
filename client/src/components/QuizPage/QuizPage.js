@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { Button, Input, Label } from 'reactstrap'
 import { Redirect } from 'react-router-dom'
 import './QuizPage.css'
-const testData = require('./testData.json')
+
+// const testData = require('./testData.json')
 
 class QuizPage extends Component {
   constructor () {
@@ -25,14 +26,14 @@ class QuizPage extends Component {
     this.submit = this.submit.bind(this)
   }
   componentDidMount () {
-    const quiz = testData.quiz
-    this.setState({
-      className: quiz.className,
-      studentName: quiz.studentName,
-      quizName: quiz.quizName,
-      quizContent: quiz.quizContent,
-      questions: quiz.questions
-    })
+    // const quiz = testData.quiz
+    // this.setState({
+    //   className: quiz.className,
+    //   studentName: quiz.studentName,
+    //   quizName: quiz.quizName,
+    //   quizContent: quiz.quizContent,
+    //   questions: quiz.questions
+    // })
   }
 
   displayQuizContent () {
@@ -143,37 +144,39 @@ class QuizPage extends Component {
   }
 
   render () {
-    if (this.state.questions.length === 0) {
-      return <div>Loading...</div>
-    }
-    return (
-      <div>
-        <div className='quiz_header'>
-          <h1>{this.state.className} - {this.state.studentName}</h1>
-          <h1>{this.state.page} of {this.state.questions.length}</h1>
-        </div>
-        <div className='quiz_body'>
-          <h1>{this.state.quizName}</h1>
-          {this.displayQuizContent()}
-          <h1>Question: {this.state.page}</h1>
-          <p>{this.state.questions[this.state.page - 1].question}</p>
-        </div>
-        <div className='answers_list'>
-          {this.displayChoices()}
-        </div>
-        <div className='quiz_buttons'>
-          {this.state.page > 1 ? <Button color='warning' className='back_button' onClick={this.back}>Back</Button> : null}
-          {this.state.page !== this.state.questions.length ? <Button color='info' className='next_button' onClick={this.next}>Next</Button> : null}
-          {this.state.page === this.state.questions.length ? <Button color='danger' className='submit_button' onClick={this.submit}>Submit</Button> : null}
-          {this.state.submit ? <Redirect to={
-            {
-              pathname: '/result',
-              state: { grade: this.state.grade }
-            }
-          } /> : null}
-        </div>
-      </div>
-    )
+    return <h1>Quiz Page</h1>
+
+    // if (this.state.questions.length === 0) {
+    //   return <div>Loading...</div>
+    // }
+    // return (
+    //   <div>
+    //     <div className='quiz_header'>
+    //       <h1>{this.state.className} - {this.state.studentName}</h1>
+    //       <h1>{this.state.page} of {this.state.questions.length}</h1>
+    //     </div>
+    //     <div className='quiz_body'>
+    //       <h1>{this.state.quizName}</h1>
+    //       {this.displayQuizContent()}
+    //       <h1>Question: {this.state.page}</h1>
+    //       <p>{this.state.questions[this.state.page - 1].question}</p>
+    //     </div>
+    //     <div className='answers_list'>
+    //       {this.displayChoices()}
+    //     </div>
+    //     <div className='quiz_buttons'>
+    //       {this.state.page > 1 ? <Button color='warning' className='back_button' onClick={this.back}>Back</Button> : null}
+    //       {this.state.page !== this.state.questions.length ? <Button color='info' className='next_button' onClick={this.next}>Next</Button> : null}
+    //       {this.state.page === this.state.questions.length ? <Button color='danger' className='submit_button' onClick={this.submit}>Submit</Button> : null}
+    //       {this.state.submit ? <Redirect to={
+    //         {
+    //           pathname: '/result',
+    //           state: { grade: this.state.grade }
+    //         }
+    //       } /> : null}
+    //     </div>
+    //   </div>
+    // )
   }
 }
 
