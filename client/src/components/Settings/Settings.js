@@ -7,8 +7,8 @@ import './Settings.css'
 
 // GraphQL Mutation to update user information
 const updateInformation = gql`
-  mutation UpdateTeacher($TeacherName: String, $TeacherEmail: String, $OldPassword: String!, $NewPassword: String) {
-    updateTeacher(incomingJwt: "${window.localStorage.getItem('token')}", TeacherName: $TeacherName, TeacherEmail: $TeacherEmail, OldPassword: $OldPassword, NewPassword: $NewPassword) {
+  mutation UpdateTeacher($incomingJwt: String!, $TeacherName: String, $TeacherEmail: String, $OldPassword: String!, $NewPassword: String) {
+    updateTeacher(incomingJwt: $incomingJwt, TeacherName: $TeacherName, TeacherEmail: $TeacherEmail, OldPassword: $OldPassword, NewPassword: $NewPassword) {
       teacher {
         TeacherName
         TeacherEmail
@@ -23,14 +23,12 @@ class Settings extends Component {
     this.state = {
       name: '',
       email: '',
-      oldPassword: null,
+      oldPassword: '',
       newPassword: ''
     }
-
-    this.handleInputChange = this.handleInputChange.bind(this)
   }
 
-  handleInputChange (event) {
+  handleInputChange = (event) => {
     this.setState({ [event.target.name]: event.target.value })
   }
 
@@ -41,24 +39,32 @@ class Settings extends Component {
         <Mutation mutation={updateInformation}>
           {(updateTeacher, { loading, error, data }) => (
             <div>
-              <form onSubmit={event => {
+              <form onSubmit={async event => {
                 event.preventDefault()
-                const updatedInfo = updateTeacher({
-                  variables:
-                  { TeacherName: name,
-                    TeacherEmail: email,
-                    OldPassword: oldPassword,
-                    NewPassword: newPassword
-                  },
-                  refetchQueries: ['GetCurrentInformation']
-                })
-                updatedInfo.then(res => {
-                  window.localStorage.setItem('token', res.data.updateTeacher.jwtString)
-                }).catch(() => {
+                try {
+                  const updatedInfo = await updateTeacher({
+                    variables: {
+                      incomingJwt: window.localStorage.getItem('token'),
+                      TeacherName: name,
+                      TeacherEmail: email,
+                      OldPassword: oldPassword,
+                      NewPassword: newPassword
+                    },
+                    refetchQueries: ['GetCurrentInformation']
+                  })
+                  if (updatedInfo.data.updateTeacher.jwtString) {
+                    window.localStorage.setItem('token', updatedInfo.data.updateTeacher.jwtString)
+                    return this.setState({
+                      name: '',
+                      email: '',
+                      oldPassword: '',
+                      newPassword: ''
+                    })
+                  }
+                } catch (err) {
                   return <span>Something went wrong!</span>
-                })
-              }
-              }>
+                }
+              }}>
                 <QueryComponent name={name} email={email} oldPassword={oldPassword} newPassword={newPassword} handleInputChange={this.handleInputChange} />
                 <Button type='submit' color='info' className='settings_save_button'>Save</Button>
               </form>
