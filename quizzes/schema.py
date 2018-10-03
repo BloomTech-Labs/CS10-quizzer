@@ -47,6 +47,7 @@ class Query(graphene.ObjectType):
     single_class    = graphene.String(ClassID=graphene.String())
 
     public_quizzes  = graphene.List(QuizType)
+    single_quiz     = graphene.Field(QuizType, QuizID=graphene.String())
     class_quizzes   = graphene.List(QuizType, ClassID=graphene.String())
     teacher_quizzes = graphene.List(QuizType, enc_jwt=graphene.String())
     
@@ -67,6 +68,15 @@ class Query(graphene.ObjectType):
     `resolve_` method `resolve_classes()` which will then return our query
     to `Class.objects.all()` from the DB
     '''
+    def resolve_single_quiz(self, info, **kwargs):
+        try:
+            QuizID = kwargs.get('QuizID')
+            return Quiz.objects.get(pk=QuizID)
+
+        except:
+            return GraphQLError('Something went wrong')
+        
+    
     def resolve_teacher(self, info, **kwargs):
         enc_jwt    = kwargs.get('enc_jwt').encode('utf-8')
         secret     = config('SECRET_KEY')
