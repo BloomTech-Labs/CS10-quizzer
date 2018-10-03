@@ -10,9 +10,9 @@ import QuizList from './QuizList'
 
 import './Quizzes.css'
 
-const getCurrentInformation = gql`
- {
-    teacher(encJwt: "${localStorage.getItem('token')}") {
+const GET_CURRENT_INFORMATION = gql`
+ query GetCurrentInformation($encJwt: String!) {
+    teacher(encJwt: $encJwt) {
       quizSet {
         QuizID
         QuizName
@@ -69,12 +69,12 @@ class Quizzes extends Component {
       <div className='quizzes_container'>
         <span>Add a new Quiz</span>
 
-        <Query query={getCurrentInformation}>
+        <Query query={GET_CURRENT_INFORMATION} variables={{ encJwt: localStorage.getItem('token') }}>
           {({ loading, error, data }) => {
             if (loading) return 'Loading...'
             if (error) return `Error: ${error.message}`
 
-            if (data) {
+            if (data && data.teacher[0]) {
               return this.renderQuizComponent(data)
             }
           }}
