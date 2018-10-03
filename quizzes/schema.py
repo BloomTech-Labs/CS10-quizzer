@@ -12,7 +12,7 @@ from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student, Stud
 from quizzes.graphql.mutation import (
     CreateTeacher, QueryTeacher, CreateStudent, CreateQuiz, CreateQuestion,
     CreateChoice, UpdateTeacherInformation, AddQuizToClass, DeleteStudent,
-    UpdateClassName
+    UpdateClassName, UpdateQuizScore
 )
 
 from quizzes.graphql.query import (
@@ -37,6 +37,7 @@ class Mutation(graphene.ObjectType):
     create_question   = CreateQuestion.Field()
     create_choice     = CreateChoice.Field()
     add_quiz_to_class = AddQuizToClass.Field()
+    update_quiz_score = UpdateQuizScore.Field()
 
 
 class Query(graphene.ObjectType):
@@ -44,7 +45,7 @@ class Query(graphene.ObjectType):
     Allows us to make GET/Query requests from the DB using GraphQL
     '''
     classes         = graphene.List(ClassType, enc_jwt=graphene.String())
-    single_class    = graphene.String(ClassID=graphene.String())
+    single_class    = graphene.Field(ClassType, ClassID=graphene.String())
 
     public_quizzes  = graphene.List(QuizType)
     single_quiz     = graphene.Field(QuizType, QuizID=graphene.String())
@@ -60,6 +61,7 @@ class Query(graphene.ObjectType):
     teacher         = graphene.List(TeacherType, enc_jwt=graphene.String())
     
     students        = graphene.List(StudentType)
+    student         = graphene.Field(StudentType, StudentID=graphene.String())
     class_students  = graphene.List(StudentType, ClassID=graphene.String())
 
     '''
@@ -68,15 +70,6 @@ class Query(graphene.ObjectType):
     `resolve_` method `resolve_classes()` which will then return our query
     to `Class.objects.all()` from the DB
     '''
-    def resolve_single_quiz(self, info, **kwargs):
-        try:
-            QuizID = kwargs.get('QuizID')
-            return Quiz.objects.get(pk=QuizID)
-
-        except:
-            return GraphQLError('Something went wrong')
-        
-    
     def resolve_teacher(self, info, **kwargs):
         enc_jwt    = kwargs.get('enc_jwt').encode('utf-8')
         secret     = config('SECRET_KEY')
@@ -122,6 +115,14 @@ class Query(graphene.ObjectType):
 
     def resolve_public_quizzes(self, info):
         return Quiz.objects.filter(Public=True)
+
+    def resolve_single_quiz(self, info, **kwargs):
+        try:
+            QuizID = kwargs.get('QuizID')
+            return Quiz.objects.get(pk=QuizID)
+
+        except:
+            return GraphQLError('Something went wrong')
 
     def resolve_class_quizzes(self, info, **kwargs):
         class_id = kwargs.get('ClassID')
@@ -169,6 +170,15 @@ class Query(graphene.ObjectType):
     def resolve_students(self, info):
         return Student.objects.all()
 
+    # returns a single student
+    def resolve_student(self, info, **kwargs):
+        try:
+            studentID = kwargs.get('StudentID')
+            return Student.objects.get(pk=studentID)
+
+        except:
+            return GraphQLError('No student found with that ID')
+
     def resolve_class_students(self, info, **kwargs):
         class_id = kwargs.get('ClassID')
 
@@ -182,8 +192,7 @@ class Query(graphene.ObjectType):
         class_id = kwargs.get('ClassID')
 
         if class_id:
-            classroom = Class.objects.get(ClassID=class_id)
-            return classroom.ClassName
+            return Class.objects.get(ClassID=class_id)
         
         return GraphQLError('Please supply a valid ClassID')
 
