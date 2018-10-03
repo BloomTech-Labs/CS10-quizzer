@@ -18,10 +18,10 @@ class NewClassCard extends Component {
 
   render () {
     return (
-      <Card className='classes_newClassContainer_Card'>
+      <Card className='classes_classcard'>
         <CardTitle>New Class</CardTitle>
         <NewClassModal openNewClassModal={this.state.openNewClassModal} toggleNewClassModal={this.toggleNewClassModal} />
-        <Button color='warning' className='add_quiz_button' onClick={this.toggleNewClassModal}>
+        <Button color='warning' className='add_class_button' onClick={this.toggleNewClassModal}>
           <span role='img' aria-labelledby='Plus Symbol'>&#x2795;</span>
         </Button>
       </Card>

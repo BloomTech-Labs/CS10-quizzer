@@ -5,16 +5,16 @@ import PropTypes from 'prop-types'
 
 function ClassCard (props) {
   return (
-    <Link to={{ pathname: '/rocket/classes/editclass/', state: { classItem: props.classItem } }}>
-      <Card>
+    <Card className='classes_classcard'>
+      <Link to={{ pathname: '/rocket/classes/editclass/', state: { classItem: props.classItem } }}>
         <CardTitle>{props.classItem.ClassName}</CardTitle>
         <CardBody>
           <CardText>Students: {props.classItem.studentSet.length}</CardText>
           <CardText>Average Grade: Number</CardText>
           <CardText>Quizzes: {props.classItem.quizSet.length}</CardText>
         </CardBody>
-      </Card>
-    </Link>
+      </Link>
+    </Card>
   )
 }
 

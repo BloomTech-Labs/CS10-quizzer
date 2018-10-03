@@ -7,7 +7,7 @@ const ClassList = props => {
   const { classSet } = props
 
   return (
-    <React.Fragment>
+    <div className='classes_container'>
       {props.classSet.length > 0
         ? classSet.map(classItem => {
           return (
@@ -18,7 +18,7 @@ const ClassList = props => {
         })
         : null}
       <NewClassCard />
-    </React.Fragment>
+    </div>
   )
 }
 

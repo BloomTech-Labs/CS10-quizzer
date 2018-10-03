@@ -26,8 +26,10 @@ class Classes extends Component {
 
   renderClassComponent = data => {
     const classSet = data.teacher[0].classSet
+
     return (
       <ViewQuizOrClass
+        className='wut'
         key={classSet.ClassID}
         render={() => (
           <ClassList
@@ -40,9 +42,7 @@ class Classes extends Component {
 
   render () {
     return (
-      <div className='quizzes_container'>
-        <h1>Classes</h1>
-
+      <div>
         <Query query={GET_CLASSES_INFORMATION} variables={{ token: localStorage.getItem('token') }}>
           {({ loading, data, error }) => {
             if (loading) return <h1>Loading...</h1>
