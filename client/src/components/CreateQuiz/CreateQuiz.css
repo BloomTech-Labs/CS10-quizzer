@@ -78,3 +78,54 @@
     font-weight: bold !important;
     margin: 0 0 7px 2%;
 }
+
+.modal_message_header {
+    background: #003366;
+    border-radius: 0 !important;
+    color: white;
+    font-family: monospace;
+    font-size: 20px;
+    justify-content: center !important;
+    text-align: center;
+}
+
+.modal_message_header h5 {
+    font-weight: bold;
+}
+
+.modal_message_body {
+    font-family: monospace;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.okay_button {
+    align-self: center;
+    font-family: monospace;
+    font-size: 20px !important; 
+    font-weight: bold !important;
+    margin: 0 0 10px 0;
+    width: 25%;
+}
+
+.modal_success_container {
+    display: flex;
+    justify-content: center;
+}
+
+.yes_button {
+    font-family: monospace;
+    font-size: 20px !important;
+    font-weight: bold !important;
+    width: 25%;
+    margin: 0 5% 10px 0;
+}
+
+.no_button {
+    font-family: monospace;
+    font-size: 20px !important;
+    font-weight: bold !important;
+    margin: 0 0 10px 0;
+    width: 25%;
+}
