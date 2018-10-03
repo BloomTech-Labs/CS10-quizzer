@@ -58,7 +58,7 @@ class SignUpModal extends Component {
               if (this.state.password !== this.state.confirmPassword) {
                 this.setState({ passwordError: 'Passwords do not match.' })
               } else {
-                const createdUser = createNewUser({ variables: { TeacherName: name, TeacherEmail: email, TeacherPW: password } })
+                const createdUser = createNewUser({ variables: { TeacherName: name, TeacherEmail: email, TeacherPW: password }, refetchQueries: ['GetCurrentInformation'] })
                 createdUser.then(data => {
                   const createdUserData = data.data.createTeacher
                   if (createdUserData) {

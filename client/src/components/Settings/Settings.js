@@ -7,8 +7,8 @@ import './Settings.css'
 
 // GraphQL Mutation to update user information
 const updateInformation = gql`
-  mutation UpdateTeacher($TeacherName: String, $TeacherEmail: String, $OldPassword: String!, $NewPassword: String) {
-    updateTeacher(incomingJwt: "${window.localStorage.getItem('token')}", TeacherName: $TeacherName, TeacherEmail: $TeacherEmail, OldPassword: $OldPassword, NewPassword: $NewPassword) {
+  mutation UpdateTeacher($incomingJwt: String!, $TeacherName: String, $TeacherEmail: String, $OldPassword: String!, $NewPassword: String) {
+    updateTeacher(incomingJwt: $incomingJwt, TeacherName: $TeacherName, TeacherEmail: $TeacherEmail, OldPassword: $OldPassword, NewPassword: $NewPassword) {
       teacher {
         TeacherName
         TeacherEmail
@@ -26,11 +26,9 @@ class Settings extends Component {
       oldPassword: null,
       newPassword: ''
     }
-
-    this.handleInputChange = this.handleInputChange.bind(this)
   }
 
-  handleInputChange (event) {
+  handleInputChange = (event) => {
     this.setState({ [event.target.name]: event.target.value })
   }
 
@@ -44,8 +42,9 @@ class Settings extends Component {
               <form onSubmit={event => {
                 event.preventDefault()
                 const updatedInfo = updateTeacher({
-                  variables:
-                  { TeacherName: name,
+                  variables: {
+                    incomingJwt: localStorage.getItem('token'),
+                    TeacherName: name,
                     TeacherEmail: email,
                     OldPassword: oldPassword,
                     NewPassword: newPassword

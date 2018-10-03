@@ -46,7 +46,7 @@ class LogInModal extends Component {
             <div>
               <form onSubmit={event => {
                 event.preventDefault()
-                const login = loginUser({ variables: { TeacherEmail: email, TeacherPW: password } })
+                const login = loginUser({ variables: { TeacherEmail: email, TeacherPW: password }, refetchQueries: ['GetCurrentInformation'] })
                 login.then(data => {
                   const logInData = data.data.queryTeacher
                   if (logInData) {
