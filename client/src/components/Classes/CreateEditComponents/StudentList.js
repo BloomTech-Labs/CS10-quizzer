@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import gql from 'graphql-tag'
 import { Query } from 'react-apollo'
 import Student from './Student'
@@ -27,7 +27,7 @@ function StudentList (props) {
           if (data) {
             const { classStudents } = data
             return (
-              <ul>
+              <Fragment>
                 {classStudents && classStudents.length > 0
                   ? classStudents.map(student => {
                     return (
@@ -38,7 +38,7 @@ function StudentList (props) {
                     )
                   })
                   : <p>No students in this class yet.</p>}
-              </ul>
+              </Fragment>
             )
           }
         }}

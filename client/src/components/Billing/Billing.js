@@ -1,10 +1,28 @@
 import React, { Component } from 'react'
+import axios from 'axios'
+import { Button } from 'reactstrap'
 
 import Stripe from '../Stripe/Stripe'
 
 import './Billing.css'
 
 class Billing extends Component {
+  unsubscribe = async () => {
+    const apiURI = process.env.NODE_ENV !== 'production' ? 'http://localhost:8000/' : 'https://quizzercs10.herokuapp.com/'
+    const token = localStorage.getItem('token')
+    const req = {
+      method: 'POST',
+      url: `${ apiURI }api/payments/unsubscribe`,
+      data: token
+    }
+
+    try {
+      await axios(req)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   render () {
     return (
       <div className='billing_container'>
@@ -20,6 +38,12 @@ class Billing extends Component {
           *       location
           */}
         <Stripe />
+
+        <Button
+          onClick={this.unsubscribe}
+        >
+          Cancel Subscription
+        </Button>
       </div>
     )
   }

@@ -13,6 +13,10 @@ from twilio.rest import Client
 from sendgrid.helpers.mail import *
 
 
+# class GetStripeCustomer:
+#     def __init__(self, )
+
+
 def basic_subscription(req):
     '''
     TODO: prevent requests that are not authenticated from making transactions
@@ -49,6 +53,42 @@ def basic_subscription(req):
         })
 
     return JsonResponse({ 'error': 'An error occurred while maiking a payment' })
+
+
+def cancel_subscription(req):
+    try:
+        # get and decrypt JWT
+        enc_jwt        = req.body
+        secret         = config('SECRET_KEY')
+        algorithm      = 'HS256'
+        decJWT         = jwt.decode(enc_jwt, secret, algorithms=[ algorithm ])
+
+        # now that we have the teachers ID we can find them and being removing
+        # them from stripe including their customer data and subscription
+        teacherID      = decJWT['sub']['id']
+        teacher        = Teacher.objects.get(pk=teacherID)
+        stripe.api_key = config('STRIPE_SECRET_KEY')
+        customer       = stripe.Customer.retrieve(id=teacher.CustomerID)
+        subscriptionID = customer.subscriptions.data[0].id
+        subscription   = stripe.Subscription.retrieve(subscriptionID)
+
+        subscription.delete()
+        customer.delete()
+        # remove their customerID from the database
+        teacher.CustomerID = ''
+        teacher.save()
+
+        return JsonResponse({
+            'statusCode': 200,
+            'statusText': 'OK'
+        })
+    
+    except:
+        return JsonResponse({
+            'statusCode': 400,
+            'statusText': 'Bad Request',
+            'error': 'This subscription does not exist'
+        })
 
 
 def premium_subscription(req):
@@ -100,33 +140,40 @@ def send_sms_notification(req):
         'statusCode': 200
     })
 
-
 def send_email(req):
-    body      = json.loads(req.body.decode('utf-8'))
-    teacher   = body['teacherName']
-    className = body['className']
-    quizName  = body['quizName']
-    quizLink  = body['quizLink']
+    body = json.loads(req.body.decode('utf-8'))
+    teacher_name = body['teacherName']
+    teacher_email = body['teacherEmail']
+    class_name = body['className']
+    class_id = body['classID']
+    students = body['students']
+    quiz_name = body['quizName']
+    quiz_id = body['quizID']
 
     sg = sendgrid.SendGridAPIClient(
         apikey=config('SENDGRID_API_KEY')
-        )
+    )
 
-    from_email = Email('test@example.com')
+    from_email = Email(teacher_email)
 
-    for student in body['students']:
-        to_email = Email(student)
-        subject  = f'New quiz from {teacher}'
+    for student in students:
+        student_id = student['id']
+        student_name = student['name']
+        student_email = student['email']
+
+        to_email = Email(student_email)
+        subject = f'New quiz from {teacher_name}'
 
         content = Content(
             'text/html',
             f'''
-            <p>You have a new quiz from <b>{teacher}</b> for the class <b>{className}</b><p>
-            <p>To take this quiz follow the link here <a href="{quizLink}">{quizName}</a></p>
+            <p>Hello <b>{student_name}</b></p>
+            <p>You have a new quiz from <b>{teacher_name}</b> for the class <b>{class_name}</b><p>
+            <p>To take this quiz follow the link here: <a href="https://quizzercs10.herokuapp.com/student/{quiz_id}/{class_id}/{student_id}/">{quiz_name}</a></p>
             '''
             )
 
-        mail     = Mail(from_email, subject, to_email, content)
+        mail = Mail(from_email, subject, to_email, content)
         response = sg.client.mail.send.post(request_body=mail.get())
 
     return HttpResponse('Email sent!')
