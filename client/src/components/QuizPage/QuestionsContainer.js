@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { Button } from 'reactstrap'
 
 import Questions from './Questions'
+import QuizComplete from './QuizComplete'
 
 const UPDATE_QUIZ_SCORE = gql`
   mutation ($QuizID: String!, $Classroom: String!, $StudentID: String!, $Score: Int!) {
@@ -95,15 +96,10 @@ class QuizQuestions extends Component {
     // render this portion when the quiz has been completed
     if (quizComplete) {
       return (
-        <div>
-          <p>
-            Quiz Complete! You got a score of {quizScore} out of {(page + 1) * 10}
-          </p>
-
-          <Link to='/'>
-            Back to Quizzer Homepage
-          </Link>
-        </div>
+        <QuizComplete
+          quizScore={quizScore}
+          page={page}
+        />
       )
     }
 
