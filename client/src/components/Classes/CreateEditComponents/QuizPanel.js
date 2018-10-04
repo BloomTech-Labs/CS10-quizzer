@@ -6,7 +6,7 @@ import { string } from 'prop-types'
 import gql from 'graphql-tag'
 
 const GET_CLASS_QUIZZES = gql`
-query GetClassQuizzes($ClassID: String!) {
+query GetClassQuizzes($ClassID: String!, $encJWT: String!) {
   classQuizzes(ClassID: $ClassID) {
     QuizID
     QuizName
@@ -16,21 +16,25 @@ query GetClassQuizzes($ClassID: String!) {
     StudentName
     StudentEmail
   }
+  teacher(encJwt: $encJWT) {
+    TeacherName
+  }
 }`
 
 function QuizPanel (props) {
-  const classID = props.classID
+  const { classID, className } = props
 
   return (
     <div>
       <h4>Quizzes</h4>
-      <Query query={GET_CLASS_QUIZZES} variables={{ ClassID: classID }}>
+      <Query query={GET_CLASS_QUIZZES} variables={{ ClassID: classID, encJWT: localStorage.getItem('token') }}>
         {({ loading, error, data }) => {
           if (loading) return 'Loading...'
           if (error) return error.message
           if (data) {
             const quizzes = data.classQuizzes
             const students = data.classStudents
+            const teacher = data.teacher[0].TeacherName
 
             if (quizzes.length > 0) {
               return (
@@ -42,6 +46,8 @@ function QuizPanel (props) {
                         quizID={quiz.QuizID}
                         quizName={quiz.QuizName}
                         students={students}
+                        teacher={teacher}
+                        className={className}
                       />
                     )
                   })}
@@ -59,7 +65,8 @@ function QuizPanel (props) {
 }
 
 QuizPanel.propTypes = {
-  classID: string
+  classID: string,
+  className: string
 }
 
 export default QuizPanel

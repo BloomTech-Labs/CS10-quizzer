@@ -30,7 +30,7 @@ class EditClass extends Component {
         <div>
           <ClassSettings classID={ClassID} className={ClassName} />
           <StudentPanel classID={ClassID} />
-          <QuizPanel classID={ClassID} />
+          <QuizPanel className={ClassName} classID={ClassID} />
         </div>
       )
     } else {

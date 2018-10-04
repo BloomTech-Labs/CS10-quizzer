@@ -3,17 +3,8 @@ import { Button } from 'reactstrap'
 import { string, array } from 'prop-types'
 import { apiURI } from '../../../index'
 
-const postData = {
-  'teacherName': 'Teacher Name',
-  'className': 'Class Name',
-  'students': [
-    'student@fake_school.com'
-  ],
-  'quizName': 'Quiz Name',
-  'quizLink': 'http://localhost:8000/rocket/quizzes/$23134dscsf'
-}
-
-const sendEmail = async () => {
+const sendEmail = async (event, postData) => {
+  event.preventDefault()
   try {
     const res = await window.fetch(apiURI, {
       method: 'POST',
@@ -26,20 +17,37 @@ const sendEmail = async () => {
 }
 
 function QuizCard (props) {
-  const { quizID, quizName, students } = props
+  const { className, teacher, quizID, quizName, students } = props
+  const studentArray = []
+
   students.forEach(student => {
-    console.log(student)
+    studentArray.push({
+      id: student.StudentID,
+      name: student.StudentName,
+      email: student.StudentEmail
+    })
   })
+
+  const postData = {
+    teacherName: teacher,
+    className: className,
+    students: studentArray,
+    quizName: quizName,
+    quizID: quizID
+  }
+  console.log(postData)
   return (
     <div>
       <h4>{quizName}</h4>
       <p>Completed: Number</p>
-      <Button onClick={sendEmail}>Email to Students</Button>
+      <Button onClick={event => sendEmail(event, postData)}>Email to Students</Button>
     </div>
   )
 }
 
 QuizCard.propTypes = {
+  className: string,
+  teacher: string,
   quizID: string,
   quizName: string,
   students: array
