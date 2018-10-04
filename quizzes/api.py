@@ -57,13 +57,26 @@ def basic_subscription(req):
 
 def cancel_subscription(req):
     try:
-        teacher        = Teacher.objects.get(pk='bd648423a1a14bdb8c9aac789382d14f')
+        # get and decrypt JWT
+        enc_jwt        = req.body
+        secret         = config('SECRET_KEY')
+        algorithm      = 'HS256'
+        decJWT         = jwt.decode(enc_jwt, secret, algorithms=[ algorithm ])
+
+        # now that we have the teachers ID we can find them and being removing
+        # them from stripe including their customer data and subscription
+        teacherID      = decJWT['sub']['id']
+        teacher        = Teacher.objects.get(pk=teacherID)
         stripe.api_key = config('STRIPE_SECRET_KEY')
         customer       = stripe.Customer.retrieve(id=teacher.CustomerID)
         subscriptionID = customer.subscriptions.data[0].id
         subscription   = stripe.Subscription.retrieve(subscriptionID)
 
         subscription.delete()
+        customer.delete()
+        # remove their customerID from the database
+        teacher.CustomerID = ''
+        teacher.save()
 
         return JsonResponse({
             'statusCode': 200,
