@@ -7,7 +7,9 @@ import gql from 'graphql-tag'
 
 const GET_SINGLE_CLASS = gql`
   query GetSingleClass($ClassID: String!) {
-    singleClass(ClassID: $ClassID)
+    classroom: singleClass(ClassID: $ClassID) {
+      ClassName
+    }
   }`
 
 class ClassSettings extends Component {
@@ -24,7 +26,8 @@ class ClassSettings extends Component {
           if (loading) return <span>Loading...</span>
           if (error) return <span>{error.message}</span>
           if (data) {
-            const className = data.singleClass
+            const className = data.classroom.ClassName
+
             return (
               <div>
                 <h1>Editing {className}</h1>
