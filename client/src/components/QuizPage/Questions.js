@@ -1,26 +1,31 @@
-import React, { Component } from 'react'
+import React from 'react'
+import { func, object, number } from 'prop-types'
 
 import QuestionBody from './QuestionBody'
 import QuestionTitle from './QuestionTitle'
 
-class Questions extends Component {
-  state = {}
+const Questions = ({ page, quiz, setIsAnswerCorrect }) => {
+  const { choiceSet, Question } = quiz.questionSet[ page ]
 
-  render () {
-    return (
-      <div>
-        <QuestionTitle
-          title={this.props.quiz.questionSet[ this.props.page ].Question}
-        />
+  return (
+    <div>
+      <QuestionTitle
+        title={Question}
+      />
 
-        <QuestionBody
-          choiceSet={this.props.quiz.questionSet[ this.props.page ].choiceSet}
-          page={this.props.page}
-          setIsAnswerCorrect={this.props.setIsAnswerCorrect}
-        />
-      </div>
-    )
-  }
+      <QuestionBody
+        choiceSet={choiceSet}
+        page={page}
+        setIsAnswerCorrect={setIsAnswerCorrect}
+      />
+    </div>
+  )
+}
+
+Questions.propTypes = {
+  page: number,
+  quiz: object,
+  setIsAnswerCorrect: func
 }
 
 export default Questions

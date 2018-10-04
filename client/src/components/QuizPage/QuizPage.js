@@ -36,21 +36,21 @@ const GET_QUIZ = gql`
 `
 
 class QuizPage extends Component {
-  constructor () {
-    super()
-    this.state = {
-      page: 0
-    }
+  state = {
+    page: 0
   }
 
   render () {
+    const { history, params } = this.props.match
+    const { cid, qid, sid } = params
+
     return (
       <Query
-        query={ GET_QUIZ }
-        variables={{ 
-          quizID: this.props.match.params.qid,
-          classID: this.props.match.params.cid,
-          studentID: this.props.match.params.sid
+        query={GET_QUIZ}
+        variables={{
+          quizID: qid,
+          classID: cid,
+          studentID: sid
         }}
       >
         {({ loading, error, data }) => {
@@ -59,7 +59,13 @@ class QuizPage extends Component {
           if (error) return <h1>There was an error</h1>
 
           if (data) {
-            return <QuestionsContainer {...data} {...this.props.match.params} history={this.props.history} />
+            return (
+              <QuestionsContainer
+                {...data}
+                {...params}
+                history={history}
+              />
+            )
           }
         }}
       </Query>

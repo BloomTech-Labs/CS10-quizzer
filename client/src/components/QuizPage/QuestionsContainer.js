@@ -47,22 +47,21 @@ class QuizQuestions extends Component {
 
   // submitAnswer
   submitAnswer = async (questionsLength, mutation) => {
-    const { isAnswerCorrect, quizScore } = this.state
+    const { isAnswerCorrect, page, quizScore } = this.state
 
     /**
-     * a self-calling promise to ensure that the state has been set before
-     * attempting to check if the student is submitting the final
-     * question of the test.
-     * if so then the student shall be directed to a new component
-     * that will show their quiz score
-     * if not they will be given the next question
+     * a self-calling promise (look up JavaScript IIFE in google) to ensure
+     * that the state has been set before attempting to check if the student is
+     * submitting the final question of the test.
+     * if so then the student shall be directed to a new component that will
+     * show their quiz score if not they will be given the next question
      */
     await (() => (
       new Promise((resolve, reject) => {
         if (isAnswerCorrect) {
           resolve(this.setQuizScore(quizScore + 10))
         } else {
-          if (this.state.quizScore > 10) {
+          if (quizScore > 10) {
             resolve(this.setQuizScore(quizScore - 10))
           } else {
             resolve(this.setQuizScore(0))
@@ -71,28 +70,34 @@ class QuizQuestions extends Component {
       })
     ))()
 
-    if (this.state.page + 1 === questionsLength) {
+    if (page + 1 === questionsLength) {
+      const { qid, cid, sid } = this.props
+
       mutation({
         variables: {
-          QuizID: this.props.qid,
-          Classroom: this.props.cid,
-          StudentID: this.props.sid,
-          Score: this.state.quizScore
+          QuizID: qid,
+          Classroom: cid,
+          StudentID: sid,
+          Score: quizScore
         }
       })
     } else {
-      this.setState({ page: this.state.page + 1 })
+      this.setState({ page: page + 1 })
     }
   }
 
   // render
   render () {
+    const { classroom, student, quiz } = this.props
+    const { page, quizComplete, quizScore } = this.state
+    const questionSetLength = quiz.questionSet.length
+
     // render this portion when the quiz has been completed
-    if (this.state.quizComplete) {
+    if (quizComplete) {
       return (
         <div>
           <p>
-            Quiz Complete! You got a score of {this.state.quizScore} out of {(this.state.page + 1) * 10}
+            Quiz Complete! You got a score of {quizScore} out of {(page + 1) * 10}
           </p>
 
           <Link to='/'>
@@ -106,13 +111,13 @@ class QuizQuestions extends Component {
     // this is what the student will see before when they first land on this page
     return (
       <div>
-        <h1>{ this.props.classroom.ClassName } - { this.props.student.StudentName }</h1>
-        <p>{ this.state.page + 1 } of { this.props.quiz.questionSet.length }</p>
+        <h1>{ classroom.ClassName } - { student.StudentName }</h1>
+        <p>{ page + 1 } of { questionSetLength }</p>
 
         <Questions
           {...this.props}
           setIsAnswerCorrect={this.setIsAnswerCorrect}
-          page={this.state.page}
+          page={page}
         />
 
         <Mutation
@@ -122,7 +127,9 @@ class QuizQuestions extends Component {
           {(updateQuizScore, { loading, error }) => {
             return (
               <Button
-                onClick={() => this.submitAnswer(this.props.quiz.questionSet.length, updateQuizScore)}
+                onClick={() => {
+                  this.submitAnswer(questionSetLength, updateQuizScore)
+                }}
               >
                 Submit
               </Button>

@@ -1,9 +1,10 @@
 import React from 'react'
+import { array, number, func } from 'prop-types'
 
 const QuestionBody = ({ choiceSet, page, setIsAnswerCorrect }) => {
   return (
     <ul>
-      {choiceSet.map(({ChoiceID, ChoiceText, isCorrect }) => (
+      {choiceSet.map(({ ChoiceID, ChoiceText, isCorrect }) => (
         <li key={ChoiceID}>
           <input
             data-correct-answer={isCorrect}
@@ -19,6 +20,12 @@ const QuestionBody = ({ choiceSet, page, setIsAnswerCorrect }) => {
       ))}
     </ul>
   )
+}
+
+QuestionBody.propTypes = {
+  choiceSet: array.isRequired,
+  page: number.isRequired,
+  setIsAnswerCorrect: func.isRequired
 }
 
 export default QuestionBody

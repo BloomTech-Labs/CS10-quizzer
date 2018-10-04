@@ -1,15 +1,16 @@
-import React, { Component } from 'react'
+import React from 'react'
+import { string } from 'prop-types'
 
-class QuestionTitle extends Component {
-  state = {}
+const QuestionTitle = ({ title }) => {
+  return (
+    <h2>
+      { title }
+    </h2>
+  )
+}
 
-  render () {
-    return (
-      <h2>
-        { this.props.title }
-      </h2>
-    )
-  }
+QuestionTitle.propTypes = {
+  title: string.isRequired
 }
 
 export default QuestionTitle
