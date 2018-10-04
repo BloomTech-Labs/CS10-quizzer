@@ -24,8 +24,9 @@ urlpatterns = [
     path('sms/', api.send_sms_notification, name='sms'),
     path('sendgrid/', csrf_exempt(api.send_email), name='sendgrid'),
     path('graphiql/', csrf_exempt(GraphQLView.as_view(graphiql=True))),
-    path('api/payments/basic', csrf_exempt(api.basic_subscription), name='basic_subscription'),
+    path('api/payments/unsubscribe', csrf_exempt(api.cancel_subscription), name='cancel_subscription'),
     path('api/payments/premium', csrf_exempt(api.premium_subscription), name='premium_subscription'),
+    path('api/payments/basic', csrf_exempt(api.basic_subscription), name='basic_subscription'),
     path('admin/', admin.site.urls),
 
     # REACT URLS
