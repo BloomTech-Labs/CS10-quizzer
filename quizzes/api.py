@@ -100,33 +100,40 @@ def send_sms_notification(req):
         'statusCode': 200
     })
 
-
 def send_email(req):
-    body      = json.loads(req.body.decode('utf-8'))
-    teacher   = body['teacherName']
-    className = body['className']
-    quizName  = body['quizName']
-    quizLink  = body['quizLink']
+    body = json.loads(req.body.decode('utf-8'))
+    teacher_name = body['teacherName']
+    teacher_email = body['teacherEmail']
+    class_name = body['className']
+    class_id = body['classID']
+    students = body['students']
+    quiz_name = body['quizName']
+    quiz_id = body['quizID']
 
     sg = sendgrid.SendGridAPIClient(
         apikey=config('SENDGRID_API_KEY')
-        )
+    )
 
-    from_email = Email('test@example.com')
+    from_email = Email(teacher_email)
 
-    for student in body['students']:
-        to_email = Email(student)
-        subject  = f'New quiz from {teacher}'
+    for student in students:
+        student_id = student['id']
+        student_name = student['name']
+        student_email = student['email']
+
+        to_email = Email(student_email)
+        subject = f'New quiz from {teacher_name}'
 
         content = Content(
             'text/html',
             f'''
-            <p>You have a new quiz from <b>{teacher}</b> for the class <b>{className}</b><p>
-            <p>To take this quiz follow the link here <a href="{quizLink}">{quizName}</a></p>
+            <p>Hello <b>{student_name}</b></p>
+            <p>You have a new quiz from <b>{teacher_name}</b> for the class <b>{class_name}</b><p>
+            <p>To take this quiz follow the link here: <a href="https://quizzercs10.herokuapp.com/student/{quiz_id}/{class_id}/{student_id}/">{quiz_name}</a></p>
             '''
             )
 
-        mail     = Mail(from_email, subject, to_email, content)
+        mail = Mail(from_email, subject, to_email, content)
         response = sg.client.mail.send.post(request_body=mail.get())
 
     return HttpResponse('Email sent!')

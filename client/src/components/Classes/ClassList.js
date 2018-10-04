@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import ClassCard from './ClassCard'
 import NewClassCard from './NewClassCard'
@@ -7,7 +7,7 @@ const ClassList = props => {
   const { classSet } = props
 
   return (
-    <React.Fragment>
+    <Fragment>
       {props.classSet.length > 0
         ? classSet.map(classItem => {
           return (
@@ -18,7 +18,7 @@ const ClassList = props => {
         })
         : null}
       <NewClassCard />
-    </React.Fragment>
+    </Fragment>
   )
 }
 
