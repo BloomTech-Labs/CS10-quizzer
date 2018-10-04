@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import gql from 'graphql-tag'
 import { Mutation } from 'react-apollo'
-import { Link } from 'react-router-dom'
 import { Button } from 'reactstrap'
 
 import Questions from './Questions'
