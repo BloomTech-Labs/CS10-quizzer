@@ -47,7 +47,7 @@ class StudentPanel extends Component {
                       StudentName: name,
                       StudentEmail: email
                     },
-                    refetchQueries: ['getStudents', 'getClasses'] // this query is created in StudentList.js and saved in the Apollo cache, which is where it is called from and why it's a string here.
+                    refetchQueries: ['GetClassQuizzes', 'getStudents', 'getClasses']
                   })
                   this.setState({
                     name: '',
