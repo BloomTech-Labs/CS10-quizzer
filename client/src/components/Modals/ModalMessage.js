@@ -31,8 +31,8 @@ class ModalMessage extends Component {
             <Button color='danger' className='yes_button' onClick={this.redirect}>Yes</Button>
             <Button color='warning' className='no_button' onClick={this.props.toggleModalMessage}>No</Button>
           </div>
-          : <Button color='info' className='okay_button' onClick={this.props.toggleModalMessage}>OK</Button>
-        }
+          : null}
+        {this.props.modalSaving ? null : <Button color='info' className='okay_button' onClick={this.props.toggleModalMessage}>OK</Button>}
         {this.state.redirect ? <Redirect to='/rocket/quizzes' /> : null}
       </Modal>
     )
@@ -43,6 +43,7 @@ ModalMessage.propTypes = {
   modalMessage: PropTypes.bool,
   modalTitle: PropTypes.string,
   modalText: PropTypes.string,
+  modalSaving: PropTypes.bool,
   modalSuccess: PropTypes.bool,
   toggleModalMessage: PropTypes.func
 }

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import gql from 'graphql-tag'
 import { Query } from 'react-apollo'
 import { Redirect, withRouter } from 'react-router-dom'
-import { Button } from 'reactstrap'
+import { Button, Card, CardBody, CardTitle } from 'reactstrap'
 import ViewQuizOrClass from '../ViewQuizOrClass/ViewQuizOrClass'
 import QuizList from './QuizList'
 import './Quizzes.css'
@@ -40,12 +40,6 @@ class Quizzes extends Component {
   render () {
     return (
       <div className='quizzes_container'>
-        <div className='add_quiz_container'>
-          <span>Add a new Quiz</span>
-          <Button color='warning' className='add_quiz_button' onClick={this.createQuiz}>
-            <span role='img' aria-labelledby='Plus Symbol'>&#x2795;</span>
-          </Button>
-        </div>
         <Query query={getCurrentInformation} variables={{ token: localStorage.getItem('token') }}>
           {({ loading, error, data }) => {
             if (loading) {
@@ -57,29 +51,53 @@ class Quizzes extends Component {
             }
 
             if (data) {
-              const { quizSet } = data.teacher[0]
-              return quizSet.map(quiz => {
-                const { QuizID, QuizName, Classes } = quiz
-                const amountOfClasses = Classes.length
+              const queryLength = data.teacher[0].quizSet.length
+              if (queryLength === 0) {
                 return (
-                  <div key={QuizID}>
-                    <ViewQuizOrClass render={() => {
-                      return (
-                        <QuizList
-                          QuizName={QuizName}
-                          QuizID={QuizID}
-                          amountOfClasses={amountOfClasses}
-                        />
-                      )
-                    }}
-                    />
+                  <div className='add_quiz_container'>
+                    <span>Add a new Quiz</span>
+                    <Button color='warning' onClick={this.createQuiz}>
+                      <span role='img' aria-labelledby='Plus Symbol'>&#x2795;</span>
+                    </Button>
                   </div>
                 )
-              })
+              } else {
+                const { quizSet } = data.teacher[0]
+                return (
+                  <div className='quiz_cards_container'>
+                    <div className='cards'>
+                      <Card className='quiz_card'>
+                        <CardBody className='quiz_card_body'>
+                          <CardTitle className='quiz_card_title'>New Quiz</CardTitle>
+                          <Button color='warning' onClick={this.createQuiz}>
+                            <span role='img' aria-labelledby='Plus Symbol'>&#x2795;</span>
+                          </Button>
+                        </CardBody>
+                      </Card>
+                    </div>
+                    {quizSet.map(quiz => {
+                      const { QuizID, QuizName, Classes } = quiz
+                      const amountOfClasses = Classes.length
+                      return (
+                        <ViewQuizOrClass key={QuizID} render={() => {
+                          return (
+                            <QuizList
+                              QuizName={QuizName}
+                              QuizID={QuizID}
+                              amountOfClasses={amountOfClasses}
+                            />
+                          )
+                        }}
+                        />
+                      )
+                    })}
+                  </div>
+                )
+              }
             }
           }}
         </Query>
-        {this.state.redirect ? <Redirect from='/rocket/quizzes' to='/rocket/quizzes/createquiz' /> : null}
+        {this.state.redirect ? <Redirect to='/rocket/quizzes/createquiz' /> : null}
       </div>
     )
   }

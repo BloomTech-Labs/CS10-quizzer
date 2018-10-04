@@ -1,8 +1,4 @@
 .quizzes_container {
-    align-items: flex-start;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
     margin: 10px 0 0 0;
     min-height: 100vh;
     width: 78%;
@@ -12,24 +8,63 @@
     font-family: monospace;
     font-size: 20px;
     font-weight: bold;
-    margin: 50px 0 0 10px;
-}
-
-.add_quiz_button {
-    border-radius: 30px !important;
-    font-family: monospace !important;
-    font-size: 20px !important;
-    font-weight: bold !important;
-    height: 60px;
-    width: 35% !important;
 }
 
 .add_quiz_container {
     align-items: center;
     display: flex;
     flex-direction: column;
+    margin: 0 auto;
+    width: 20%;
 }
 
-.add_quiz_button span {
+.add_quiz_container button {
+    border-radius: 30px !important;
+    font-family: monospace !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+    height: 60px;
+    width: 35%;
+}
+
+.add_quiz_container span {
     margin: 0
+}
+
+.quiz_cards_container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 2% 0 2%;
+}
+
+.quiz_card {
+    background: #EEEEEE !important;
+    border: 2px solid black !important;
+}
+
+.quiz_card_body {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.quiz_card_body button {
+    border-radius: 25px;
+}
+
+.quiz_card_title {
+    color: #003366;
+    font-family: monospace;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.quiz_card_text {
+    font-family: monospace;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.cards {
+    margin: 0 0 20px 2%;
 }
