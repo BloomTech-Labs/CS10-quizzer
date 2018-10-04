@@ -13,6 +13,10 @@ from twilio.rest import Client
 from sendgrid.helpers.mail import *
 
 
+# class GetStripeCustomer:
+#     def __init__(self, )
+
+
 def basic_subscription(req):
     '''
     TODO: prevent requests that are not authenticated from making transactions
@@ -49,6 +53,29 @@ def basic_subscription(req):
         })
 
     return JsonResponse({ 'error': 'An error occurred while maiking a payment' })
+
+
+def cancel_subscription(req):
+    try:
+        teacher        = Teacher.objects.get(pk='bd648423a1a14bdb8c9aac789382d14f')
+        stripe.api_key = config('STRIPE_SECRET_KEY')
+        customer       = stripe.Customer.retrieve(id=teacher.CustomerID)
+        subscriptionID = customer.subscriptions.data[0].id
+        subscription   = stripe.Subscription.retrieve(subscriptionID)
+
+        subscription.delete()
+
+        return JsonResponse({
+            'statusCode': 200,
+            'statusText': 'OK'
+        })
+    
+    except:
+        return JsonResponse({
+            'statusCode': 400,
+            'statusText': 'Bad Request',
+            'error': 'This subscription does not exist'
+        })
 
 
 def premium_subscription(req):
