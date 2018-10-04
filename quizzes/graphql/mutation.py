@@ -429,6 +429,9 @@ class CreateChoiceMutation(graphene.ObjectType):
 end CreateChoice
 '''
 
+'''
+start UpdateClassName
+'''
 class UpdateClassName(graphene.Mutation):
     class Arguments:
         ClassID = graphene.String(required=True)
@@ -460,3 +463,40 @@ class UpdateClassName(graphene.Mutation):
 class UpdateClassNameMutation(graphene.ObjectType):
     ClassID = graphene.String()
     ClassName = graphene.String()
+'''
+end UpdateClassName
+'''
+
+
+'''
+start UpdateQuizScore
+'''
+class UpdateQuizScore(graphene.Mutation):
+    class Arguments:
+        QuizID    = graphene.String(required=True)
+        Classroom = graphene.String(required=True)
+        StudentID = graphene.String(required=True)
+        Score     = graphene.Int(required=True)
+
+    updated_quiz_score = graphene.Field(lambda: UpdateQuizScoreMutation)
+
+    @staticmethod
+    def mutate(self, info, QuizID, Classroom, StudentID, Score):
+        quiz_score = QuizScores.objects.get(
+            QuizID=QuizID,
+            ClassID=Classroom,
+            StudentID=StudentID
+            )
+
+        quiz_score.Score = Score
+        quiz_score.save(update_fields=['Score'])
+
+        return UpdateQuizScore(updated_quiz_score=quiz_score)
+
+class UpdateQuizScoreMutation(graphene.ObjectType):
+    QuizID    = graphene.String()
+    Score     = graphene.Int()
+    StudentID = graphene.String()
+'''
+end UpdateQuizScore
+'''
