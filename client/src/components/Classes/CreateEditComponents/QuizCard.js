@@ -1,12 +1,13 @@
 import React from 'react'
 import { Button } from 'reactstrap'
 import { string, array } from 'prop-types'
-import { apiURI } from '../../../index'
+
+const sendGridURL = process.env.NODE_ENV !== 'production' ? 'http://localhost:8000/sendgrid/' : '/sendgrid/'
 
 const sendEmail = async (event, postData) => {
   event.preventDefault()
   try {
-    const res = await window.fetch(apiURI, {
+    const res = await window.fetch(sendGridURL, {
       method: 'POST',
       body: JSON.stringify(postData)
     })
@@ -17,7 +18,7 @@ const sendEmail = async (event, postData) => {
 }
 
 function QuizCard (props) {
-  const { className, teacher, quizID, quizName, students } = props
+  const { classID, className, teacherName, teacherEmail, quizID, quizName, students } = props
   const studentArray = []
 
   students.forEach(student => {
@@ -29,13 +30,15 @@ function QuizCard (props) {
   })
 
   const postData = {
-    teacherName: teacher,
-    className: className,
+    teacherName,
+    teacherEmail,
+    className,
+    classID,
     students: studentArray,
-    quizName: quizName,
-    quizID: quizID
+    quizName,
+    quizID
   }
-  console.log(postData)
+
   return (
     <div>
       <h4>{quizName}</h4>
@@ -46,8 +49,10 @@ function QuizCard (props) {
 }
 
 QuizCard.propTypes = {
+  classID: string,
   className: string,
-  teacher: string,
+  teacherName: string,
+  teacherEmail: string,
   quizID: string,
   quizName: string,
   students: array

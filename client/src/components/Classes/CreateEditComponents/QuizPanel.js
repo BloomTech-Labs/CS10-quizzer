@@ -18,6 +18,7 @@ query GetClassQuizzes($ClassID: String!, $encJWT: String!) {
   }
   teacher(encJwt: $encJWT) {
     TeacherName
+    TeacherEmail
   }
 }`
 
@@ -31,10 +32,12 @@ function QuizPanel (props) {
         {({ loading, error, data }) => {
           if (loading) return 'Loading...'
           if (error) return error.message
-          if (data) {
+          if (data && data.classQuizzes && data.classStudents && data.teacher) {
+            console.log(data)
             const quizzes = data.classQuizzes
             const students = data.classStudents
-            const teacher = data.teacher[0].TeacherName
+            const teacherName = data.teacher[0].TeacherName
+            const teacherEmail = data.teacher[0].TeacherEmail
 
             if (quizzes.length > 0) {
               return (
@@ -46,8 +49,10 @@ function QuizPanel (props) {
                         quizID={quiz.QuizID}
                         quizName={quiz.QuizName}
                         students={students}
-                        teacher={teacher}
+                        teacherName={teacherName}
+                        teacherEmail={teacherEmail}
                         className={className}
+                        classID={classID}
                       />
                     )
                   })}
@@ -57,6 +62,7 @@ function QuizPanel (props) {
               return null
             }
           }
+          return <span>Something broke!</span>
         }}
       </Query>
       <QuizSelector classID={classID} />
