@@ -11,6 +11,11 @@ query GetClassQuizzes($ClassID: String!) {
     QuizID
     QuizName
   }
+  classStudents(ClassID: $ClassID) {
+    StudentID
+    StudentName
+    StudentEmail
+  }
 }`
 
 function QuizPanel (props) {
@@ -25,6 +30,8 @@ function QuizPanel (props) {
           if (error) return error.message
           if (data) {
             const quizzes = data.classQuizzes
+            const students = data.classStudents
+
             if (quizzes.length > 0) {
               return (
                 <ul>
@@ -32,7 +39,9 @@ function QuizPanel (props) {
                     return (
                       <QuizCard
                         key={quiz.QuizID}
+                        quizID={quiz.QuizID}
                         quizName={quiz.QuizName}
+                        students={students}
                       />
                     )
                   })}

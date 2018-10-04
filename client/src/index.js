@@ -8,7 +8,7 @@ import registerServiceWorker from './registerServiceWorker'
 import { ApolloProvider } from 'react-apollo'
 import ApolloClient from 'apollo-boost'
 
-const apiURI = process.env.NODE_ENV !== 'production' ? 'http://localhost:8000/graphiql/' : '/graphiql/'
+export const apiURI = process.env.NODE_ENV !== 'production' ? 'http://localhost:8000/graphiql/' : '/graphiql/'
 
 export const client = new ApolloClient({
   uri: apiURI
