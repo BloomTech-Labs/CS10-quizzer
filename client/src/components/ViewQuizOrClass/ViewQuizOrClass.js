@@ -3,7 +3,7 @@ import { func } from 'prop-types'
 
 const ViewQuizOrClass = props => {
   return (
-    <div>
+    <div className='cards'>
       {props.render(props)}
     </div>
   )
