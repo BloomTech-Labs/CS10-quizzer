@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import QuizCard from './QuizCard'
 import QuizSelector from './QuizSelector'
 import { Query } from 'react-apollo'
@@ -34,7 +34,7 @@ function QuizPanel (props) {
 
             if (quizzes.length > 0) {
               return (
-                <ul>
+                <Fragment>
                   {quizzes.map((quiz) => {
                     return (
                       <QuizCard
@@ -45,7 +45,7 @@ function QuizPanel (props) {
                       />
                     )
                   })}
-                </ul>
+                </Fragment>
               )
             } else {
               return null
