@@ -1,26 +1,23 @@
 import React from 'react'
-import { string, number } from 'prop-types'
+import { Card, CardBody, CardTitle, CardText } from 'reactstrap'
+import PropTypes from 'prop-types'
 
 const QuizList = props => {
   const { QuizName, amountOfClasses } = props
 
   return (
-    <React.Fragment>
-      <p>{QuizName}</p>
-      <p>Classes Assigned: {amountOfClasses}</p>
-
-      <button
-        onClick={() => console.log(`EDIT ${QuizName}`)}
-      >
-        Edit
-      </button>
-    </React.Fragment>
+    <Card className='quiz_card'>
+      <CardBody>
+        <CardTitle className='quiz_card_title'>{QuizName}</CardTitle>
+        <CardText className='quiz_card_text'>Classes Assigned: {amountOfClasses}</CardText>
+      </CardBody>
+    </Card>
   )
 }
 
 QuizList.propTypes = {
-  QuizName: string,
-  amountOfClasses: number
+  QuizName: PropTypes.string,
+  amountOfClasses: PropTypes.number
 }
 
 export default QuizList

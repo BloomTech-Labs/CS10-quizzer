@@ -47,9 +47,11 @@ class CreateQuiz extends Component {
       questions: [],
       choices: [],
       answerList: [],
+      choicesCount: 0,
       modalMessage: false,
       modalTitle: '',
       modalText: '',
+      modalSaving: false,
       modalSuccess: false,
       token: ''
     }
@@ -85,7 +87,8 @@ class CreateQuiz extends Component {
     this.setState({
       questions: questionsArr,
       choices: choicesArr,
-      answerList: list
+      answerList: list,
+      choicesCount: this.state.choicesCount + 2
     })
   }
 
@@ -107,13 +110,20 @@ class CreateQuiz extends Component {
     const choicesArr = Object.assign([], this.state.choices)
     const list = Object.assign([], this.state.answerList)
     const index = Number(event.target.name)
+    let count = 0
+    choicesArr[index].forEach(choice => {
+      if (choice[2] === false) {
+        count++
+      }
+    })
     questionsArr.splice(index, 1)
     choicesArr.splice(index, 1)
     list.splice(index, 1)
     this.setState({
       questions: questionsArr,
       choices: choicesArr,
-      answerList: list
+      answerList: list,
+      choicesCount: this.state.choicesCount - count
     })
   }
 
@@ -176,14 +186,20 @@ class CreateQuiz extends Component {
     const list = Object.assign([], this.state.answerList)
     const index = Number(event.target.name)
     const choice = Number(event.target.attributes.choice.nodeValue)
+    let count = this.state.choicesCount
     if (choicesArr[index][choice][1] === true) {
       list[index] = null
+    } else if (choicesArr[index][choice][2] === false) {
+      count--
+    } else if (choicesArr[index][choice][2] === true) {
+      count++
     }
     choicesArr[index][choice][1] = false
     choicesArr[index][choice][2] = !choicesArr[index][choice][2]
     this.setState({
       choices: choicesArr,
-      answersList: list
+      answersList: list,
+      choicesCount: count
     })
   }
 
@@ -199,6 +215,7 @@ class CreateQuiz extends Component {
         <h4 className='create_quiz_instructions'>
         To create a quiz, you must provide a quiz name, quiz content and add at least one question. You must also add atleast two answer
         choices per question, but you are limited to four answer choices.</h4>
+        {/* Mutations to create a quiz, questions and choices */}
         <Mutation mutation={CREATE_QUIZ}>
           {(createNewQuiz, { loading: loadingQuiz }) => (
             <Mutation mutation={CREATE_QUESTION}>
@@ -221,6 +238,13 @@ class CreateQuiz extends Component {
                           modalText: 'To create a quiz, you must choose an answer for each question you add.'
                         })
                         return
+                      } else {
+                        this.setState({
+                          modalMessage: true,
+                          modalTitle: 'Information',
+                          modalText: 'Your quiz is being saved. Please wait...',
+                          modalSaving: true
+                        })
                       }
                       const createdQuiz = createNewQuiz({
                         variables:
@@ -260,7 +284,22 @@ class CreateQuiz extends Component {
                                     })
                                     createdChoice
                                       .then(() => {
-                                        console.log('Successfully created choice.')
+                                        this.setState({
+                                          choicesCount: this.state.choicesCount - 1
+                                        })
+                                        if (this.state.choicesCount === 0) {
+                                          this.setState({
+                                            quizName: '',
+                                            questions: [],
+                                            choices: [],
+                                            answerList: [],
+                                            choicesCount: 0,
+                                            modalMessage: true,
+                                            modalTitle: 'Success',
+                                            modalText: 'You have successfully created a quiz. Do you want to go to the quizzes page?',
+                                            modalSuccess: true
+                                          })
+                                        }
                                       })
                                       .catch(() => {
                                         this.setState({
@@ -286,18 +325,6 @@ class CreateQuiz extends Component {
                             modalText: 'An error occurred while creating the quiz.'
                           })
                         })
-                      if (!loadingQuiz && !loadingQuestion && !loadingChoice) {
-                        this.setState({
-                          quizName: '',
-                          questions: [],
-                          choices: [],
-                          answerList: [],
-                          modalMessage: true,
-                          modalTitle: 'Success',
-                          modalText: 'You have successfully created a quiz. Do you want to go to the quizzes page?',
-                          modalSuccess: true
-                        })
-                      }
                     }}>
                       <input className='create_quiz_name' name='quizName' onChange={this.handleOnChange} placeholder='Name' required type='text' value={this.state.quizName} />
                       <CreateQuestions state={this.state} questionChange={this.questionChange} check={this.check} choiceChange={this.choiceChange} deleteQuestion={this.deleteQuestion} enableOrDisable={this.enableOrDisable} />
@@ -310,7 +337,7 @@ class CreateQuiz extends Component {
             </Mutation>
           )}
         </Mutation>
-        <ModalMessage modalMessage={this.state.modalMessage} modalTitle={this.state.modalTitle} modalText={this.state.modalText} modalSuccess={this.state.modalSuccess} toggleModalMessage={this.toggleModalMessage} />
+        <ModalMessage modalMessage={this.state.modalMessage} modalTitle={this.state.modalTitle} modalText={this.state.modalText} modalSaving={this.state.modalSaving} modalSuccess={this.state.modalSuccess} toggleModalMessage={this.toggleModalMessage} />
       </div>
     )
   }
