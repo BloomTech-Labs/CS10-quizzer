@@ -6,6 +6,7 @@ import { Button } from 'reactstrap'
 
 import Questions from './Questions'
 import QuizComplete from './QuizComplete'
+import QuizHeader from './QuizHeader'
 
 const UPDATE_QUIZ_SCORE = gql`
   mutation ($QuizID: String!, $Classroom: String!, $StudentID: String!, $Score: Int!) {
@@ -107,8 +108,12 @@ class QuizQuestions extends Component {
     // this is what the student will see before when they first land on this page
     return (
       <div>
-        <h1>{ classroom.ClassName } - { student.StudentName }</h1>
-        <p>{ page + 1 } of { questionSetLength }</p>
+        <QuizHeader
+          classroom={classroom}
+          page={page}
+          questionSetLength={questionSetLength}
+          student={student}
+        />
 
         <Questions
           {...this.props}
