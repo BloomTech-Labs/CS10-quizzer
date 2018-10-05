@@ -7,6 +7,8 @@ import SignUpModal from '../Modals/SignUpModal'
 import { client } from '../../index'
 import './NavBar.css'
 
+import { navContainerStyle } from './style/style'
+
 class NavBar extends Component {
   constructor (props) {
     super(props)
@@ -40,7 +42,7 @@ class NavBar extends Component {
 
   render () {
     return (
-      <div className='nav_container'>
+      <div style={navContainerStyle} className='nav_container'>
         <NavContainerLeft toggleSignUp={this.toggleSignUp} />
         <NavContainerRight logOut={this.logOut} toggleLogIn={this.toggleLogIn} toggleSignUp={this.toggleSignUp} />
         <SignUpModal signUpModal={this.state.signUpModal} toggleSignUp={this.toggleSignUp} toggleLogIn={this.toggleLogIn} />
