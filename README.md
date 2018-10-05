@@ -9,22 +9,22 @@ Quizzer is a simple web application for teachers to create quizzes and quickly d
 
 ## Contents
 1. [Our Project Stack](#our-project-stack-)
-    - [Why These Technologies?](#tech)
-2. [Developer Documentation](#docs)
-    - [Contributing](#contribute)
-    - [Local Installation](#install)
-    - [API](#api)
-3. [Contributors](#contributors)
-4. [License](#license)
+    - [Why These Technologies?](#why-these-technologies-)
+2. [Developer Documentation](#developer-documentation-)
+    - [Contributing](#contributing-)
+    - [Local Installation](#local-installation-)
+    - [API](#api-)
+3. [Contributors](#contributors-)
+4. [License](#license-)
 
-## Our Project Stack <a name="stack"></a>
+## Our Project Stack
 Quizzer is built on a straightforward stack: the client is a [React](https://github.com/facebook/react) application (created with [Create React App](https://github.com/facebook/create-react-app) and primarily built with [reactstrap](https://github.com/reactstrap/reactstrap) components), while the back-end is a [Django](https://www.djangoproject.com/) server, which both serves up the client itself, and delivers data to and from a [PostgreSQL](https://www.postgresql.org/) database (or, in a development environment, the default Django [SQLite](https://www.sqlite.org/index.html) database.)
 
 Communication between the client and server is achieved through [GraphQL](https://graphql.org/), rather than traditional REST. To accomplish this, the client employs the [React Apollo Client](https://www.apollographql.com/docs/react/) client to properly format and parse requests and responses, while [Graphene-Django](https://docs.graphene-python.org/projects/django/en/latest/) is employed server-side to receive, interpret, and respond appropriately to the client.
 
 Lastly, our application is set up for continuous integration and automatic deploy: any updates to the `master` branch are first processed through [Codeship](https://codeship.com/) for testing and, assuming tests pass, deployed to [Heroku](https://heroku.com/) where it can be accessed by the end-user.
 
-### Why These Technologies? <a name="tech"></a>
+### Why These Technologies?
 
 - **React:** This was a simple choice to make, both due to the team's familiarity with React, and because its component-based structure allows rapid implementation of a functional user interface with a minimum of effort.
 
@@ -42,20 +42,20 @@ Lastly, our application is set up for continuous integration and automatic deplo
 
 - **Heroku:** As we are using Django, we decided early on to simply allow it to serve up the client directly, rather than deploy our server to one service, and our client to another. This necessitated using a service which could support hosting a database in addition to serving up static assets, and Heroku fit that bill nicely.
 
-## Developer Documentation <a name="docs"></a>
+## Developer Documentation
 
-### Contributing <a name="contribute"></a>
+### Contributing
 WIP
 
-### Local Installation <a name="install"></a>
+### Local Installation
 WIP
 
-## API <a name="api"></a>
+## API
 WIP
 
-## Contributors <a name="contributors"></a>
+## Contributors
 | [<img src="https://avatars3.githubusercontent.com/u/17170364?v=4" align="center" width=100><br><b>Brian Durbin</b> ](https://github.com/bdurb) | [<img src="https://avatars0.githubusercontent.com/u/29239201?v=4" align="center" width=100><br><b>Brandon Benefield</b>  ](https://github.com/bbenefield89) | [<img src="https://avatars1.githubusercontent.com/u/35475006?v=4" align="center" width=100><br><b>Edward Gonzalez</b>  ](https://github.com/eddygonzalez9708) | [<img src="https://avatars2.githubusercontent.com/u/26112479?v=4" align="center" width=100><br><b>Daniel Abbott</b>  ](https://github.com/Mephestys) |
 |---|---|---|---|
 
-## License <a name="license"></a>
+## License
 Quizzer is [MIT licensed.](LICENSE)
