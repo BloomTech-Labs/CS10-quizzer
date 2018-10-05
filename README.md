@@ -8,7 +8,7 @@
 Quizzer is a simple web application for teachers to create quizzes and quickly distribute them to students via email. [Try it out.](https://quizzercs10.herokuapp.com/)
 
 ## Contents
-1. [Our Project Stack](#stack)
+1. [Our Project Stack](#our-project-stack-)
     - [Why These Technologies?](#tech)
 2. [Developer Documentation](#docs)
     - [Contributing](#contribute)
