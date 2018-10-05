@@ -6,13 +6,18 @@ export const SideNavButton = styled.button`
   border: none;
   color: #010101;
   font-size: 4rem;
+  outline: none;
   position: absolute;
   right: 50px;
   top: 31px;
   width: 40px;
 
+  &:focus {
+    outline: none;
+  }
+
   @media (min-width: 818px) {
-    display: flex;
+    display: none;
     width: 230%
   }
 `
