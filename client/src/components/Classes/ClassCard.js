@@ -18,7 +18,7 @@ function ClassCard (props) {
         <CardTitle>{props.classItem.ClassName}</CardTitle>
         <CardBody>
           <CardText>Students: {props.classItem.studentSet.length}</CardText>
-          <CardText>Average Grade: { averageGrade }%</CardText>
+          <CardText>Average Grade: { isNaN(averageGrade) ? 'No grades yet' : `${averageGrade}%` }</CardText>
           <CardText>Quizzes: {props.classItem.quizSet.length}</CardText>
         </CardBody>
       </Card>
