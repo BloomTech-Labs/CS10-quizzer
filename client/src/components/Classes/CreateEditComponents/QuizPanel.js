@@ -33,7 +33,6 @@ function QuizPanel (props) {
           if (loading) return 'Loading...'
           if (error) return error.message
           if (data && data.classQuizzes && data.classStudents && data.teacher) {
-            console.log(data)
             const quizzes = data.classQuizzes
             const students = data.classStudents
             const teacherName = data.teacher[0].TeacherName
