@@ -138,9 +138,17 @@
     color: #117a8b; 
 }
 
+@media (min-width: 1265px) {
+  .landing_container_first_section {
+    flex-direction: row !important
+  }
 
+  .landing_container_first_section_left {
+    width: 50% !important;
+  }
 
-
-
-
-
+  .landing_container_first_section_left > h1,
+  .landing_container_first_section_left > p {
+    padding-left: 5rem !important;
+  }
+}

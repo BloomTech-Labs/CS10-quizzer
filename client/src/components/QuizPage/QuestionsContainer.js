@@ -27,6 +27,24 @@ class QuizQuestions extends Component {
     quizScore: 0
   }
 
+  callMutation = (questionsLength, mutation) => {
+    const { qid, cid, sid } = this.props
+    const { quizScore } = this.state
+
+    mutation({
+      variables: {
+        QuizID: qid,
+        Classroom: cid,
+        StudentID: sid,
+        Score: quizScore / (questionsLength * 10) * 100
+      }
+    })
+  }
+
+  getNextQuestion = page => {
+    this.setState({ page: page + 1 })
+  }
+
   // setQuizScore
   setQuizScore = score => {
     this.setState({
@@ -61,29 +79,16 @@ class QuizQuestions extends Component {
       new Promise((resolve, reject) => {
         if (isAnswerCorrect) {
           resolve(this.setQuizScore(quizScore + 10))
-        } else {
-          if (quizScore > 10) {
-            resolve(this.setQuizScore(quizScore - 10))
-          } else {
-            resolve(this.setQuizScore(0))
-          }
         }
+
+        resolve()
       })
     ))()
 
     if (page + 1 === questionsLength) {
-      const { qid, cid, sid } = this.props
-
-      mutation({
-        variables: {
-          QuizID: qid,
-          Classroom: cid,
-          StudentID: sid,
-          Score: quizScore
-        }
-      })
+      this.callMutation(questionsLength, mutation)
     } else {
-      this.setState({ page: page + 1 })
+      this.getNextQuestion(page)
     }
   }
 
@@ -93,10 +98,13 @@ class QuizQuestions extends Component {
     const { page, quizComplete, quizScore } = this.state
     const questionSetLength = quiz.questionSet.length
 
+    console.log(quizScore)
+
     // render this portion when the quiz has been completed
     if (quizComplete) {
       return (
         <QuizComplete
+          questionsLength={questionSetLength}
           quizScore={quizScore}
           page={page}
         />

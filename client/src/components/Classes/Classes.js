@@ -11,15 +11,25 @@ const GET_CLASSES_INFORMATION = gql`
       classSet {
         ClassID
         ClassName
+
         studentSet {
           StudentID
         }
+
         quizSet {
           QuizID
         }
+
+        quizscoresSet {
+          QuizScoresID
+          StudentID
+          QuizID
+          Score
+        }
       }
     }
-  }`
+  }
+`
 
 class Classes extends Component {
   state = {}

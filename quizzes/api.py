@@ -169,11 +169,11 @@ def send_email(req):
             f'''
             <p>Hello <b>{student_name}</b></p>
             <p>You have a new quiz from <b>{teacher_name}</b> for the class <b>{class_name}</b><p>
-            <p>To take this quiz follow the link here: <a href="https://quizzercs10.herokuapp.com/student/{quiz_id}/{class_id}/{student_id}/">{quiz_name}</a></p>
+            <p>To take this quiz follow the link here: <a href="https://quizzercs10.herokuapp.com/student/{quiz_id}/{class_id}/{student_id}">{quiz_name}</a></p>
             '''
             )
 
         mail = Mail(from_email, subject, to_email, content)
         response = sg.client.mail.send.post(request_body=mail.get())
 
-    return HttpResponse('Email sent!')
+    return HttpResponse()
