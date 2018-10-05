@@ -32,7 +32,6 @@ class RocketList extends Component {
   }
 
   hideSideNav = () => {
-    console.log('fooooo')
     this.setState({ sideNavHidden: !this.state.sideNavHidden })
   }
 

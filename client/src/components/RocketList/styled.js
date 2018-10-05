@@ -7,9 +7,14 @@ export const SideNavButton = styled.button`
   color: #010101;
   font-size: 4rem;
   position: absolute;
-  right: 17px;
+  right: 50px;
   top: 31px;
   width: 40px;
+
+  @media (min-width: 818px) {
+    display: flex;
+    width: 230%
+  }
 `
 
 export const RocketListNavBar = styled.div`
@@ -24,6 +29,11 @@ export const RocketListNavBar = styled.div`
   min-height: 100vh;
   margin: 0;
   width: 100vw;
+
+  @media (min-width: 818px) {
+    display: flex;
+    width: 230%
+  }
 `
 
 export const SideNavLinks = styled(Link)`
