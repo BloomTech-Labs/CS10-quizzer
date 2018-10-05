@@ -91,13 +91,17 @@ class UpdateTeacherInformation(graphene.Mutation):
         if old_pw:
             if teacher:
                 if bcrypt.checkpw(old_pw, hashed_old_pw):
-                    new_password = NewPassword.encode('utf-8')
-                    hashed_new_pw = bcrypt.hashpw(new_password, bcrypt.gensalt()).decode('utf-8')
-
-                    # object.save() cannot take any args, so just change entries first
+                    # object.save() cannot take any args, so just change entries directly first.
                     teacher.TeacherName = TeacherName if len(TeacherName) > 0 else teacher.TeacherName
                     teacher.TeacherEmail = TeacherEmail if len(TeacherEmail) > 0 else teacher.TeacherEmail
-                    teacher.TeacherPW = hashed_new_pw if len(hashed_new_pw) > 0 else hashed_old_pw
+
+                    # No point in doing any new password hashing if there's no new password present...
+                    if len(NewPassword) > 0:
+                        new_password = NewPassword.encode('utf-8')
+                        hashed_new_pw = bcrypt.hashpw(new_password, bcrypt.gensalt()).decode('utf-8')
+                        teacher.TeacherPW = hashed_new_pw
+                    
+                    # Save the new teacher data back into the database
                     teacher.save()
 
                     # create DATA for new JWT to replace old one now that we maybe changed name or email
