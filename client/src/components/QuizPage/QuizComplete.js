@@ -2,11 +2,13 @@ import React from 'react'
 import { number } from 'prop-types'
 import { Link } from 'react-router-dom'
 
-const QuizComplete = ({ quizScore, page }) => {
+const QuizComplete = ({ questionsLength, quizScore, page }) => {
+  console.log(quizScore)
+  
   return (
     <div>
       <p>
-        Quiz Complete! You got a score of {quizScore} out of {(page + 1) * 10}
+        Quiz Complete! You got a score of {quizScore / (questionsLength * 10) * 100}%!
       </p>
 
       <Link to='/'>
