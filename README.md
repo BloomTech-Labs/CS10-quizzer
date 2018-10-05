@@ -8,14 +8,14 @@
 Quizzer is a simple web application for teachers to create quizzes and quickly distribute them to students via email. [Try it out.](https://quizzercs10.herokuapp.com/)
 
 ## Contents
-1. [Our Project Stack](#our-project-stack-)
-    - [Why These Technologies?](#why-these-technologies-)
-2. [Developer Documentation](#developer-documentation-)
-    - [Contributing](#contributing-)
-    - [Local Installation](#local-installation-)
-    - [API](#api-)
-3. [Contributors](#contributors-)
-4. [License](#license-)
+1. [Our Project Stack](#our-project-stack)
+    - [Why These Technologies?](#why-these-technologies)
+2. [Developer Documentation](#developer-documentation)
+    - [Contributing](#contributing)
+    - [Local Installation](#local-installation)
+    - [API](#api)
+3. [Contributors](#contributors)
+4. [License](#license)
 
 ## Our Project Stack
 Quizzer is built on a straightforward stack: the client is a [React](https://github.com/facebook/react) application (created with [Create React App](https://github.com/facebook/create-react-app) and primarily built with [reactstrap](https://github.com/reactstrap/reactstrap) components), while the back-end is a [Django](https://www.djangoproject.com/) server, which both serves up the client itself, and delivers data to and from a [PostgreSQL](https://www.postgresql.org/) database (or, in a development environment, the default Django [SQLite](https://www.sqlite.org/index.html) database.)
