@@ -7,11 +7,11 @@
 Quizzer is a simple web application for teachers to create quizzes and quickly distribute them to students via email.
 
 ## Our Project Stack
-Quizzer is built on a straightforward stack: the client is a [React](React) application (created with [Create React App](https://github.com/facebook/create-react-app) and primarily built with [reactstrap](https://github.com/reactstrap/reactstrap) components), while the back-end is a [Django](django) server, which both serves up the client itself, and delivers data to and from a [PostgreSQL](PostgreSQL) database (or, in a development environment, the default Django [SQLite](SQLite) database.)
+Quizzer is built on a straightforward stack: the client is a [React](https://github.com/facebook/react) application (created with [Create React App](https://github.com/facebook/create-react-app) and primarily built with [reactstrap](https://github.com/reactstrap/reactstrap) components), while the back-end is a [Django](https://www.djangoproject.com/) server, which both serves up the client itself, and delivers data to and from a [PostgreSQL](https://www.postgresql.org/) database (or, in a development environment, the default Django [SQLite](https://www.sqlite.org/index.html) database.)
 
-Communication between the client and server is achieved through [GraphQL](GraphQL), rather than traditional [REST](REST). To accomplish this, the client employs the [React Apollo](ReactApollo) client to properly format and parse requests and responses, while [Graphene](graphene) is employed server-side to receive, interpret, and respond appropriately to the client.
+Communication between the client and server is achieved through [GraphQL](https://graphql.org/), rather than traditional REST. To accomplish this, the client employs the [React Apollo Client](https://www.apollographql.com/docs/react/) client to properly format and parse requests and responses, while [Graphene-Django](https://docs.graphene-python.org/projects/django/en/latest/) is employed server-side to receive, interpret, and respond appropriately to the client.
 
-Lastly, our application is set up for continuous integration and automatic deploy: any updates to the `master` branch are first processed through [Codeship](https://codeship.com/) for testing and, assuming tests pass, deployed to [Heroku](Heroku) where it can be accessed by the end-user.
+Lastly, our application is set up for continuous integration and automatic deploy: any updates to the `master` branch are first processed through [Codeship](https://codeship.com/) for testing and, assuming tests pass, deployed to [Heroku](https://heroku.com/) where it can be accessed by the end-user.
 
 ### Why These Technologies?
 
