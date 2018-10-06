@@ -5,7 +5,7 @@
 [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 [ ![Codeship Status for Lambda-School-Labs/CS10-quizzer](https://app.codeship.com/projects/8ea07f40-9e5a-0136-7f9c-425a9ca03814/status?branch=master)](https://app.codeship.com/projects/306228) [![React](https://img.shields.io/badge/React-16.5-blue.svg)](https://reactjs.org/) [![Django](https://img.shields.io/badge/Django-2.1-green.svg)](https://www.djangoproject.com/) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
-Quizzer is a simple web application for teachers to create quizzes and quickly distribute them to students via email. [Try it out.](https://quizzercs10.herokuapp.com/)
+[Quizzer](https://quizzercs10.herokuapp.com/) is a simple web application for teachers to create quizzes and quickly distribute them to students via email.
 
 ## Contents
 1. [Our Project Stack](#our-project-stack)
