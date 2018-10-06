@@ -10,12 +10,14 @@ Quizzer is a simple web application for teachers to create quizzes and quickly d
 ## Contents
 1. [Our Project Stack](#our-project-stack)
     - [Why These Technologies?](#why-these-technologies)
-2. [Developer Documentation](#developer-documentation)
+1. [Testing](#testing)
+1. [Security](#security)
+1. [Developer Documentation](#developer-documentation)
     - [Contributing](#contributing)
     - [Local Installation](#local-installation)
     - [API](#api)
-3. [Contributors](#contributors)
-4. [License](#license)
+1. [Contributors](#contributors)
+1. [License](#license)
 
 ## Our Project Stack
 Quizzer is built on a straightforward stack: the client is a [React](https://github.com/facebook/react) application (created with [Create React App](https://github.com/facebook/create-react-app) and primarily built with [reactstrap](https://github.com/reactstrap/reactstrap) components), while the back-end is a [Django](https://www.djangoproject.com/) server, which both serves up the client itself, and delivers data to and from a [PostgreSQL](https://www.postgresql.org/) database (or, in a development environment, the default Django [SQLite](https://www.sqlite.org/index.html) database.)
@@ -36,11 +38,18 @@ Lastly, our application is set up for continuous integration and automatic deplo
 
   - Accomplishing this communication was fairly simple to implement, as the Apollo Client integrates easily with React, providing components to quickly interpret and fire off GraphQL queries and mutations, while Graphene gives similar functionality to Django, integrating directly with schemas and models we had already created for the database.
 
-- **Codeship:** In order to verify that any changes pushed to the `master` branch are viable for production, we integrated Codeship into our GitHub project to make use of automated build tests of both the server and the client. This also provides the same service to changes made to ANY branch, meaning that pull requests will clearly show a reviewer whether the changes have passed tests or not, prior to them directly reviewing those changes.
+- **Codeship:** In order to verify that any changes pushed to the `master` branch don't break the app prior to reaching production, we integrated Codeship into our GitHub project. Due to time constraints and the smaller size of our team, we have so far been unable to build any true unit tests within Codeship, however it does serve to verify that the app builds successfully.
+  - All branches within the project also process through Codeship on new commits, meaning that pull requests will clearly show a reviewer whether the changes still build, prior to them directly reviewing those changes.
 
   - Additionally, we integrated Codeship into our Slack team channel, which displays messages when a build fails, or when a previously failing build is now passing. This allows us to stay apprised of any issues affecting any team member's work.
 
 - **Heroku:** As we are using Django, we decided early on to simply allow it to serve up the client directly, rather than deploy our server to one service, and our client to another. This necessitated using a service which could support hosting a database in addition to serving up static assets, and Heroku fit that bill nicely.
+
+## Testing
+Aside from Codeship verifying builds prior to deploy, our testing has been completely manual. On reviewing new PR's, we pull down the respective branch and commence testing the new feature, bug fix, etc. to verify it works as advertised, as well as checking whether the changes impact any other, unrelated functionality.
+
+## Security
+WIP
 
 ## Developer Documentation
 
@@ -51,7 +60,7 @@ WIP
 WIP
 
 ## API
-WIP
+As our API is based on GraphQL, every request to the server must be a `POST` request, and the body should be of the type `application/json`.
 
 ## Contributors
 | [<img src="https://avatars3.githubusercontent.com/u/17170364?v=4" align="center" width=100><br><b>Brian Durbin</b> ](https://github.com/bdurb) | [<img src="https://avatars0.githubusercontent.com/u/29239201?v=4" align="center" width=100><br><b>Brandon Benefield</b>  ](https://github.com/bbenefield89) | [<img src="https://avatars1.githubusercontent.com/u/35475006?v=4" align="center" width=100><br><b>Edward Gonzalez</b>  ](https://github.com/eddygonzalez9708) | [<img src="https://avatars2.githubusercontent.com/u/26112479?v=4" align="center" width=100><br><b>Daniel Abbott</b>  ](https://github.com/Mephestys) |
