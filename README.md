@@ -38,7 +38,7 @@ Lastly, our application is set up for continuous integration and automatic deplo
 
   - Accomplishing this communication was fairly simple to implement, as the Apollo Client integrates easily with React, providing components to quickly interpret and fire off GraphQL queries and mutations, while Graphene gives similar functionality to Django, integrating directly with schemas and models we had already created for the database.
 
-- **Codeship:** In order to verify that any changes pushed to the `master` branch don't break the app prior to reaching production, we integrated Codeship into our GitHub project. Due to time constraints and the smaller size of our team, we have so far been unable to build any true unit tests within Codeship, however it does serve to verify that the app builds successfully.
+- **Codeship:** In order to verify that any changes pushed to the `master` branch don't break the app prior to reaching production, we integrated Codeship into our GitHub project. Due to time constraints and the smaller size of our team, we haven't written any true unit tests within Codeship, however it does serve to verify that the app builds successfully.
   - All branches within the project also process through Codeship on new commits, meaning that pull requests will clearly show a reviewer whether the changes still build, prior to them directly reviewing those changes.
 
   - Additionally, we integrated Codeship into our Slack team channel, which displays messages when a build fails, or when a previously failing build is now passing. This allows us to stay apprised of any issues affecting any team member's work.
@@ -60,7 +60,66 @@ WIP
 WIP
 
 ## API
-As our API is based on GraphQL, every request to the server must be a `POST` request, and the body should be of the type `application/json`.
+As our API is based on GraphQL, every request to the server must be a `POST` request, formatted as `application/json`.
+
+### Queries
+Queries are used to retrieve data from the server without altering that data in some way.
+
+#### classes
+Returns all classes owned by a user.
+- Arguments:
+  - `encJwt` - A string containing a valid JWT.
+
+- Optional Returns:
+  - `ClassID` - The unique identifier for a classroom.
+  - `ClassName` - The name of the classroom.
+  - `Teacher` - The user associated with the JWT.
+  - `createdAt` - Date/time of creation.
+  - `lastModified` - Date/time last modified.
+  - `quizSet` - QuizType GraphQL Schema.
+  - `studentSet` - StudentType GraphQL Schema.
+  - `classQuizSet`
+
+- Example Usage:
+  ```js
+  {
+    classes(encJwt: "{valid jwt}") {
+      ClassID
+      ClassName
+    }
+  }
+
+  // Returns a list of all class ID's and class names for classrooms created by the user specified in the JWT.
+  ```
+
+#### singleClass
+
+#### publicQuizzes
+
+#### singleQuiz
+
+#### classQuizzes
+
+#### teacherQuizzes
+
+#### quizQuestions
+
+#### questions
+
+#### choices
+
+#### teachers
+
+#### teacher
+
+#### students
+
+#### student
+
+#### classStudents
+
+### Mutations
+Mutations allow saving new, or manipulating current, data in some way.
 
 ## Contributors
 | [<img src="https://avatars3.githubusercontent.com/u/17170364?v=4" align="center" width=100><br><b>Brian Durbin</b> ](https://github.com/bdurb) | [<img src="https://avatars0.githubusercontent.com/u/29239201?v=4" align="center" width=100><br><b>Brandon Benefield</b>  ](https://github.com/bbenefield89) | [<img src="https://avatars1.githubusercontent.com/u/35475006?v=4" align="center" width=100><br><b>Edward Gonzalez</b>  ](https://github.com/eddygonzalez9708) | [<img src="https://avatars2.githubusercontent.com/u/26112479?v=4" align="center" width=100><br><b>Daniel Abbott</b>  ](https://github.com/Mephestys) |
