@@ -7,7 +7,7 @@ from decouple import config
 from graphene_django import DjangoObjectType
 from graphql import GraphQLError, GraphQLObjectType, GraphQLList
 from quizzes.graphql.mutations.classes import CreateClass
-from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student, Student_Quiz, Class_Quiz
+from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student
 
 from quizzes.graphql.mutation import (
     CreateTeacher, QueryTeacher, CreateStudent, CreateQuiz, CreateQuestion,
@@ -16,7 +16,7 @@ from quizzes.graphql.mutation import (
 )
 
 from quizzes.graphql.query import (
-    ClassType, QuizType, QuestionType, ChoiceType, TeacherType, StudentType, Class_QuizType
+    ClassType, QuizType, QuestionType, ChoiceType, TeacherType, StudentType
 )
 
 

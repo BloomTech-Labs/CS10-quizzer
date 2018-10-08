@@ -6,7 +6,7 @@ import time
 
 from decouple import config
 from graphql import GraphQLError
-from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student, Class_Quiz, QuizScores
+from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student, QuizScores
 from uuid import UUID
 
 
