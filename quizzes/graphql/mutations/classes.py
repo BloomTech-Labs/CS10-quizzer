@@ -6,6 +6,8 @@ from decouple import config
 from graphql import GraphQLError
 from quizzes.models import Class, Teacher
 
+from quizzes.helpers.jwt_helpers import decode_jwt
+
 '''
 CreateClass
 '''
@@ -41,9 +43,7 @@ class CreateClass(graphene.Mutation):
 
     @staticmethod
     def mutate(self, info, ClassName, enc_jwt):
-        secret    = config('SECRET_KEY')
-        algorithm = 'HS256'
-        dec_jwt   = jwt.decode(enc_jwt, secret, algorithms=[ algorithm ])
+        dec_jwt = decode_jwt(encJWT)
 
         # `user` variable needs to be changed to use the ID given by the JWT
         # for now JWT does NOT return a userID
