@@ -55,10 +55,16 @@ class Quizzes extends Component {
               if (queryLength === 0) {
                 return (
                   <div className='add_quiz_container'>
-                    <span>Add a new Quiz</span>
-                    <Button color='warning' onClick={this.createQuiz}>
-                      <span role='img' aria-labelledby='Plus Symbol'>&#x2795;</span>
-                    </Button>
+                    <div className='cards'>
+                      <Card className='quiz_card'>
+                        <CardBody className='quiz_card_body'>
+                          <CardTitle className='quiz_card_title'>New Quiz</CardTitle>
+                          <Button color='warning' onClick={this.createQuiz}>
+                            <span role='img' aria-labelledby='Plus Symbol'>&#x2795;</span>
+                          </Button>
+                        </CardBody>
+                      </Card>
+                    </div>
                   </div>
                 )
               } else {
