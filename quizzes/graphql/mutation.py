@@ -170,7 +170,7 @@ class CreateStudent(graphene.Mutation):
     student = graphene.Field(lambda: CreateStudentMutation)
 
     @staticmethod
-    def mutate(self, info, StudentName, StudentEmail, ClassID):
+    def mutate(self, info, StudentName, StudentEmail, ClassID, enc_jwt):
         ClassID = Class.objects.get(ClassID=ClassID)
         quizzes = ClassID.quiz_set.all()
         student = Student.objects.create(
@@ -210,7 +210,7 @@ class DeleteStudent(graphene.Mutation):
     student = graphene.Field(lambda: DeleteStudentMutation)
 
     @staticmethod
-    def mutate(self, info, StudentID):
+    def mutate(self, info, StudentID, enc_jwt):
         student = Student.objects.get(StudentID=StudentID).delete()
 
         return DeleteStudent(student=student)
@@ -382,13 +382,13 @@ class UpdateClassName(graphene.Mutation):
     class Arguments:
         ClassID = graphene.String(required=True)
         ClassName = graphene.String(required=True)
-        encJWT = graphene.String(required=True)
+        enc_jwt = graphene.String(required=True)
 
     updated_class = graphene.Field(lambda: UpdateClassNameMutation)
 
     @staticmethod
-    def mutate(self, info, ClassID, ClassName, encJWT):
-        decJWT     = decode_jwt(encJWT)
+    def mutate(self, info, ClassID, ClassName, enc_jwt):
+        dec_jwt = decode_jwt(enc_jwt)
         teacherID = dec_jwt[ 'sub' ][ 'id' ]
         teacher = Teacher.objects.get(TeacherID=teacherID)
         updated_class = Class.objects.get(ClassID=ClassID)

@@ -43,7 +43,7 @@ class CreateClass(graphene.Mutation):
 
     @staticmethod
     def mutate(self, info, ClassName, enc_jwt):
-        dec_jwt = decode_jwt(encJWT)
+        dec_jwt = decode_jwt(enc_jwt)
 
         # `user` variable needs to be changed to use the ID given by the JWT
         # for now JWT does NOT return a userID
