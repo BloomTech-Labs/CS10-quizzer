@@ -74,8 +74,9 @@ def cancel_subscription(req):
 
         subscription.delete()
         customer.delete()
-        # remove their customerID from the database
+        # remove their customerID and subscription type from the database
         teacher.CustomerID = ''
+        teacher.Subscription = ''
         teacher.save()
 
         return JsonResponse({

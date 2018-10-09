@@ -282,6 +282,7 @@ class CreateQuiz(graphene.Mutation):
         teacherID  = decJWT[ 'sub' ][ 'id' ]
         teacher    = Teacher.objects.get(TeacherID=teacherID)
         quizzes    = teacher.quiz_set.all()
+
         if teacher.Subscription == "" and len(quizzes) >= 10:
             return GraphQLError('Free users cannot create more than 10 quizzes.')
         else:
