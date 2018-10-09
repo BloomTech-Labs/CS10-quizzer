@@ -53,14 +53,9 @@ class Query(graphene.ObjectType):
     teacher_quizzes = graphene.List(QuizType, enc_jwt=graphene.String())
     
     quiz_questions  = graphene.List(QuestionType, QuizID=graphene.String())
-    questions       = graphene.List(QuestionType)
-    
-    choices         = graphene.List(ChoiceType)
 
-    teachers        = graphene.List(TeacherType)
     teacher         = graphene.List(TeacherType, enc_jwt=graphene.String())
     
-    students        = graphene.List(StudentType)
     student         = graphene.Field(StudentType, StudentID=graphene.String())
     class_students  = graphene.List(StudentType, ClassID=graphene.String())
 
@@ -151,18 +146,6 @@ class Query(graphene.ObjectType):
                 return quiz.question_set.all()
             
         raise invalid_quiz
-
-    def resolve_questions(self, info):
-        return Question.objects.all()
-
-    def resolve_choices(self, info):
-        return Choice.objects.all()
-
-    def resolve_teachers(self, info):
-        return Teacher.objects.all()
-
-    def resolve_students(self, info):
-        return Student.objects.all()
 
     # returns a single student
     def resolve_student(self, info, **kwargs):
