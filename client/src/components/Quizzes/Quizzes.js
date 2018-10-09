@@ -7,6 +7,9 @@ import ViewQuizOrClass from '../ViewQuizOrClass/ViewQuizOrClass'
 import QuizList from './QuizList'
 import './Quizzes.css'
 
+import Styles from '../RocketStyles'
+import { AddQuizContainer, Cards } from './styled'
+
 const getCurrentInformation = gql`
   query getCurrentInformation($token: String!) {
     teacher(encJwt: $token) {
@@ -39,7 +42,7 @@ class Quizzes extends Component {
 
   render () {
     return (
-      <div className='quizzes_container'>
+      <Styles>
         <Query query={getCurrentInformation} variables={{ token: localStorage.getItem('token') }}>
           {({ loading, error, data }) => {
             if (loading) {
@@ -51,60 +54,46 @@ class Quizzes extends Component {
             }
 
             if (data) {
-              const queryLength = data.teacher[0].quizSet.length
-              if (queryLength === 0) {
-                return (
-                  <div className='add_quiz_container'>
-                    <div className='cards'>
-                      <Card className='quiz_card'>
-                        <CardBody className='quiz_card_body'>
-                          <CardTitle className='quiz_card_title'>New Quiz</CardTitle>
-                          <Button color='warning' onClick={this.createQuiz}>
-                            <span role='img' aria-labelledby='Plus Symbol'>&#x2795;</span>
-                          </Button>
-                        </CardBody>
-                      </Card>
-                    </div>
-                  </div>
-                )
-              } else {
-                const { quizSet } = data.teacher[0]
-                return (
-                  <div className='quiz_cards_container'>
-                    <div className='cards'>
-                      <Card className='quiz_card'>
-                        <CardBody className='quiz_card_body'>
-                          <CardTitle className='quiz_card_title'>New Quiz</CardTitle>
-                          <Button color='warning' onClick={this.createQuiz}>
-                            <span role='img' aria-labelledby='Plus Symbol'>&#x2795;</span>
-                          </Button>
-                        </CardBody>
-                      </Card>
-                    </div>
-                    {quizSet.map(quiz => {
-                      const { QuizID, QuizName, Classes } = quiz
-                      const amountOfClasses = Classes.length
-                      return (
-                        <ViewQuizOrClass key={QuizID} render={() => {
-                          return (
-                            <QuizList
-                              QuizName={QuizName}
-                              QuizID={QuizID}
-                              amountOfClasses={amountOfClasses}
-                            />
-                          )
-                        }}
-                        />
-                      )
-                    })}
-                  </div>
-                )
-              }
+              const { quizSet } = data.teacher[0]
+
+              return (
+                <AddQuizContainer className='add_quiz_container'>
+                  <Cards>
+                    <Card className='quiz_card'>
+                      <CardBody className='quiz_card_body'>
+                        <CardTitle className='quiz_card_title'>New Quiz</CardTitle>
+                        <Button color='warning' onClick={this.createQuiz}>
+                          <span role='img' aria-labelledby='Plus Symbol'>&#x2795;</span>
+                        </Button>
+                      </CardBody>
+                    </Card>
+                  </Cards>
+
+                  {quizSet.map(quiz => {
+                    const { QuizID, QuizName, Classes } = quiz
+                    const amountOfClasses = Classes.length
+
+                    return (
+                      <ViewQuizOrClass key={QuizID} render={() => {
+                        return (
+                          <QuizList
+                            QuizName={QuizName}
+                            QuizID={QuizID}
+                            amountOfClasses={amountOfClasses}
+                          />
+                        )
+                      }}
+                      />
+                    )
+                  })}
+                </AddQuizContainer>
+              )
             }
           }}
         </Query>
+
         {this.state.redirect ? <Redirect to='/rocket/quizzes/createquiz' /> : null}
-      </div>
+      </Styles>
     )
   }
 }
