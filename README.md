@@ -95,7 +95,6 @@ Once those are taken care of, clone the repository into a directory of your choo
 - Finally, run `python manage.py runserver` in order to launch the server.
 
 ## API
-As our API is based on GraphQL, every request to the server must be a `POST` request, formatted as `application/json`.
 
 ### Schemas
 For the API, a schema can be thought of as a collection of possible returns for a query, based on the data models created in Django to be used with the database. As an example, if a query returns a `ClassType`, optional returned data could include the ID or name of a classroom, the set of students which are associated with that classroom, or all of the above. With GraphQL, you only get the data you ask for.
