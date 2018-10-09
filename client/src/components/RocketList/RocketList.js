@@ -13,7 +13,7 @@ import { client } from '../../index'
 import { Query } from 'react-apollo'
 
 import './RocketList.css'
-import { SideNavButton, RocketListNavBar, SideNavLinks } from './styled'
+import { SideNavButton, RocketListNavBar, RocketSideNav, SideNavLinks } from './styled'
 
 const GET_CURRENT_USER = gql`
   query getUser($token:String!) {
@@ -103,7 +103,7 @@ class RocketList extends Component {
           : null }
 
         <div className='rocket_list_main'>
-          <div className='rocket_side_nav'>
+          <RocketSideNav>
             <SideNavButton onClick={this.hideSideNav}>
               =
             </SideNavButton>
@@ -117,7 +117,7 @@ class RocketList extends Component {
               <SideNavLinks to='/rocket/settings/'>Settings</SideNavLinks>
               <Button color='warning' className='logOut' onClick={this.logOut}>Log Out</Button>
             </RocketListNavBar>
-          </div>
+          </RocketSideNav>
 
           <Switch>
             <Route exact path='/rocket/quizzes' component={Quizzes} />
