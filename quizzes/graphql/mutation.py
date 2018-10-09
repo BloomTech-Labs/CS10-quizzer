@@ -281,9 +281,12 @@ class CreateQuiz(graphene.Mutation):
         decJWT     = jwt.decode(encJWT, secret, algorithms=[ algorithm ])
         teacherID  = decJWT[ 'sub' ][ 'id' ]
         teacher    = Teacher.objects.get(TeacherID=teacherID)
-        quiz       = Quiz.objects.create(Teacher=teacher, QuizName=QuizName, Public=Public)
-
-        return CreateQuiz(quiz=quiz)
+        quizzes    = teacher.quiz_set.all()
+        if teacher.Subscription == "" and len(quizzes) >= 10:
+            return GraphQLError('Free users cannot create more than 10 quizzes.')
+        else:
+            quiz = Quiz.objects.create(Teacher=teacher, QuizName=QuizName, Public=Public)
+            return CreateQuiz(quiz=quiz)
 
 class CreateQuizMutation(graphene.ObjectType):
     QuizID        = graphene.String()
