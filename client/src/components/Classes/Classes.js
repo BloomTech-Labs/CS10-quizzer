@@ -5,6 +5,8 @@ import ViewQuizOrClass from '../ViewQuizOrClass/ViewQuizOrClass'
 import ClassList from './ClassList'
 import './Classes.css'
 
+import Styles from '../RocketStyles'
+
 const GET_CLASSES_INFORMATION = gql`
   query getClasses($token: String!) {
     teacher(encJwt: $token) {
@@ -50,7 +52,7 @@ class Classes extends Component {
 
   render () {
     return (
-      <div className='quizzes_container'>
+      <Styles>
         <h1>Classes</h1>
 
         <Query query={GET_CLASSES_INFORMATION} variables={{ token: localStorage.getItem('token') }}>
@@ -63,7 +65,7 @@ class Classes extends Component {
             }
           }}
         </Query>
-      </div>
+      </Styles>
     )
   }
 }
