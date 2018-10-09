@@ -306,15 +306,95 @@ Returns `StudentType`. Useful for getting a list of students associated with a s
   ```
 
 ### Mutations
-Mutations allow saving new, or manipulating current, data in some way.
+Mutations allow saving or manipulating data in the database in some way.
 
 #### createClass
+Returns a `ClassType` called with `newClass`. Creates and returns a new classroom.
+
+- Arguments:
+  - `ClassName` - A string containing the desired name for the classroom.
+  - `encJwt` - A string containing a valid JWT.
+
+- Example Usage:
+  ```js
+  mutation {
+    createClass(ClassName: "Class One", encJwt: "{valid JWT}") {
+      newClass {
+        ClassID
+      }
+    }
+  }
+
+  // Creates a new classroom in the database called Class One, which will be associated with the user data in the JWT. The return data, newClass, contains the ClassType information, in this case the ClassID.
+  ```
 
 #### updateClass
+Returns a `ClassType` called `updatedClass`. Updates information for a currently existing classroom.
+
+- Arguments:
+  - `ClassID` - A string containing a valid ClassID.
+  - `ClassName` - A string containing the desired name for the classroom.
+  - `encJwt` - A string containing a valid JWT.
+
+- Example Usage:
+  ```js
+  mutation {
+    updateClass(ClassID: "{valid ClassID}", ClassName: "Fishladder", encJwt: "{valid JWT}") {
+      updatedClass {
+        ClassID
+        ClassName
+      }
+    }
+  }
+
+  // Updates the current classroom associated with the ClassID to have the new name "Fishladder". The JWT is used to verify the user prior to making changes. The return data, updatedClass, contains the ClassType information, in this case the classes ID and new name.
+  ```
 
 #### createTeacher
+Returns a `TeacherType` called `teacher`, and a JWT string containing user information called `jwtString`. Creates a new user in the database.
+
+- Arguments:
+  - `TeacherEmail` - A string containing the desired email address for the user.
+  - `TeacherName` - A string containing the desired name for the user.
+  - `TeacherPW` - A string containing the desired password for the user.
+
+- Example Usage:
+  ```js
+  mutation {
+    createTeacher(TeacherEmail: "example@example.com", TeacherName: "Example Teacher", TeacherPW: "nuggets") {
+      teacher {
+        TeacherID
+      }
+      jwtString
+    }
+  }
+
+  // Creates a new user in the database with their chosen email address, name, and password (which is hashed and salted). Returns "teacher" which contains their unique ID, as well as a JWT containing their user information needed for authorized interactions with the server.
+  ```
 
 #### updateTeacher
+Returns a `TeacherType` called `teacher`, and a JWT string containing user information called `jwtString`. Updates a current user in the database.
+
+- Arguments:
+  - `NewPassword` - A string containing the current password on the account.
+  - `OldPassword` - A string containing the desired new password for the account.
+  - `TeacherEmail` - A string containing the desired new email address for the account.
+  - `TeacherName` - A string containing the desired new name for the account.
+  - `incomingJwt` - A string containing a valid JWT.
+
+- Example Usage:
+  ```js
+  mutation {
+    updateTeacher(NewPassword: "not_nuggets", OldPassword: "nuggets", TeacherEmail: "test@test.com", TeacherName: "Test Teacher", incomingJwt: "{valid JWT}") {
+      teacher {
+        TeacherID
+      }
+      jwtString
+    }
+  }
+
+  // Updates the user matching information contained in incomingJwt, overwriting the current password, name, and email address with new data. Returns "teacher" which contains their unique ID, as well as a new JWT containing their user information needed for authorized interactions with the server.
+  ```
 
 #### createStudent
 
