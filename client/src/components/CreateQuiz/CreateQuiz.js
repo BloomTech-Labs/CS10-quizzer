@@ -1,58 +1,25 @@
 import React, { Component } from 'react'
-import CreateQuestions from './CreateQuestions'
+import CreateQuestions from '../CreateQuestion/CreateQuestion'
 import ModalMessage from '../Modals/ModalMessage'
-import gql from 'graphql-tag'
-import { Mutation } from 'react-apollo'
+import { CREATE_QUIZ, CREATE_QUESTION, CREATE_CHOICE } from '../Mutations'
 import { Button } from 'reactstrap'
+import { Mutation } from 'react-apollo'
 import './CreateQuiz.css'
-
-// Create Quiz Mutation
-const CREATE_QUIZ = gql`
-  mutation CreateQuiz($Public: Boolean!, $QuizName: String!, $encJWT: String!) {
-    createQuiz(Public: $Public, QuizName: $QuizName, encJWT: $encJWT) {
-      quiz {
-        QuizID
-      }
-    }
-  }
-`
-
-// Create Question Mutation
-const CREATE_QUESTION = gql`
-  mutation CreateQuestion($QuestionText: String!, $QuizID: String!, $encJWT:String!, $isMajor: Boolean!) {
-    createQuestion(QuestionText: $QuestionText, QuizID: $QuizID, encJWT: $encJWT, isMajor: $isMajor) {
-      question {
-        QuestionID
-      }
-    }
-  }
-`
-
-// Create Choice Mutation
-const CREATE_CHOICE = gql`
-  mutation CreateChoice($ChoiceText: String!, $QuestionID: String!, $encJWT: String!, $isCorrect: Boolean!) {
-    createChoice(ChoiceText: $ChoiceText, QuestionID: $QuestionID, encJWT: $encJWT, isCorrect: $isCorrect) {
-      choice {
-        ChoiceID
-      }
-    }
-  }
-`
 
 class CreateQuiz extends Component {
   constructor () {
     super()
     this.state = {
-      quizName: '',
-      questions: [],
-      choices: [],
       answerList: [],
+      choices: [],
       choicesCount: 0,
       modalMessage: false,
-      modalTitle: '',
-      modalText: '',
       modalSaving: false,
       modalSuccess: false,
+      modalText: '',
+      modalTitle: '',
+      questions: [],
+      quizName: '',
       token: ''
     }
   }
@@ -69,14 +36,11 @@ class CreateQuiz extends Component {
     })
   }
 
-  // This method adds a new question to this.state.questions array,
-  // add choices to this.state.choices array for that question, and
-  // adds a null value in this.state.answerList for that question since no answers have been chosen yet
   addQuestion = () => {
-    const questionsArr = Object.assign([], this.state.questions)
-    const choicesArr = Object.assign([], this.state.choices)
-    const list = Object.assign([], this.state.answerList)
-    questionsArr.push('')
+    const choicesArr = [...this.state.choices]
+    const list = [...this.state.answerList]
+    const questionsArr = [...this.state.questions]
+    
     choicesArr.push([
       ['', false, false],
       ['', false, false],
@@ -84,67 +48,68 @@ class CreateQuiz extends Component {
       ['', false, true]
     ])
     list.push(null)
+    questionsArr.push('')
+    
     this.setState({
-      questions: questionsArr,
-      choices: choicesArr,
       answerList: list,
-      choicesCount: this.state.choicesCount + 2
+      choices: choicesArr,
+      choicesCount: this.state.choicesCount + 2,
+      questions: questionsArr
     })
   }
 
-  // This method changes the text value of the question while the user is typing
   questionChange = (event) => {
-    const questionsArr = Object.assign([], this.state.questions)
     const index = Number(event.target.name)
+    const questionsArr = [...this.state.questions]
+    
     questionsArr[index] = event.target.value
     this.setState({
       questions: questionsArr
     })
   }
 
-  // This method deletes the question from this.state.questions,
-  // deletes the question choices from this.state.choices, and
-  // deletes the value associated to the question in this.state.answerList
   deleteQuestion = (event) => {
-    const questionsArr = Object.assign([], this.state.questions)
-    const choicesArr = Object.assign([], this.state.choices)
-    const list = Object.assign([], this.state.answerList)
-    const index = Number(event.target.name)
+    const choicesArr = [...this.state.choices]
     let count = 0
+    const index = Number(event.target.name)
+    const list = [...this.state.answerList]
+    const questionsArr = [...this.state.questions]
+    
     choicesArr[index].forEach(choice => {
       if (choice[2] === false) {
         count++
       }
     })
+    
     questionsArr.splice(index, 1)
     choicesArr.splice(index, 1)
     list.splice(index, 1)
+    
     this.setState({
-      questions: questionsArr,
-      choices: choicesArr,
       answerList: list,
-      choicesCount: this.state.choicesCount - count
+      choices: choicesArr,
+      choicesCount: this.state.choicesCount - count,
+      questions: questionsArr,
     })
   }
 
-  // This method changes the text value for the choice while the user is typing
   choiceChange = (event) => {
-    const choicesArr = Object.assign([], this.state.choices)
-    const index = Number(event.target.name)
     const choice = Number(event.target.id)
+    const choicesArr = [...this.state.choices]
+    const index = Number(event.target.name)
+    
     choicesArr[index][choice][0] = event.target.value
+    
     this.setState({
       choices: choicesArr
     })
   }
 
-  // This method changes the check value for a choice from false to true when clicked on
-  // and it changes the other check values in a choice set to false
-  check = (event) => {
-    const choicesArr = Object.assign([], this.state.choices)
-    const list = Object.assign([], this.state.answerList)
-    const index = Number(event.target.name)
+  choiceCheck = (event) => {
     const choice = Number(event.target.id)
+    const choicesArr = [...this.state.choices]
+    const list = [...this.state.answerList]
+    const index = Number(event.target.name)
 
     if (choicesArr[index][choice][1] === false) {
       choicesArr[index][choice][1] = true
@@ -175,18 +140,18 @@ class CreateQuiz extends Component {
     }
 
     this.setState({
-      choices: choicesArr,
-      answerList: list
+      answerList: list,
+      choices: choicesArr
     })
   }
-
-  // This method enables or disables the 3rd or 4th  question in a choice set
+  
   enableOrDisable = (event) => {
-    const choicesArr = Object.assign([], this.state.choices)
-    const list = Object.assign([], this.state.answerList)
-    const index = Number(event.target.name)
-    const choice = Number(event.target.attributes.choice.nodeValue)
+    const choice = Number(event.target.id)
+    const choicesArr = [...this.state.choices]
     let count = this.state.choicesCount
+    const index = Number(event.target.name)
+    const list = [...this.state.answerList]
+
     if (choicesArr[index][choice][1] === true) {
       list[index] = null
     } else if (choicesArr[index][choice][2] === false) {
@@ -194,8 +159,10 @@ class CreateQuiz extends Component {
     } else if (choicesArr[index][choice][2] === true) {
       count++
     }
+    
     choicesArr[index][choice][1] = false
     choicesArr[index][choice][2] = !choicesArr[index][choice][2]
+    
     this.setState({
       choices: choicesArr,
       answersList: list,
@@ -213,22 +180,22 @@ class CreateQuiz extends Component {
     return (
       <div className='create_quiz_container'>
         <h4 className='create_quiz_instructions'>
-        To create a quiz, you must provide a quiz name, quiz content and add at least one question. You must also add atleast two answer
-        choices per question, but you are limited to four answer choices.</h4>
-        {/* Mutations to create a quiz, questions and choices */}
+          To create a quiz, you must provide a quiz name and add at least one question. You must also 
+          add at least two answer choices per question, but each question is limited to four answer choices.
+        </h4>
         <Mutation mutation={CREATE_QUIZ}>
-          {(createNewQuiz, { loading: loadingQuiz }) => (
+          {(createNewQuiz) => (
             <Mutation mutation={CREATE_QUESTION}>
-              {(createNewQuestion, { loading: loadingQuestion }) => (
+              {(createNewQuestion) => (
                 <Mutation mutation={CREATE_CHOICE}>
-                  {(createNewChoice, { loading: loadingChoice }) => (
+                  {(createNewChoice) => (
                     <form className='create_quiz_form' onSubmit={event => {
                       event.preventDefault()
                       if (this.state.questions.length === 0) {
                         this.setState({
                           modalMessage: true,
-                          modalTitle: 'Information',
-                          modalText: 'To create a quiz, you must add at least one question.'
+                          modalText: 'To create a quiz, you must add at least one question.',
+                          modalTitle: 'Information'
                         })
                         return
                       } else if (this.state.answerList.indexOf(null) > -1) {
@@ -241,17 +208,17 @@ class CreateQuiz extends Component {
                       } else {
                         this.setState({
                           modalMessage: true,
+                          modalText: 'The quiz is being saved. Please wait...',
                           modalTitle: 'Information',
-                          modalText: 'Your quiz is being saved. Please wait...',
                           modalSaving: true
                         })
                       }
                       const createdQuiz = createNewQuiz({
                         variables:
                           {
+                            encJWT: this.state.token,
                             Public: false,
                             QuizName: this.state.quizName,
-                            encJWT: this.state.token
                           },
                         refetchQueries: ['getCurrentInformation']
                       })
@@ -261,10 +228,10 @@ class CreateQuiz extends Component {
                           this.state.questions.forEach((question, index) => {
                             const createdQuestion = createNewQuestion({
                               variables: {
-                                QuestionText: question,
-                                QuizID: quizId,
                                 encJWT: this.state.token,
-                                isMajor: false
+                                isMajor: false,
+                                QuizID: quizId,
+                                QuestionText: question
                               },
                               refetchQueries: ['getCurrentInformation']
                             })
@@ -276,9 +243,9 @@ class CreateQuiz extends Component {
                                     const createdChoice = createNewChoice({
                                       variables: {
                                         ChoiceText: choice[0],
-                                        QuestionID: questionId,
                                         encJWT: this.state.token,
-                                        isCorrect: choice[1]
+                                        isCorrect: choice[1],
+                                        QuestionID: questionId,
                                       },
                                       refetchQueries: ['getCurrentInformation']
                                     })
@@ -289,23 +256,23 @@ class CreateQuiz extends Component {
                                         })
                                         if (this.state.choicesCount === 0) {
                                           this.setState({
-                                            quizName: '',
-                                            questions: [],
-                                            choices: [],
                                             answerList: [],
+                                            choices: [],
                                             choicesCount: 0,
                                             modalMessage: true,
-                                            modalTitle: 'Success',
                                             modalText: 'You have successfully created a quiz. Do you want to go to the quizzes page?',
-                                            modalSuccess: true
+                                            modalTitle: 'Success',
+                                            modalSuccess: true,
+                                            questions: [],
+                                            quizName: ''
                                           })
                                         }
                                       })
                                       .catch(() => {
                                         this.setState({
                                           modalMessage: true,
-                                          modalTitle: 'Error',
-                                          modalText: 'An error occurred while creating the quiz.'
+                                          modalText: 'An error occurred while creating the quiz.',
+                                          modalTitle: 'Error'
                                         })
                                       })
                                   }
@@ -314,7 +281,8 @@ class CreateQuiz extends Component {
                               .catch(() => {
                                 this.setState({
                                   modalMessage: true,
-                                  modalText: 'An error occurred while creating the quiz.'
+                                  modalText: 'An error occurred while creating the quiz.',
+                                  modalTitle: 'Error'
                                 })
                               })
                           })
@@ -322,14 +290,15 @@ class CreateQuiz extends Component {
                         .catch(() => {
                           this.setState({
                             modalMessage: true,
-                            modalText: 'An error occurred while creating the quiz.'
+                            modalText: 'An error occurred while creating the quiz.',
+                            modalTitle: 'Error'
                           })
                         })
                     }}>
-                      <input className='create_quiz_name' name='quizName' onChange={this.handleOnChange} placeholder='Name' required type='text' value={this.state.quizName} />
-                      <CreateQuestions state={this.state} questionChange={this.questionChange} check={this.check} choiceChange={this.choiceChange} deleteQuestion={this.deleteQuestion} enableOrDisable={this.enableOrDisable} />
-                      <Button color='seconday' className='create_quiz_container_button' onClick={this.addQuestion}>Add Question</Button>
-                      <Button color='info' className='create_quiz_container_button'>Create Quiz</Button>
+                      <input name='quizName' onChange={this.handleOnChange} placeholder='Name' required type='text' value={this.state.quizName} />
+                      <CreateQuestions state={this.state} questionChange={this.questionChange} choiceCheck={this.choiceCheck} choiceChange={this.choiceChange} deleteQuestion={this.deleteQuestion} enableOrDisable={this.enableOrDisable} />
+                      <Button color='secondary' className='create_quiz_button' onClick={this.addQuestion}>Add Question</Button>
+                      <Button color='info' className='create_quiz_button'>Create Quiz</Button>
                     </form>
                   )}
                 </Mutation>

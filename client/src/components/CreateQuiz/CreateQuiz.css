@@ -36,47 +36,12 @@
     width: 80%;
 }
 
-.create_quiz_container_button {
+.create_quiz_button {
     font-family: monospace;
     font-size: 20px !important;
     font-weight: bold !important;
     margin: 20px 0 0 5%;
     width: 20%;
-}
-
-.question_fieldset {
-    margin: 10px 0 0 5%;
-}
-
-.question_fieldset div {
-    margin: 0 0 10px 0; 
-}
-
-.question_fieldset div input:first-child {
-    margin: 0;
-    width: 2%;
-}
-
-.question_fieldset div input:nth-child(2) {
-    margin: 0 0 0 2%;
-}
-
-.question_choices {
-    margin: 0 0 0 2%;
-}
-
-.delete_question {
-    font-family: monospace;
-    font-size: 20px !important;
-    font-weight: bold !important;
-    margin: 0 0 0 5%;
-}
-
-.enable_disable_choice {
-    font-family: monospace;
-    font-size: 15px !important;
-    font-weight: bold !important;
-    margin: 0 0 7px 2%;
 }
 
 .modal_message_header {
