@@ -3,15 +3,32 @@ import { Button } from 'reactstrap'
 import './EditChoice.css'
 
 const EditChoice = (props) => {
-    const { choice, choices } = props
+    const { choices, choiceChecked, choiceTextChange, id, index } = props
     return (
       <div>
-        <input checked={choices.length >= choice + 1 ? choices[choice].isCorrect : null} disabled={choices.length >= choice + 1 ? false : true} id={choices.length >= choice + 1 ? choices[choice].ChoiceID : null} readOnly required type='radio' />
-        <input className='question_choices' disabled={choices.length >= choice + 1 ? false : true} id={choices.length >= choice + 1 ? choices[choice].ChoiceID : null} placeholder={`Choice ${choice + 1}`} readOnly required type='text' value={choices.length >= choice + 1 ? choices[choice].ChoiceText : ''} />
-        {choice > 1
-          ? choices.length >= choice + 1
-            ? <Button choice={choice} className='enable_disable_choice'>Disable Choice</Button>
-            : <Button choice={choice} color='info' className='enable_disable_choice'>Enable Choice</Button>
+        <input 
+          checked={choices.length >= id + 1 ? choices[id].isCorrect : null} 
+          id={id} 
+          disabled={choices.length >= id + 1 ? false : true} 
+          name={index}
+          onChange={event => choiceChecked(event)}
+          required 
+          type='radio' 
+        />
+        <input 
+          id={id}
+          className='question_choices' 
+          disabled={choices.length >= id + 1 ? false : true} 
+          name={index} 
+          onChange={event => choiceTextChange(event)}
+          placeholder={`Choice ${id + 1}`} 
+          type='text' 
+          value={choices.length >= id + 1 ? choices[id].ChoiceText : ''} 
+        />
+        {id > 1
+          ? choices.length >= id + 1
+            ? <Button id={id} className='enable_disable_choice' name={index}>Disable Choice</Button>
+            : <Button id={id} color='info' className='enable_disable_choice' name={index}>Enable Choice</Button>
         : null} 
       </div>
     )
