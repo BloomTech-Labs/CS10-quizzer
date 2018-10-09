@@ -49,7 +49,16 @@ Lastly, our application is set up for continuous integration and automatic deplo
 Aside from Codeship verifying builds prior to deploy, our testing has been completely manual. On reviewing new PR's, we pull down the respective branch and commence testing the new feature, bug fix, etc. to verify it works as advertised, as well as checking whether the changes impact any other, unrelated functionality.
 
 ## Security
-WIP
+### User Creation
+When a new user is created, the user must provide a password, as well as verify the password matches in a second input field. Once submitted, the password is hashed and salted prior to being stored in the database, meaning no plaintext password can ever be viewed in the database.
+
+### User Authentication
+On signing in as an existing user, assuming the provided password matches what is stored in the database, the user is then provided with a HS256 encrypted JWT containing their unique ID, user name, and email address, as well as a JWT creation time and expiration date.
+
+This JWT **must** be present in the majority of GraphQL communication with the server, as it will be used to identify the user and locate their respective information in the database, helping to prevent any unauthorized use of queries and mutations. Effectively, only students taking the quizzes need no such authentication, as they never have true accounts.
+
+### Customer Payments
+No financial information is ever stored in the database, as all transactions are performed directly through Stripe. The only thing that does get stored is simple subscription information and a customer ID for Stripe to use.
 
 ## Developer Documentation
 
@@ -57,7 +66,23 @@ WIP
 WIP
 
 ### Local Installation
-WIP
+In order to run the application locally, you'll need to install the following software:
+  - [Node.js](https://nodejs.org/en/) - Version 8.12.0
+  - [Python 3](https://www.python.org/downloads/) - Version 3.7.0
+
+We also highly recommend using [pipenv](https://github.com/pypa/pipenv) for running a Python virtual environment, as it makes installing necessary dependencies much easier (though we've included a `requirements.txt`).
+
+Once those are taken care of, clone the repository into a directory of your choosing, and the following steps should be performed from the terminal of your choice (bash, cmd, PowerShell, etc.):
+#### Client:
+- Enter the `client` directory and run either `npm install` or `yarn` in order to install the required packages (we recommend [Yarn](https://yarnpkg.com/en/)).
+- Verify the application starts by running either `npm start` or `yarn start`. If it starts up, you're good to go!
+#### Server:
+(These instructions will assume you're using pipenv as recommended).
+- From the root directory of the app, run `pipenv install` to install the necessary dependencies.
+- Once packages are installed, run `pipenv shell` to enter the virtual environment.
+- From here, you'll be able to run server commands. Type `python manage.py makemigrations` to ensure that necessary Django migration data is created.
+- Once this is done, run `python manage.py migrate` in order to apply those migrations and create the local development database.
+- Finally, run `python manage.py runserver` in order to launch the server.
 
 ## API
 As our API is based on GraphQL, every request to the server must be a `POST` request, formatted as `application/json`.
