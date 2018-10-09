@@ -15,5 +15,5 @@ export const AddQuizContainer = styled.div`
 export const Cards = styled.div`
   margin-bottom: 3rem;
   width: 100%;
-  max-width: 350px;
+  max-width: ${({ maxWidth = '350px' }) => maxWidth};
 `
