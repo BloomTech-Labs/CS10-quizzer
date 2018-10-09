@@ -239,6 +239,8 @@ class CreateQuiz(graphene.Mutation):
 
         if teacher.Subscription == "" and len(quizzes) >= 10:
             return GraphQLError('Free users cannot create more than 10 quizzes.')
+        elif teacher.Subscription == "Basic" and len(quizzes) >= 25:
+            return GraphQLError('Basic users cannot create more than 25 quizzes.')
         else:
             quiz = Quiz.objects.create(Teacher=teacher, QuizName=QuizName, Public=Public)
             return CreateQuiz(quiz=quiz)
