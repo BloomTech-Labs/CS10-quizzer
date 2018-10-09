@@ -16,7 +16,7 @@ from sendgrid.helpers.mail import *
 # class GetStripeCustomer:
 #     def __init__(self, )
 
-
+# stripe_secret_key, body, plan, sub
 def basic_subscription(req):
     '''
     TODO: prevent requests that are not authenticated from making transactions
@@ -30,11 +30,11 @@ def basic_subscription(req):
     '''
     if req.method == 'POST':
         create_subscription = CreateSubscription(
-            config('STRIPE_SECRET_KEY'),
-            req.body,
-            'plan_Dfqkao8AaFuGrC',
-            'Basic'
-            )
+            stripe_secret_key=config('STRIPE_SECRET_KEY'),
+            body=req.body,
+            plan='plan_Dfqkao8AaFuGrC',
+            sub='Basic'
+        )
 
         create_subscription.parse_body()
         customer_exists = create_subscription.check_if_customer_exists()
@@ -90,15 +90,14 @@ def cancel_subscription(req):
             'error': 'This subscription does not exist'
         })
 
-
 def premium_subscription(req):
     if req.method == 'POST':
         create_subscription = CreateSubscription(
-            config('STRIPE_SECRET_KEY'),
-            req.body,
-            'plan_Dg2R9ddEFH3x95',
-            'Premium'
-            )
+            stripe_secret_key=config('STRIPE_SECRET_KEY'),
+            body=req.body,
+            plan='plan_Dg2R9ddEFH3x95',
+            sub='Premium'
+        )
 
         create_subscription.parse_body()
         customer_exists = create_subscription.check_if_customer_exists()
