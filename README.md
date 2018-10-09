@@ -216,18 +216,42 @@ Returns `QuizType`. Useful for getting a list of quizzes associated with a singl
   ```
 
 #### teacherQuizzes
+Returns `QuizType`. Useful for getting a list of quizzes associated with a single user.
+
+- Arguments:
+  - `encJwt` - A string containing a valid JWT.
+
+- Example Usage:
+  ```js
+  {
+    teacherQuizzes(encJwt: "{valid JWT}") {
+      QuizID
+      QuizName
+    }
+  }
+
+  // Returns a list of quiz ID's and quiz names associated with the teacher found in the provided JWT argument.
+  ``` 
 
 #### quizQuestions
+Returns `QuestionType`. Useful for retrieving all questions associated with a single quiz.
 
-#### questions
+- Arguments:
+  - `QuizID` - A string containing a valid QuizID.
 
-#### choices
+- Example Usage:
+  ```js
+  {
+    quizQuestions(QuizID: "{valid QuizID}") {
+      QuestionID
+      Question
+    }
+  }
 
-#### teachers
+  // Returns a list of question ID's and question text associated with the provided QuizID argument.
+  ```
 
 #### teacher
-
-#### students
 
 #### student
 
