@@ -10,6 +10,7 @@ import './Quizzes.css'
 const getCurrentInformation = gql`
   query getCurrentInformation($token: String!) {
     teacher(encJwt: $token) {
+      Subscription
       quizSet {
         QuizID
         QuizName
@@ -68,10 +69,10 @@ class Quizzes extends Component {
                   </div>
                 )
               } else {
-                const { quizSet } = data.teacher[0]
+                const { quizSet, Subscription } = data.teacher[0]
                 return (
                   <div>
-                    {queryLength >= 10 ? <span>The free plan has a limit of 10 quizzes. <Link to='/rocket/billing'>Upgrade your plan?</Link></span> : null}
+                    {queryLength >= 10 && Subscription === '' ? <span>The free plan has a limit of 10 quizzes. <Link to='/rocket/billing'>Upgrade your plan?</Link></span> : null}
                     <div className='quiz_cards_container'>
                       <div className='cards'>
                         <Card className='quiz_card'>
