@@ -1,16 +1,12 @@
 .nav_container {
     background: #003366;
     color: #fff;
-    display: flex; 
-    justify-content: space-between; 
-    height: 5rem;
 }
 
-.nav_container_left {
-    align-items: center; 
-    display: flex; 
-    margin: 0 0 0 2%; 
-    width: 33%; 
+@media (min-width: 628px) {
+  .nav_container {
+    flex-direction: row !important;
+  }
 }
 
 .nav_container_left_logo_button h1 {

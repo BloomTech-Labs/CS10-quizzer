@@ -10,7 +10,8 @@ class EditQuiz extends Component {
   constructor () {
     super()
     this.state = {
-      quizId: ''
+      quizId: '',
+      quizData: {}
     }
   }
 
@@ -23,8 +24,19 @@ class EditQuiz extends Component {
   }
 
   quizNameChange = (event) => {
+    const obj = Object.assign({}, this.state.quizData)
+    obj.QuizName = event.target.value
     this.setState({
-      [event.target.name]: event.target.value
+      quizData: obj
+    })
+  }
+
+  questionTextChange = (event) => {
+    const obj = Object.assign({}, this.state.quizData)
+    const index = event.target.name
+    obj.questionSet[index].Question = event.target.value
+    this.setState({
+      quizData: obj
     })
   }
 
@@ -32,17 +44,23 @@ class EditQuiz extends Component {
     if (!this.state.quizId) {
       return <span>Loading...</span>
     }
-
+    console.log('State ', this.state.quizData)
     return (
-      <Query query={GET_QUIZ_INFORMATION} variables={{ quizId: this.state.quizId }}>
+      <Query 
+        query={GET_QUIZ_INFORMATION} 
+        variables={{ quizId: this.state.quizId }}
+        onCompleted={data => 
+          this.setState({
+          quizData: data.singleQuiz
+        })}
+      >
         {({ data, loading }) => {
           if (loading || !data) {
             return <span>Loading...</span>
           }
 
-          if (data) {
-            const quizData = data.singleQuiz
-
+          if (this.state.quizData) {
+            const quizData = this.state.quizData
             return (
               <div className='edit_quiz_container'>
                 <h4 className='edit_quiz_instructions'>
@@ -51,8 +69,8 @@ class EditQuiz extends Component {
                   four answer choices.
                 </h4>
                 <form className='edit_quiz_form'> 
-                 <input id={quizData.QuizID} name='quizName' placeholder='Name' readOnly required type='text' value={quizData.QuizName} />
-                 <EditQuestion questionSet={quizData.questionSet} />
+                 <input name='QuizName' placeholder='Name' onChange={this.quizNameChange} required type='text' value={quizData.QuizName} />
+                 <EditQuestion questionSet={quizData.questionSet} questionTextChange={this.questionTextChange} />
                  <Button color='secondary' className='edit_quiz_button'>Add Question</Button>
                  <div className='saveOrDelete'> 
                    <Button color='info' className='edit_quiz_button'>Save Changes</Button>
