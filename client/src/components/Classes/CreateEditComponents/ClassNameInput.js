@@ -5,8 +5,8 @@ import gql from 'graphql-tag'
 import PropTypes from 'prop-types'
 
 const UPDATE_CLASS_NAME = gql`
-mutation UpdateClassName($ClassID: String!, $ClassName: String!, $encJWT: String!){
-  updateClass(ClassID: $ClassID, ClassName: $ClassName, encJWT: $encJWT) {
+mutation UpdateClassName($ClassID: String!, $ClassName: String!, $encJwt: String!){
+  updateClass(ClassID: $ClassID, ClassName: $ClassName, encJwt: $encJwt) {
     updatedClass {
       ClassID
       ClassName
@@ -36,7 +36,7 @@ class ClassNameInput extends Component {
                 variables: {
                   ClassID: classID,
                   ClassName: name,
-                  encJWT: window.localStorage.getItem('token')
+                  encJwt: window.localStorage.getItem('token')
                 },
                 refetchQueries: ['GetSingleClass', 'getClasses']
               })

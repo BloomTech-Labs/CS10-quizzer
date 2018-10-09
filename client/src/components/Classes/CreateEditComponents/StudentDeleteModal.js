@@ -5,8 +5,8 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import { Mutation } from 'react-apollo'
 
 const DELETE_STUDENT = gql`
-mutation DeleteStudent($StudentID: String!) {
-  deleteStudent(StudentID: $StudentID) {
+mutation DeleteStudent($StudentID: String!, $encJwt: String!) {
+  deleteStudent(StudentID: $StudentID, encJwt: $encJwt) {
     student {
       StudentID
     }
@@ -29,7 +29,8 @@ const StudentDeleteModal = (props) => {
                 event.preventDefault()
                 deleteStudent({
                   variables: {
-                    StudentID: studentID
+                    StudentID: studentID,
+                    encJwt: localStorage.getItem('token')
                   },
                   refetchQueries: ['getStudents']
                 })
