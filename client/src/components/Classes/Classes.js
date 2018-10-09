@@ -27,9 +27,6 @@ const GET_CLASSES_INFORMATION = gql`
         }
 
         quizscoresSet {
-          QuizScoresID
-          StudentID
-          QuizID
           Score
         }
       }

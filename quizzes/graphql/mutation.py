@@ -426,14 +426,17 @@ class UpdateQuizScore(graphene.Mutation):
 
     @staticmethod
     def mutate(self, info, QuizID, Classroom, StudentID, Score):
+        quiz = Quiz.objects.get(QuizID=QuizID)
+        quiz_name = quiz.QuizName
         quiz_score = QuizScores.objects.get(
             QuizID=QuizID,
             ClassID=Classroom,
             StudentID=StudentID
-            )
+        )
 
         quiz_score.Score = Score
-        quiz_score.save(update_fields=['Score'])
+        quiz_score.QuizName = quiz_name
+        quiz_score.save(update_fields=['Score', 'QuizName'])
 
         return UpdateQuizScore(updated_quiz_score=quiz_score)
 
