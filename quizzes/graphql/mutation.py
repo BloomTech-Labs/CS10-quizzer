@@ -6,18 +6,19 @@ import time
 
 from decouple import config
 from graphql import GraphQLError
-from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student, Class_Quiz, QuizScores
+from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student, QuizScores
 from uuid import UUID
 
+from quizzes.helpers.jwt_helpers import decode_jwt, create_jwt
 
 '''
 start CreateTeacher
 '''
 class CreateTeacher(graphene.Mutation):
     class Arguments:
-        TeacherName  = graphene.String()
-        TeacherPW    = graphene.String()
-        TeacherEmail = graphene.String()
+        TeacherName  = graphene.String(required=True)
+        TeacherPW    = graphene.String(required=True)
+        TeacherEmail = graphene.String(required=True)
 
     jwt_string = graphene.String()
     teacher    = graphene.Field(lambda: TeacherMutation)
@@ -33,23 +34,7 @@ class CreateTeacher(graphene.Mutation):
         teacher = Teacher.objects.create(TeacherName=TeacherName, TeacherPW=hashed, TeacherEmail=TeacherEmail)
         teacher.TeacherID = str(teacher.TeacherID)
 
-        # create DATA for JWT
-        secret    = config('SECRET_KEY')
-        algorithm = 'HS256'
-        payload = {
-            'sub': {
-                'id': teacher.TeacherID,
-                'username': teacher.TeacherName,
-                'email': teacher.TeacherEmail
-            },
-            'iat': time.time(),
-            'exp': time.time() + 86400
-        }
-
-        # create JWT as a byte string e.g. b'<< JWT >>'
-        enc_jwt    = jwt.encode(payload, secret, algorithm=algorithm)
-        # transforms JWT-byte-string into a normal UTF-8 string
-        jwt_string = enc_jwt.decode('utf-8')
+        jwt_string = create_jwt(teacher.TeacherID, teacher.TeacherName, teacher.TeacherEmail)
 
         # this is what GraphQL is going to return
         return CreateTeacher(teacher=teacher, jwt_string=jwt_string)
@@ -72,16 +57,14 @@ class UpdateTeacherInformation(graphene.Mutation):
         OldPassword  = graphene.String(required=True)
         NewPassword  = graphene.String()
         TeacherEmail = graphene.String()
-        incoming_jwt = graphene.String()
+        incoming_jwt = graphene.String(required=True)
 
     jwt_string = graphene.String()
     teacher    = graphene.Field(lambda: UpdateTeacherInformationMutation)
 
     @staticmethod
     def mutate(self, info, incoming_jwt, TeacherName, TeacherEmail, OldPassword, NewPassword):
-        secret    = config('SECRET_KEY')
-        algorithm = 'HS256'
-        dec_jwt   = jwt.decode(incoming_jwt, secret, algorithms=[ algorithm ])
+        dec_jwt = decode_jwt(incoming_jwt)
         teacherID = dec_jwt[ 'sub' ][ 'id' ]
         teacher = Teacher.objects.get(TeacherID=teacherID)
 
@@ -103,24 +86,10 @@ class UpdateTeacherInformation(graphene.Mutation):
                     
                     # Save the new teacher data back into the database
                     teacher.save()
+                    # Make ID into a string so we can return it easily.
+                    teacher.TeacherID = str(teacher.TeacherID)
 
-                    # create DATA for new JWT to replace old one now that we maybe changed name or email
-                    secret    = config('SECRET_KEY')
-                    algorithm = 'HS256'
-                    payload = {
-                        'sub': {
-                            'id': str(teacher.TeacherID),
-                            'username': teacher.TeacherName,
-                            'email': teacher.TeacherEmail
-                        },
-                        'iat': time.time(),
-                        'exp': time.time() + 86400
-                    }
-
-                    # create JWT as a byte string e.g. b'<< JWT >>'
-                    outgoing_jwt = jwt.encode(payload, secret, algorithm=algorithm)
-                    # transforms JWT-byte-string into a normal UTF-8 string
-                    jwt_string = outgoing_jwt.decode('utf-8')
+                    jwt_string = create_jwt(teacher.TeacherID, teacher.TeacherName, teacher.TeacherEmail)
 
                     # this is what GraphQL is going to return
                     return UpdateTeacherInformation(teacher=teacher, jwt_string=jwt_string)
@@ -147,8 +116,8 @@ start QueryTeacher
 '''
 class QueryTeacher(graphene.Mutation):
     class Arguments:
-        TeacherEmail = graphene.String()
-        TeacherPW    = graphene.String()
+        TeacherEmail = graphene.String(required=True)
+        TeacherPW    = graphene.String(required=True)
 
     jwt_string = graphene.String()
     teacher    = graphene.Field(lambda: QueryTeacherMutation)
@@ -162,23 +131,8 @@ class QueryTeacher(graphene.Mutation):
         if plain_pw:
             if teacher:
                 if bcrypt.checkpw(plain_pw, hashed_pw):
-                    # create DATA for JWT
-                    secret    = config('SECRET_KEY')
-                    algorithm = 'HS256'
-                    payload = {
-                        'sub': {
-                            'id': str(teacher.TeacherID),
-                            'username': teacher.TeacherName,
-                            'email': teacher.TeacherEmail
-                        },
-                        'iat': time.time(),
-                        'exp': time.time() + 86400
-                    }
-
-                    # create JWT as a byte string e.g. b'<< JWT >>'
-                    enc_jwt = jwt.encode(payload, secret, algorithm=algorithm)
-                    # transforms JWT-byte-string into a normal UTF-8 string
-                    jwt_string = enc_jwt.decode('utf-8')
+                    teacher.TeacherID = str(teacher.TeacherID)
+                    jwt_string = create_jwt(teacher.TeacherID, teacher.TeacherName, teacher.TeacherEmail)
 
                     # this is what GraphQL is going to return
                     return QueryTeacher(teacher=teacher, jwt_string=jwt_string)
@@ -208,14 +162,15 @@ start CreateStudent
 '''
 class CreateStudent(graphene.Mutation):
     class Arguments:
-        StudentName  = graphene.String()
-        StudentEmail = graphene.String()
-        ClassID      = graphene.String()
+        StudentName  = graphene.String(required=True)
+        StudentEmail = graphene.String(required=True)
+        ClassID      = graphene.String(required=True)
+        enc_jwt      = graphene.String(required=True)
 
     student = graphene.Field(lambda: CreateStudentMutation)
 
     @staticmethod
-    def mutate(self, info, StudentName, StudentEmail, ClassID):
+    def mutate(self, info, StudentName, StudentEmail, ClassID, enc_jwt):
         ClassID = Class.objects.get(ClassID=ClassID)
         quizzes = ClassID.quiz_set.all()
         student = Student.objects.create(
@@ -249,12 +204,13 @@ end CreateStudent
 
 class DeleteStudent(graphene.Mutation):
     class Arguments:
-        StudentID = graphene.String()
+        StudentID = graphene.String(required=True)
+        enc_jwt = graphene.String(required=True)
 
     student = graphene.Field(lambda: DeleteStudentMutation)
 
     @staticmethod
-    def mutate(self, info, StudentID):
+    def mutate(self, info, StudentID, enc_jwt):
         student = Student.objects.get(StudentID=StudentID).delete()
 
         return DeleteStudent(student=student)
@@ -268,17 +224,15 @@ start CreateQuiz
 '''
 class CreateQuiz(graphene.Mutation):
     class Arguments:
-        QuizName = graphene.String()
+        QuizName = graphene.String(required=True)
         Public   = graphene.Boolean()
-        encJWT   = graphene.String()
+        encJWT   = graphene.String(required=True)
 
     quiz = graphene.Field(lambda: CreateQuizMutation)
 
     @staticmethod
     def mutate(self, info, QuizName, Public, encJWT):
-        secret     = config('SECRET_KEY')
-        algorithm  = 'HS256'
-        decJWT     = jwt.decode(encJWT, secret, algorithms=[ algorithm ])
+        decJWT     = decode_jwt(encJWT)
         teacherID  = decJWT[ 'sub' ][ 'id' ]
         teacher    = Teacher.objects.get(TeacherID=teacherID)
         quizzes    = teacher.quiz_set.all()
@@ -306,17 +260,15 @@ start AddQuizToClass
 '''
 class AddQuizToClass(graphene.Mutation):
     class Arguments:
-        QuizID     = graphene.String()
-        Classroom  = graphene.String()
-        encJWT     = graphene.String()
+        QuizID     = graphene.String(required=True)
+        Classroom  = graphene.String(required=True)
+        encJWT     = graphene.String(required=True)
 
     quiz = graphene.Field(lambda: AddQuizToClassMutation)
 
     @staticmethod
     def mutate(self, info, QuizID, Classroom, encJWT):
-        secret     = config('SECRET_KEY')
-        algorithm  = 'HS256'
-        decJWT     = jwt.decode(encJWT, secret, algorithms=[ algorithm ])
+        decJWT     = decode_jwt(encJWT)
         teacherID  = decJWT[ 'sub' ][ 'id' ]
         teacher    = Teacher.objects.get(TeacherID=teacherID)
         classroom  = Class.objects.get(ClassID=Classroom)
@@ -353,23 +305,18 @@ start CreateQuestion
 '''
 class CreateQuestion(graphene.Mutation):
     class Arguments:
-        QuizID       = graphene.String()
-        QuestionText = graphene.String()
+        QuizID       = graphene.String(required=True)
+        QuestionText = graphene.String(required=True)
         isMajor      = graphene.Boolean()
-        encJWT       = graphene.String()
+        encJWT       = graphene.String(required=True)
 
     question = graphene.Field(lambda: CreateQuestionMutation)
 
     @staticmethod
     def mutate(self, info, QuizID, QuestionText, isMajor, encJWT):
-        secret     = config('SECRET_KEY')
-        algorithm  = 'HS256'
-        decJWT     = jwt.decode(encJWT, secret, algorithms=[ algorithm ])
+        decJWT     = decode_jwt(encJWT)
         teacherID  = decJWT[ 'sub' ][ 'id' ]
         teacher    = Teacher.objects.get(TeacherID=teacherID)
-
-        # check if JWT is expire
-        # check if teacher exists
 
         quiz     = Quiz.objects.get(QuizID=QuizID)
         question = Question.objects.create(
@@ -398,23 +345,18 @@ start CreateChoice
 '''
 class CreateChoice(graphene.Mutation):
     class Arguments:
-        ChoiceText = graphene.String()
-        isCorrect  = graphene.Boolean()
-        QuestionID = graphene.String()
-        encJWT     = graphene.String()
+        ChoiceText = graphene.String(required=True)
+        isCorrect  = graphene.Boolean(required=True)
+        QuestionID = graphene.String(required=True)
+        encJWT     = graphene.String(required=True)
 
     choice = graphene.Field(lambda: CreateChoiceMutation)
 
     @staticmethod
     def mutate(self, info, ChoiceText, isCorrect, QuestionID, encJWT):
-        secret     = config('SECRET_KEY')
-        algorithm  = 'HS256'
-        decJWT     = jwt.decode(encJWT, secret, algorithms=[ algorithm ])
+        decJWT     = decode_jwt(encJWT)
         teacherID  = decJWT[ 'sub' ][ 'id' ]
         teacher    = Teacher.objects.get(TeacherID=teacherID)
-
-        # check if JWT is expire
-        # check if teacher exists
 
         question = Question.objects.get(QuestionID=QuestionID)
         choice   = Choice.objects.create(
@@ -444,15 +386,13 @@ class UpdateClassName(graphene.Mutation):
     class Arguments:
         ClassID = graphene.String(required=True)
         ClassName = graphene.String(required=True)
-        encJWT = graphene.String(required=True)
+        enc_jwt = graphene.String(required=True)
 
     updated_class = graphene.Field(lambda: UpdateClassNameMutation)
 
     @staticmethod
-    def mutate(self, info, ClassID, ClassName, encJWT):
-        secret    = config('SECRET_KEY')
-        algorithm = 'HS256'
-        dec_jwt   = jwt.decode(encJWT, secret, algorithms=[ algorithm ])
+    def mutate(self, info, ClassID, ClassName, enc_jwt):
+        dec_jwt = decode_jwt(enc_jwt)
         teacherID = dec_jwt[ 'sub' ][ 'id' ]
         teacher = Teacher.objects.get(TeacherID=teacherID)
         updated_class = Class.objects.get(ClassID=ClassID)

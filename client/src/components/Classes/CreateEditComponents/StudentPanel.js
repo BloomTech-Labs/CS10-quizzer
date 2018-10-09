@@ -6,8 +6,8 @@ import gql from 'graphql-tag'
 import StudentList from './StudentList'
 
 const CREATE_NEW_STUDENT = gql`
-mutation CreateNewStudent($ClassID: String!, $StudentName: String!, $StudentEmail: String!) {
-  createStudent(ClassID: $ClassID, StudentName: $StudentName, StudentEmail: $StudentEmail) {
+mutation CreateNewStudent($ClassID: String!, $StudentName: String!, $StudentEmail: String!, $encJwt: String!) {
+  createStudent(ClassID: $ClassID, StudentName: $StudentName, StudentEmail: $StudentEmail, encJwt: $encJwt) {
     student {
       StudentID
       StudentName
@@ -45,7 +45,8 @@ class StudentPanel extends Component {
                     variables: {
                       ClassID: classID,
                       StudentName: name,
-                      StudentEmail: email
+                      StudentEmail: email,
+                      encJwt: localStorage.getItem('token')
                     },
                     refetchQueries: ['GetClassQuizzes', 'getStudents', 'getClasses']
                   })
