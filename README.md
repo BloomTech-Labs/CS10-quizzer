@@ -480,10 +480,69 @@ Returns a `QuestionType` called `question`. Creates a new question for a quiz in
   ```
 
 #### createChoice
+Returns a `ChoiceType` called `choice`. Creates a new answer choice for a question in a quiz in the database.
+
+- Arguments:
+  - `ChoiceText` - A string containing the desired text for the choice.
+  - `QuestionID` - A string containing a valid QuestionID.
+  - `encJWT` - A string containing a valid JWT.
+  - `isCorrect` - A Boolean, indicates whether this choice is the correct one for the question.
+
+- Example Usage:
+  ```js
+  mutation {
+    createChoice(ChoiceText: "Four", QuestionID: "{valid QuestionID}", encJWT: "{valid JWT}", isCorrect: true) {
+      choice {
+        ChoiceID
+      }
+    }
+  }
+
+  // Creates a new choice with the text "Four" and associates it with the provided question, setting it to be the correct answer for that question. Returns the unique ID of the choice.
+  ```
 
 #### addQuizToClass
+Returns a `QuizType` called `quiz`. Associates an existing quiz with an existing classroom.
+
+- Arguments:
+  - `Classroom` - A string containing a valid ClassID.
+  - `QuizID` - A string containing a valid QuizID.
+  - `encJWT` - A string containing a valid JWT.
+
+- Example Usage:
+  ```js
+  mutation {
+    addQuizToClass(Classroom: "{valid ClassID}", QuizID: "{valid QuizID}", encJWT: "{valid JWT}") {
+      quiz {
+        QuizName
+      }
+    }
+  }
+
+  // Creates a reference between the provided QuizID and ClassID's, in effect adding the quiz to a classroom. This example returns the quiz name.
+  ```
 
 #### updateQuizScore
+Returns a `QuizScores` called 
+
+- Arguments:
+  - `Classroom` - A string containing a valid ClassID.
+  - `QuizID` - A string containing a valid QuizID.
+  - `Score` - An integer representing the student's score.
+  - `StudentID` - A String containing a valid StudentID.
+
+- Example Usage:
+  ```js
+  mutation {
+    updateQuizScore(Classroom: "{valid ClassID}", QuizID: "{valid QuizID}", Score: 20, StudentID: "{valid StudentID}") {
+      updatedQuizScore {
+        Score
+      }
+    }
+  }
+
+  // Adds a score of 20 for the student associated with StudentID for the quiz associated with QuizID in the class associated with Classroom. Returns the score.
+  ```
 
 #### queryTeacher
 Returns a `TeacherType` called `teacher`, and a JWT string containing user information called `jwtString`. Used to login as an existing teacher in the database.
