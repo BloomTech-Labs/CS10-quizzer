@@ -7,11 +7,13 @@ import CreateQuiz from '../CreateQuiz/CreateQuiz'
 import PageError from '../PageError/PageError'
 import EditClass from '../Classes/EditClass'
 import { Breadcrumb, BreadcrumbItem, Button } from 'reactstrap'
-import { Route, Switch, Link, Redirect, withRouter } from 'react-router-dom'
+import { Route, Switch, Redirect, withRouter } from 'react-router-dom'
 import gql from 'graphql-tag'
 import { client } from '../../index'
 import { Query } from 'react-apollo'
+
 import './RocketList.css'
+import { SideNavButton, RocketListNavBar, SideNavLinks } from './styled'
 
 const GET_CURRENT_USER = gql`
   query getUser($token:String!) {
@@ -24,8 +26,13 @@ class RocketList extends Component {
   constructor () {
     super()
     this.state = {
-      redirect: false
+      redirect: false,
+      sideNavHidden: true
     }
+  }
+
+  hideSideNav = () => {
+    this.setState({ sideNavHidden: !this.state.sideNavHidden })
   }
 
   logOut = () => {
@@ -94,14 +101,24 @@ class RocketList extends Component {
             <BreadcrumbItem active>Create Quiz</BreadcrumbItem>
           </Breadcrumb>
           : null }
+
         <div className='rocket_list_main'>
-          <div className='rocket_list_navbar'>
-            <Link to='/rocket/quizzes/'>Quizzes</Link>
-            <Link to='/rocket/classes/'>Classes</Link>
-            <Link to='/rocket/billing/'>Billing</Link>
-            <Link to='/rocket/settings/'>Settings</Link>
-            <Button color='warning' className='logOut' onClick={this.logOut}>Log Out</Button>
+          <div className='rocket_side_nav'>
+            <SideNavButton onClick={this.hideSideNav}>
+              =
+            </SideNavButton>
+
+            <RocketListNavBar
+              display={this.state.sideNavHidden ? 'none' : 'flex'}
+            >
+              <SideNavLinks to='/rocket/quizzes/'>Quizzes</SideNavLinks>
+              <SideNavLinks to='/rocket/classes/'>Classes</SideNavLinks>
+              <SideNavLinks to='/rocket/billing/'>Billing</SideNavLinks>
+              <SideNavLinks to='/rocket/settings/'>Settings</SideNavLinks>
+              <Button color='warning' className='logOut' onClick={this.logOut}>Log Out</Button>
+            </RocketListNavBar>
           </div>
+
           <Switch>
             <Route exact path='/rocket/quizzes' component={Quizzes} />
             <Route exact path='/rocket/classes' component={Classes} />
