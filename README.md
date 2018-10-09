@@ -252,10 +252,58 @@ Returns `QuestionType`. Useful for retrieving all questions associated with a si
   ```
 
 #### teacher
+Returns `TeacherType`. Useful for getting a single user.
+
+- Arguments:
+  - `encJwt` - A string containing a valid JWT.
+
+- Example Usage:
+  ```js
+  {
+    teacher(encJwt: "{valid JWT}") {
+      TeacherName
+      TeacherEmail
+    }
+  }
+
+  // Returns the name and email address of the user associated with the provided JWT argument.
+  ```
 
 #### student
+Returns `StudentType`. Useful for getting a single student.
+
+- Arguments:
+  - `StudentID` - A string containing a valid StudentID.
+
+- Example Usage:
+  ```js
+  {
+    student(StudentID: "{valid StudentID}") {
+      StudentName
+      StudentEmail
+    }
+  }
+
+  // Returns the name and email address of the student associated with the provided StudentID argument.
+  ```
 
 #### classStudents
+Returns `StudentType`. Useful for getting a list of students associated with a single class.
+
+- Arguments:
+  - `ClassID` - A string containing a valid ClassID.
+
+- Example Usage:
+  ```js
+  {
+    classStudents(ClassID: "{valid ClassID}") {
+      StudentName
+      StudentEmail
+    }
+  }
+
+  // Returns a list of names and email addresses for all students associated with the provided ClassID argument.
+  ```
 
 ### Mutations
 Mutations allow saving new, or manipulating current, data in some way.
