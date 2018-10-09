@@ -397,12 +397,87 @@ Returns a `TeacherType` called `teacher`, and a JWT string containing user infor
   ```
 
 #### createStudent
+Returns a `StudentType` called `student`. Adds a new student to the database.
+
+- Arguments:
+  - `ClassID` - A string containing a valid ClassID.
+  - `StudentEmail` - A string containing the desired email address for the student.
+  - `StudentName` - A string containing the desired name for the student.
+
+- Example Usage:
+  ```js
+  mutation {
+    createStudent(ClassID: "{valid ClassID}", StudentEmail: "student@student.com", StudentName: "A Student") {
+      student {
+        StudentID
+      }
+    }
+  }
+
+  // Adds a new student to the database, and returns their unique ID.
+  ```
 
 #### deleteStudent
+Returns a `StudentType` called `student`. Removes a student from the database.
+
+- Arguments:
+  - `StudentID` - A valid StudentID.
+
+- Example Usage:
+  ```js
+  mutation {
+    deleteStudent(StudentID: "{valid StudentID}") {
+      student {
+        studentID
+      }
+    }
+  }
+
+  // Removes the student associated with the provided StudentID argument from the database, returning an ID no longer present in the database.
+  ```
 
 #### createQuiz
+Returns a `QuizType` called `quiz`. Creates a new quiz in the database.
+
+- Arguments:
+  - `Public` - A Boolean to indicate whether the quiz is publicly accesssible (currently has no effect).
+  - `QuizName` - A string containing the desired name of the quiz.
+  - `encJWT` - A string containing a valid JWT.
+
+- Example Usage:
+  ```js
+  mutation {
+    createQuiz(Public: false, QuizName: "Quiz One", encJWT: "{valid JWT}") {
+      quiz {
+        QuizID
+      }
+    }
+  }
+
+  // Creates a new quiz called Quiz One in the database, and returns the ID for that quiz.
+  ```
 
 #### createQuestion
+Returns a `QuestionType` called `question`. Creates a new question for a quiz in the database.
+
+- Arguments:
+  - `QuestionText` - A string containing the desired text for the question.
+  - `QuizID` - A string containing a valid QuizID.
+  - `encJWT` - A string containing a valid JWT.
+  - `isMajor` - A Boolean indicating whether the question is major or not (currently has no effect).
+
+- Example Usage:
+  ```js
+  mutation {
+    createQuestion(QuestionText: "What is 2 + 2?", QuizID: "{valid QuizID}", encJWT: "{valid JWT}", isMajor: false) {
+      question {
+        QuestionID
+      }
+    }
+  }
+
+  // Creates a new question with the text "What is 2 + 2?" and associates it with a provided QuizID. Returns the unique ID of the added question.
+  ```
 
 #### createChoice
 
@@ -411,6 +486,25 @@ Returns a `TeacherType` called `teacher`, and a JWT string containing user infor
 #### updateQuizScore
 
 #### queryTeacher
+Returns a `TeacherType` called `teacher`, and a JWT string containing user information called `jwtString`. Used to login as an existing teacher in the database.
+
+- Arguments:
+  - `TeacherEmail` - A string containing the email address of a user in the database.
+  - `TeacherPW` - A string containing the password of a user in the database.
+
+- Example Usage:
+  ```js
+  mutation {
+    queryTeacher(TeacherEmail: "teacher@teacher.com", TeacherPW: "teaching") {
+      teacher {
+        TeacherID
+      }
+      jwtString
+    }
+  }
+
+  // Returns an ID and a JWT for a valid user.
+  ```
 
 ## Contributors
 | [<img src="https://avatars3.githubusercontent.com/u/17170364?v=4" align="center" width=100><br><b>Brian Durbin</b> ](https://github.com/bdurb) | [<img src="https://avatars0.githubusercontent.com/u/29239201?v=4" align="center" width=100><br><b>Brandon Benefield</b>  ](https://github.com/bbenefield89) | [<img src="https://avatars1.githubusercontent.com/u/35475006?v=4" align="center" width=100><br><b>Edward Gonzalez</b>  ](https://github.com/eddygonzalez9708) | [<img src="https://avatars2.githubusercontent.com/u/26112479?v=4" align="center" width=100><br><b>Daniel Abbott</b>  ](https://github.com/Mephestys) |
