@@ -62,23 +62,93 @@ WIP
 ## API
 As our API is based on GraphQL, every request to the server must be a `POST` request, formatted as `application/json`.
 
+### Schemas
+For the API, a schema can be thought of as a collection of possible returns for a query, based on the data models created in Django to be used with the database. As an example, if a query returns a `ClassType`, optional returned data could include the ID or name of a classroom, the set of students which are associated with that classroom, or all of the above. With GraphQL, you only get the data you ask for.
+
+Following is a list of schemas and their possible returns:
+
+#### TeacherType
+This schema deals with users (internally called teachers to differentiate them from student users).
+- `TeacherID` - String, the users unique ID (internally a UUID type, converted to a string for the client).
+- `TeacherEmail` - String, the users email address.
+- `TeacherName` - String, the users name.
+- `TeacherPW` - String, the hashed and salted users password (passwords are unavailable as plain text).
+- `CustomerID` - String, the users Stripe customer ID (empty if the user does not have a paid subscription).
+- `Subscription` - ???
+- `createdAt` - DateTime, value containing the date and time the data was created in the database. Can be read as a string.
+- `lastModified` - DateTime, value containing the date and time the data was last modified in the database. Can be read as a string.
+- `classSet` - Relational, returns `ClassType`, useful for accessing classroom data specific to the user.
+- `quizSet` - Relational, returns `QuizType`, useful for accessing quiz data specific to the user.
+
+#### QuizType
+This schema deals with user-created quizzes.
+- `QuizID` - String, the quiz's unique ID (internally a UUID type, converted to a string for the client).
+- `QuizName` - String, the quiz name.
+- `Public` - Boolean, declares whether the quiz is publicly accessible (currently unused).
+- `createdAt` - DateTime, value containing the date and time the data was created in the database. Can be read as a string.
+- `lastModified` - DateTime, value containing the date and time the data was last modified in the database. Can be read as a string.
+- `Teacher` - Relational, returns `TeacherType`, useful for accessing user data specific to the quiz.
+- `Classes` - Relational, returns `ClassType`, useful for accessing classroom data specific to the quiz.
+- `questionSet` - Relational, returns `QuestionType`, useful for accessing question data specific to the quiz.
+- `studentSet` - Relational, returns `StudentType`, useful for accessing student data specific to the quiz.
+
+#### QuestionType
+This schema governs questions which are asked within quizzes.
+- `QuestionID` - String, the question's unique ID (internally a UUID type, converted to a string for the client).
+- `Question` - String, the text content of the question.
+- `isMajor` - Boolean, meant to be used to indicate whether a question is major or minor (currently unused).
+- `createdAt` - DateTime, value containing the date and time the data was created in the database. Can be read as a string.
+- `lastModified` - DateTime, value containing the date and time the data was last modified in the database. Can be read as a string.
+- `QuizID` - Relational, returns `QuizType`, useful for accessing quiz data specific to the question. (Special note, this is mainly just used to access the ID of a quiz to associate a question with a quiz, hence the name QuizID).
+- `choiceSet` - Relational, returns `ChoiceType`, useful for accessing choice (answers) data specific to the question.
+
+#### ChoiceType
+This schema covers answer options within questions.
+- `ChoiceID` - String, the choice's unique ID (internally a UUID type, converted to a string for the client).
+- `ChoiceText` - String, the text content of the choice.
+- `isCorrect` - Boolean, whether this choice is the correct one for the question.
+- `createdAt` - DateTime, value containing the date and time the data was created in the database. Can be read as a string.
+- `lastModified` - DateTime, value containing the date and time the data was last modified in the database. Can be read as a string.
+- `QuestionID` - Relational, returns `QuestionType`, useful for accessing question data specific to the choice.
+
+#### QuizScores
+This schema handles student quiz score data.
+- `QuizScoreID` - String, the quiz scores unique ID (internally a UUID type, converted to a string for the client).
+- `StudentID` - String, the student owning the quiz scores unique ID (internally a UUID type, converted to a string for the client).
+- `QuizID` - String, the quiz owning the quiz scores unique ID (internally a UUID type, converted to a string for the client).
+- `Score` - Int, the score a student has received for a quiz.
+- `createdAt` - DateTime, value containing the date and time the data was created in the database. Can be read as a string.
+- `lastModified` - DateTime, value containing the date and time the data was last modified in the database. Can be read as a string.
+- `ClassID` - Relational, returns `ClassType`, useful for accessing class data specific to the quiz score.
+
+#### ClassType
+This schema is for classrooms created by the user, where they'll be able to add students and assign quizzes to those students.
+- `ClassID` - String, the classes unique ID (internally a UUID type, converted to a string for the client).
+- `ClassName` - String, the name of the class.
+- `Teacher` - Relational, returns `TeacherType`, useful for accessing teacher data specific to the class.
+- `createdAt` - DateTime, value containing the date and time the data was created in the database. Can be read as a string.
+- `lastModified` - DateTime, value containing the date and time the data was last modified in the database. Can be read as a string.
+- `quizSet` - Relational, returns `QuizType`, useful for accessing quiz data specific to the class.
+- `studentSet` - Relational, returns `StudentType`, useful for accessing student data specific to the class.
+- `quizscoresSet` - Relational, returns `QuizScoresType`, useful for accessing quiz score data specific to the class.
+
+#### StudentType
+This schema relates to individual student data.
+- `StudentID` - String, the student's unique ID (internally a UUID type, converted to a string for the client).
+- `StudentName` - String, the name of the student.
+- `StudentEmail` - String, the email address of the student.
+- `createdAt` - DateTime, value containing the date and time the data was created in the database. Can be read as a string.
+- `lastModified` - DateTime, value containing the date and time the data was last modified in the database. Can be read as a string.
+- `ClassID` - Relational, returns `ClassType`, useful for accessing class data specific to the student (called ClassID since it has been primarily used for accessing a classrooms ID).
+- `Quizzes` - Relational, returns `QuizType`, useful for accessing quiz data specific to the student.
+
 ### Queries
 Queries are used to retrieve data from the server without altering that data in some way.
 
 #### classes
-Returns all classes owned by a user.
+Returns `ClassType`. Useful for getting all the classroom created by the user
 - Arguments:
   - `encJwt` - A string containing a valid JWT.
-
-- Optional Returns:
-  - `ClassID` - The unique identifier for a classroom.
-  - `ClassName` - The name of the classroom.
-  - `Teacher` - The user associated with the JWT.
-  - `createdAt` - Date/time of creation.
-  - `lastModified` - Date/time last modified.
-  - `quizSet` - QuizType GraphQL Schema.
-  - `studentSet` - StudentType GraphQL Schema.
-  - `classQuizSet`
 
 - Example Usage:
   ```js
@@ -93,12 +163,57 @@ Returns all classes owned by a user.
   ```
 
 #### singleClass
+Returns `ClassType`. Useful for getting data on a single classroom based on a provided ClassID.
+- Arguments:
+  - `ClassID` - A string containing a valid ClassID.
 
-#### publicQuizzes
+- Example Usage:
+  ```js
+  {
+    singleClass(ClassID: "{valid ClassID}") {
+      ClassName
+    }
+  }
+
+  // Returns the name of the classroom associated with the provided ClassID argument.
+  ```
+
+#### publicQuizzes (currently unused)
 
 #### singleQuiz
+Returns `QuizType`. Useful for getting data on a single quiz based on a provided QuizID.
+
+- Arguments:
+  - `QuizID` - A string containing a valid QuizID.
+
+- Example Usage:
+  ```js
+  {
+    singleQuiz(QuizID: "{valid QuizID}") {
+      QuizName
+    }
+  }
+
+  // Returns the name of the quiz associated with the provided QuizID argument.
+  ```
 
 #### classQuizzes
+Returns `QuizType`. Useful for getting a list of quizzes associated with a single classroom.
+
+- Arguments:
+  - `ClassID` - A string containing a valid ClassID.
+
+- Example Usage:
+  ```js
+  {
+    classQuizzes(ClassID: "{valid ClassID}") {
+      QuizID
+      QuizName
+    }
+  }
+
+  // Returns a list of quiz ID's and quiz names associated with the provided ClassID argument.
+  ```
 
 #### teacherQuizzes
 
