@@ -7,7 +7,7 @@ from decouple import config
 from graphene_django import DjangoObjectType
 from graphql import GraphQLError, GraphQLObjectType, GraphQLList
 from quizzes.graphql.mutations.classes import CreateClass
-from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student
+from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student, QuizScores
 
 from quizzes.graphql.mutation import (
     CreateTeacher, QueryTeacher, CreateStudent, CreateQuiz, CreateQuestion,
@@ -16,7 +16,7 @@ from quizzes.graphql.mutation import (
 )
 
 from quizzes.graphql.query import (
-    ClassType, QuizType, QuestionType, ChoiceType, TeacherType, StudentType
+    ClassType, QuizType, QuestionType, ChoiceType, TeacherType, StudentType, QuizScoresType
 )
 
 from quizzes.helpers.jwt_helpers import decode_jwt
@@ -58,6 +58,8 @@ class Query(graphene.ObjectType):
     
     student         = graphene.Field(StudentType, StudentID=graphene.String())
     class_students  = graphene.List(StudentType, ClassID=graphene.String())
+
+    student_scores = graphene.List(QuizScoresType, StudentID=graphene.String())
 
     '''
     Each method, resolve_<< name >>, is named after what we want to return.
@@ -172,5 +174,12 @@ class Query(graphene.ObjectType):
             return Class.objects.get(ClassID=class_id)
         
         return GraphQLError('Please supply a valid ClassID')
+
+    def resolve_student_scores(self, info, **kwargs):
+        student_id = kwargs.get('StudentID')
+
+        if student_id:
+            student_scores = QuizScores.objects.filter(StudentID=student_id)
+            return student_scores
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
