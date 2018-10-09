@@ -428,11 +428,12 @@ Returns a `StudentType` called `student`. Adds a new student to the database.
   - `ClassID` - A string containing a valid ClassID.
   - `StudentEmail` - A string containing the desired email address for the student.
   - `StudentName` - A string containing the desired name for the student.
+  - `encJwt` - A string containing a valid JWT.
 
 - Example Usage:
   ```js
   mutation {
-    createStudent(ClassID: "{valid ClassID}", StudentEmail: "student@student.com", StudentName: "A Student") {
+    createStudent(ClassID: "{valid ClassID}", StudentEmail: "student@student.com", StudentName: "A Student", encJwt: "{valid JWT}") {
       student {
         StudentID
       }
@@ -446,12 +447,13 @@ Returns a `StudentType` called `student`. Adds a new student to the database.
 Returns a `StudentType` called `student`. Removes a student from the database.
 
 - Arguments:
-  - `StudentID` - A valid StudentID.
+  - `StudentID` - A string containing a valid StudentID.
+  - `encJwt` - A string containing a valid JWT.
 
 - Example Usage:
   ```js
   mutation {
-    deleteStudent(StudentID: "{valid StudentID}") {
+    deleteStudent(StudentID: "{valid StudentID}", encJwt: "{valid JWT}") {
       student {
         studentID
       }
