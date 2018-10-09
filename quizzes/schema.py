@@ -60,6 +60,7 @@ class Query(graphene.ObjectType):
     class_students  = graphene.List(StudentType, ClassID=graphene.String())
 
     student_scores = graphene.List(QuizScoresType, StudentID=graphene.String())
+    quiz_scores = graphene.List(QuizScoresType, QuizID=graphene.String())
 
     '''
     Each method, resolve_<< name >>, is named after what we want to return.
@@ -179,7 +180,12 @@ class Query(graphene.ObjectType):
         student_id = kwargs.get('StudentID')
 
         if student_id:
-            student_scores = QuizScores.objects.filter(StudentID=student_id)
-            return student_scores
+            return QuizScores.objects.filter(StudentID=student_id)
+
+    def resolve_quiz_scores(self, info, **kwargs):
+        quiz_id = kwargs.get('QuizID')
+
+        if quiz_id:
+            return QuizScores.objects.filter(QuizID=quiz_id)
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
