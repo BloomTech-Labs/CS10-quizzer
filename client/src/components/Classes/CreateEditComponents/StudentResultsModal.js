@@ -35,7 +35,7 @@ function QuizSelectModal (props) {
                         <option
                           key={index}
                         >
-                          Quiz: {score.QuizName} Total: {score.Score}
+                          {score.QuizName ? `Quiz: ${score.QuizName} Total: ${score.Score}` : 'Student must take this quiz before results are available.'}
                         </option>
                       )
                     })}
