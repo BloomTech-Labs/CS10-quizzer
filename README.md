@@ -78,6 +78,16 @@ Once those are taken care of, clone the repository into a directory of your choo
 - Verify the application starts by running either `npm start` or `yarn start`. If it starts up, you're good to go!
 #### Server:
 (These instructions will assume you're using pipenv as recommended).
+- This app makes use of a number of secret values, and in order to develop further, you will also need a local copy with similar values:
+  - Create a `.env` file in the root directory, and give it the following keys:
+  ```
+  SECRET_KEY = You will need to have Django generate a key for you.
+  DEBUG = Set this to `True` when debugging, and `False` for production.
+  ALLOWED_HOSTS = For development, this can be `localhost,127.0.0.1`
+  STRIPE_PUBLIC_KEY = You will need to have an active Stripe account, you can retrieve a public key there.
+  STRIPE_SECRET_KEY = Same situation as the Stripe public key.
+  SENDGRID_API_KEY = You will need to have an active Sendgrid account, you can retrieve an API key there.
+  ```
 - From the root directory of the app, run `pipenv install` to install the necessary dependencies.
 - Once packages are installed, run `pipenv shell` to enter the virtual environment.
 - From here, you'll be able to run server commands. Type `python manage.py makemigrations` to ensure that necessary Django migration data is created.
@@ -99,7 +109,7 @@ This schema deals with users (internally called teachers to differentiate them f
 - `TeacherName` - String, the users name.
 - `TeacherPW` - String, the hashed and salted users password (passwords are unavailable as plain text).
 - `CustomerID` - String, the users Stripe customer ID (empty if the user does not have a paid subscription).
-- `Subscription` - ???
+- `Subscription` - String, the users subscription type (basic or premium).
 - `createdAt` - DateTime, value containing the date and time the data was created in the database. Can be read as a string.
 - `lastModified` - DateTime, value containing the date and time the data was last modified in the database. Can be read as a string.
 - `classSet` - Relational, returns `ClassType`, useful for accessing classroom data specific to the user.
