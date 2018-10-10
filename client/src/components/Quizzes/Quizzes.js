@@ -5,6 +5,7 @@ import { Redirect, withRouter, Link } from 'react-router-dom'
 import { Button, Card, CardBody, CardTitle } from 'reactstrap'
 import ViewQuizOrClass from '../ViewQuizOrClass/ViewQuizOrClass'
 import QuizList from './QuizList'
+import QuizPaywallModal from './QuizPaywallModal'
 import './Quizzes.css'
 
 import Styles from '../RocketStyles'
@@ -27,12 +28,30 @@ const getCurrentInformation = gql`
   }
 `
 
+const FREE_PLAN = 10
+const BASIC_PLAN = 25
+
 class Quizzes extends Component {
   constructor () {
     super()
     this.state = {
-      redirect: false
+      redirect: false,
+      toggleModal: false
     }
+  }
+
+  subscriptionCheck = (subType, quizAmount) => {
+    if ((subType === '' && quizAmount >= FREE_PLAN) || (subType === 'Basic' && quizAmount >= BASIC_PLAN)) {
+      this.togglePaywallModal()
+    } else {
+      this.createQuiz()
+    }
+  }
+
+  togglePaywallModal = () => {
+    this.setState({
+      toggleModal: !this.state.toggleModal
+    })
   }
 
   createQuiz = () => {
@@ -44,6 +63,7 @@ class Quizzes extends Component {
   render () {
     return (
       <Styles>
+        <QuizPaywallModal isOpen={this.state.toggleModal} toggle={this.togglePaywallModal} />
         <Query query={getCurrentInformation} variables={{ token: localStorage.getItem('token') }}>
           {({ loading, error, data }) => {
             if (loading) {
@@ -60,14 +80,14 @@ class Quizzes extends Component {
 
               return (
                 <div>
-                  {quizzesLength >= 10 && Subscription === '' ? <span>The free plan has a limit of 10 quizzes. <Link to='/rocket/billing'>Upgrade your plan?</Link></span> : null}
-                  {quizzesLength >= 25 && Subscription === 'Basic' ? <span>The basic plan has a limit of 25 quizzes. <Link to='/rocket/billing'>Upgrade your plan?</Link></span> : null}
+                  {quizzesLength >= FREE_PLAN && Subscription === '' ? <span>The free plan has a limit of {FREE_PLAN} quizzes. <Link to='/rocket/billing'>Upgrade your plan?</Link></span> : null}
+                  {quizzesLength >= BASIC_PLAN && Subscription === 'Basic' ? <span>The basic plan has a limit of {BASIC_PLAN} quizzes. <Link to='/rocket/billing'>Upgrade your plan?</Link></span> : null}
                   <AddQuizContainer className='add_quiz_container'>
                     <Cards>
                       <Card className='quiz_card'>
                         <CardBody className='quiz_card_body'>
                           <CardTitle className='quiz_card_title'>New Quiz</CardTitle>
-                          <Button color='warning' onClick={this.createQuiz}>
+                          <Button color='warning' onClick={() => this.subscriptionCheck(Subscription, quizzesLength)}>
                             <span role='img' aria-labelledby='Plus Symbol'>&#x2795;</span>
                           </Button>
                         </CardBody>
