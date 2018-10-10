@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import gql from 'graphql-tag'
+import { object } from 'prop-types'
 import { Query } from 'react-apollo'
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom'
 import { Breadcrumb, Button, Row, Col } from 'reactstrap'
@@ -41,11 +42,21 @@ class RocketList extends Component {
   }
 
   capitalizeCurrentBreadCrumb = () => {
-    const { page } = this.props.match.params
-    const firstLetterCapitalized = page.charAt(0).toUpperCase()
-    const restOfString = page.substr(1)
+    const { params } = this.props.match
+    const breadcrumbs = []
 
-    return firstLetterCapitalized + restOfString
+    for (const param in params) {
+      const firstCharCapitalized = params[ param ].charAt(0).toUpperCase()
+      const restOfTheString = params[ param ].substr(1)
+      const paramData = {
+        url: params[ param ],
+        displayText: firstCharCapitalized + restOfTheString
+      }
+
+      breadcrumbs.push(paramData)
+    }
+
+    return breadcrumbs
   }
 
   hideSideNav = () => {
@@ -91,9 +102,23 @@ class RocketList extends Component {
                 Home
               </BreadcrumbItemStyled>
 
-              <BreadcrumbItemStyled active>
-                { this.capitalizeCurrentBreadCrumb() }
-              </BreadcrumbItemStyled>
+              {/**
+                * '.map()' over the available parameters from
+                *  'this.props.match.params' and generates breadcrumbs depending
+                *  on the current URL
+                */}
+              {this.capitalizeCurrentBreadCrumb().map(({ url, displayText }, ind, arr) => {
+                return (
+                  arr[ ind + 1 ]
+                    ? <BreadcrumbItemStyled key={url} tag='a' href={url}>
+                      { displayText }
+                    </BreadcrumbItemStyled>
+                    : <BreadcrumbItemStyled key={url} active>
+                      { displayText }
+                    </BreadcrumbItemStyled>
+                )
+              })}
+
             </Breadcrumb>
           </Col> {/* COL */}
 
@@ -131,6 +156,10 @@ class RocketList extends Component {
       </div>
     )
   }
+}
+
+RocketList.propTypes = {
+  match: object
 }
 
 export default withRouter(RocketList)
