@@ -83,11 +83,36 @@ class EditQuiz extends Component {
     })
   }
 
+  addQuestion = () => {
+    const obj = Object.assign({}, this.state.quizData)
+
+    obj.questionSet.push({
+      Question: '',
+      QuestionID: null,
+      choiceSet: [
+        {
+          ChoiceID: null,
+          ChoiceText: '',
+          isCorrect: false
+        },
+        {
+          ChoiceID: null,
+          ChoiceText: '',
+          isCorrect: false
+        }
+      ]
+    })
+    
+    this.setState({
+      quizData: obj
+    })
+  }
+
   render () {
     if (!this.state.quizId) {
       return <span>Loading...</span>
     }
-    
+    console.log('Quiz Data ', this.state.quizData)
     return (
       <Query 
         query={GET_QUIZ_INFORMATION} 
@@ -125,7 +150,7 @@ class EditQuiz extends Component {
                    choiceTextChange={this.choiceTextChange} 
                  />
                  <div className='edit_quiz_buttons'> 
-                   <Button color='secondary'>Add Question</Button>
+                   <Button color='secondary' onClick={this.addQuestion}>Add Question</Button>
                    <Button color='info'>Save Changes</Button>
                    <Button color='danger'>Delete Quiz</Button> 
                  </div> 
