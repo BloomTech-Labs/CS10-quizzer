@@ -447,3 +447,6 @@ class UpdateQuizScoreMutation(graphene.ObjectType):
 '''
 end UpdateQuizScore
 '''
+
+class UpdateCCEmails(graphene.Mutation):
+    pass
