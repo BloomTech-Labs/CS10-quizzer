@@ -4,6 +4,7 @@ import { Button } from 'reactstrap'
 import PropTypes from 'prop-types'
 import EditQuestion from '../EditQuestion/EditQuestion'
 import { Query } from 'react-apollo'
+import { client } from '../../index'
 import './EditQuiz.css'
 
 class EditQuiz extends Component {
@@ -21,6 +22,10 @@ class EditQuiz extends Component {
         quizId: this.props.location.state
       })
     }
+  }
+  
+  componentWillUnmount () {
+    client.resetStore() 
   }
 
   quizNameChange = (event) => {
