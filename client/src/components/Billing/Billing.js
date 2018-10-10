@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Button } from 'reactstrap'
+import { Col, Button, Row } from 'reactstrap'
 
 import Stripe from '../Stripe/Stripe'
 
-import './Billing.css'
+import { BillingContainerStyled } from './styled'
 
 class Billing extends Component {
   unsubscribe = async () => {
@@ -38,7 +38,7 @@ class Billing extends Component {
           *       location
           */}
         <Stripe />
-
+        
         <Button
           onClick={this.unsubscribe}
         >
