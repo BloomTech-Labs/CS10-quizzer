@@ -5,13 +5,14 @@ import sendgrid
 import stripe
 
 from decouple import config
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from quizzes.helpers.createsubscription import CreateSubscription
 from quizzes.models import Teacher
 from twilio.rest import Client
 from sendgrid.helpers.mail import *
 
+from quizzes.models import Class
 
 # class GetStripeCustomer:
 #     def __init__(self, )
@@ -156,24 +157,32 @@ def send_email(req):
 
     from_email = Email(teacher_email)
 
-    for student in students:
-        student_id = student['id']
-        student_name = student['name']
-        student_email = student['email']
+    classroom = Class.objects.get(ClassID=class_id)
+    cc_teacher = classroom.cc_emails
 
-        to_email = Email(student_email)
-        subject = f'New quiz from {teacher_name}'
+    print(cc_teacher)
 
-        content = Content(
-            'text/html',
-            f'''
-            <p>Hello <b>{student_name}</b></p>
-            <p>You have a new quiz from <b>{teacher_name}</b> for the class <b>{class_name}</b><p>
-            <p>To take this quiz follow the link here: <a href="https://quizzercs10.herokuapp.com/student/{quiz_id}/{class_id}/{student_id}">{quiz_name}</a></p>
-            '''
-            )
+    if len(students) > 0:
+        for student in students:
+            student_id = student['id']
+            student_name = student['name']
+            student_email = student['email']
 
-        mail = Mail(from_email, subject, to_email, content)
-        response = sg.client.mail.send.post(request_body=mail.get())
+            to_email = Email(student_email)
+            subject = f'New quiz from {teacher_name}'
 
-    return HttpResponse()
+            content = Content(
+                'text/html',
+                f'''
+                <p>Hello <b>{student_name}</b></p>
+                <p>You have a new quiz from <b>{teacher_name}</b> for the class <b>{class_name}</b><p>
+                <p>To take this quiz follow the link here: <a href="https://quizzercs10.herokuapp.com/student/{quiz_id}/{class_id}/{student_id}">{quiz_name}</a></p>
+                '''
+                )
+
+            mail = Mail(from_email, subject, to_email, content)
+            response = sg.client.mail.send.post(request_body=mail.get())
+            
+        return HttpResponse()
+    else:
+        return HttpResponseBadRequest()
