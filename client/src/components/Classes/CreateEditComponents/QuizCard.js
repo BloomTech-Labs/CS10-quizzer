@@ -1,6 +1,15 @@
 import React from 'react'
 import { Button } from 'reactstrap'
+import gql from 'graphql-tag'
+import { Query } from 'react-apollo'
 import { string, array } from 'prop-types'
+
+const QUIZ_COMPLETION_QUERY = gql`
+query QuizCompletionQuery($QuizID: String!) {
+  quizScores(QuizID: $QuizID) {
+    Score
+  }
+}`
 
 const sendGridURL = process.env.NODE_ENV !== 'production' ? 'http://localhost:8000/sendgrid/' : '/sendgrid/'
 
@@ -42,7 +51,22 @@ function QuizCard (props) {
   return (
     <div>
       <h4>{quizName}</h4>
-      <p>Completed: Number</p>
+      <Query query={QUIZ_COMPLETION_QUERY} variables={{ QuizID: quizID }}>
+        {({ loading, error, data }) => {
+          if (loading) return <span>Loading...</span>
+          if (error) return <span>{error.message}</span>
+
+          if (data.quizScores) {
+            let completedCount = 0
+            data.quizScores.forEach(value => {
+              if (value.Score > 0) completedCount++
+            })
+            return (
+              <p>Completed: {completedCount} / {studentArray.length}</p>
+            )
+          }
+        }}
+      </Query>
       <Button onClick={event => sendEmail(event, postData)}>Email to Students</Button>
     </div>
   )

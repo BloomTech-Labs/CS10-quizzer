@@ -14,7 +14,11 @@ import { client } from '../../index'
 import { Query } from 'react-apollo'
 
 import './RocketList.css'
+<<<<<<< HEAD
 import { SideNavButton, RocketListNavBar, SideNavLinks } from './styled'
+=======
+import { SideNavButton, RocketListNavBar, RocketSideNav, SideNavLinks } from './styled'
+>>>>>>> 6c69c6b40ec3c81c0703a2ff48ada5d8f40d0880
 
 const GET_CURRENT_USER = gql`
   query getUser($token:String!) {
@@ -102,6 +106,7 @@ class RocketList extends Component {
             <BreadcrumbItem active>Create Quiz</BreadcrumbItem>
           </Breadcrumb>
           : null }
+<<<<<<< HEAD
         {window.location.pathname === '/rocket/quizzes/editquiz' || window.location.pathname === '/rocket/quizzes/editquiz/'
           ? <Breadcrumb tag='nav' className='nav_bread_crumb'>
             <BreadcrumbItem tag='a' href='/'>Home</BreadcrumbItem>
@@ -111,6 +116,11 @@ class RocketList extends Component {
           : null }
         <div className='rocket_list_main'>
           <div className='rocket_side_nav'>
+=======
+
+        <div className='rocket_list_main'>
+          <RocketSideNav>
+>>>>>>> 6c69c6b40ec3c81c0703a2ff48ada5d8f40d0880
             <SideNavButton onClick={this.hideSideNav}>
               =
             </SideNavButton>
@@ -124,7 +134,11 @@ class RocketList extends Component {
               <SideNavLinks to='/rocket/settings/'>Settings</SideNavLinks>
               <Button color='warning' className='logOut' onClick={this.logOut}>Log Out</Button>
             </RocketListNavBar>
+<<<<<<< HEAD
           </div>
+=======
+          </RocketSideNav>
+>>>>>>> 6c69c6b40ec3c81c0703a2ff48ada5d8f40d0880
 
           <Switch>
             <Route exact path='/rocket/quizzes' component={Quizzes} />

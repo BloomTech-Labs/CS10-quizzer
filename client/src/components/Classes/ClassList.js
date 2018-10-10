@@ -1,24 +1,25 @@
 import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
+import { Row } from 'reactstrap'
+
 import ClassCard from './ClassCard'
-import NewClassCard from './NewClassCard'
 
 const ClassList = props => {
   const { classSet } = props
 
   return (
-    <Fragment>
+    <Row>
       {props.classSet.length > 0
         ? classSet.map(classItem => {
           return (
             <ClassCard
               key={classItem.ClassID}
-              classItem={classItem} />
+              classItem={classItem}
+            />
           )
         })
         : null}
-      <NewClassCard />
-    </Fragment>
+    </Row>
   )
 }
 

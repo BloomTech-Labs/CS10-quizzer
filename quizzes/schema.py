@@ -7,7 +7,7 @@ from decouple import config
 from graphene_django import DjangoObjectType
 from graphql import GraphQLError, GraphQLObjectType, GraphQLList
 from quizzes.graphql.mutations.classes import CreateClass
-from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student, Student_Quiz, Class_Quiz
+from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student, QuizScores
 
 from quizzes.graphql.mutation import (
     CreateTeacher, QueryTeacher, CreateStudent, CreateQuiz, CreateQuestion,
@@ -16,10 +16,10 @@ from quizzes.graphql.mutation import (
 )
 
 from quizzes.graphql.query import (
-    ClassType, QuizType, QuestionType, ChoiceType, TeacherType, StudentType, Class_QuizType
+    ClassType, QuizType, QuestionType, ChoiceType, TeacherType, StudentType, QuizScoresType
 )
 
-
+from quizzes.helpers.jwt_helpers import decode_jwt
 
 class Mutation(graphene.ObjectType):
     '''
@@ -53,16 +53,14 @@ class Query(graphene.ObjectType):
     teacher_quizzes = graphene.List(QuizType, enc_jwt=graphene.String())
     
     quiz_questions  = graphene.List(QuestionType, QuizID=graphene.String())
-    questions       = graphene.List(QuestionType)
-    
-    choices         = graphene.List(ChoiceType)
 
-    teachers        = graphene.List(TeacherType)
     teacher         = graphene.List(TeacherType, enc_jwt=graphene.String())
     
-    students        = graphene.List(StudentType)
     student         = graphene.Field(StudentType, StudentID=graphene.String())
     class_students  = graphene.List(StudentType, ClassID=graphene.String())
+
+    student_scores = graphene.List(QuizScoresType, StudentID=graphene.String())
+    quiz_scores = graphene.List(QuizScoresType, QuizID=graphene.String())
 
     '''
     Each method, resolve_<< name >>, is named after what we want to return.
@@ -71,10 +69,8 @@ class Query(graphene.ObjectType):
     to `Class.objects.all()` from the DB
     '''
     def resolve_teacher(self, info, **kwargs):
-        enc_jwt    = kwargs.get('enc_jwt').encode('utf-8')
-        secret     = config('SECRET_KEY')
-        algorithm  = 'HS256'
-        dec_jwt    = jwt.decode(enc_jwt, secret, algorithms=[ algorithm ])
+        enc_jwt    = kwargs.get('enc_jwt')
+        dec_jwt    = decode_jwt(enc_jwt)
         teacherID  = dec_jwt[ 'sub' ][ 'id' ]
         teacher    = Teacher.objects.filter(TeacherID=teacherID)
         
@@ -91,10 +87,8 @@ class Query(graphene.ObjectType):
         TODO: do not return every single class if JWT is wrong/missing
         '''
         try:
-            enc_jwt    = kwargs.get('enc_jwt').encode('utf-8')
-            secret     = config('SECRET_KEY')
-            algorithm  = 'HS256'
-            dec_jwt    = jwt.decode(enc_jwt, secret, algorithms=[ algorithm ])
+            enc_jwt    = kwargs.get('enc_jwt')
+            dec_jwt    = decode_jwt(enc_jwt)
             teacher    = Teacher.objects.get(TeacherID=dec_jwt[ 'sub' ][ 'id' ])
 
             '''
@@ -135,10 +129,8 @@ class Query(graphene.ObjectType):
 
     def resolve_teacher_quizzes(self, info, **kwargs):
         if 'enc_jwt' in kwargs:
-            enc_jwt   = kwargs.get('enc_jwt').encode('utf-8')
-            secret    = config('SECRET_KEY')
-            algorithm = 'HS256'
-            dec_jwt   = jwt.decode(enc_jwt, secret, algorithms=[ algorithm ])
+            enc_jwt   = kwargs.get('enc_jwt')
+            dec_jwt   = decode_jwt(enc_jwt)
             teacherID = dec_jwt['sub']['id']
             teacher   = Teacher.objects.get(TeacherID=teacherID)
 
@@ -157,18 +149,6 @@ class Query(graphene.ObjectType):
                 return quiz.question_set.all()
             
         raise invalid_quiz
-
-    def resolve_questions(self, info):
-        return Question.objects.all()
-
-    def resolve_choices(self, info):
-        return Choice.objects.all()
-
-    def resolve_teachers(self, info):
-        return Teacher.objects.all()
-
-    def resolve_students(self, info):
-        return Student.objects.all()
 
     # returns a single student
     def resolve_student(self, info, **kwargs):
@@ -195,5 +175,17 @@ class Query(graphene.ObjectType):
             return Class.objects.get(ClassID=class_id)
         
         return GraphQLError('Please supply a valid ClassID')
+
+    def resolve_student_scores(self, info, **kwargs):
+        student_id = kwargs.get('StudentID')
+
+        if student_id:
+            return QuizScores.objects.filter(StudentID=student_id)
+
+    def resolve_quiz_scores(self, info, **kwargs):
+        quiz_id = kwargs.get('QuizID')
+
+        if quiz_id:
+            return QuizScores.objects.filter(QuizID=quiz_id)
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

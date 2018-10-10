@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ClassNameInput from './ClassNameInput'
-import { InputGroup, Input, Button } from 'reactstrap'
+// import { InputGroup, Input, Button } from 'reactstrap'
 import { Query } from 'react-apollo'
 import { string } from 'prop-types'
 import gql from 'graphql-tag'
@@ -33,11 +33,11 @@ class ClassSettings extends Component {
                 <h1>Editing {className}</h1>
                 <h4>Settings</h4>
                 <ClassNameInput className={className} classID={classID} />
-                <InputGroup>
+                {/* <InputGroup>
                   <Input type='checkbox' />
                   <p>CC Me on Class Emails</p>
                 </InputGroup>
-                <Button>Import CSV</Button>
+                <Button>Import CSV</Button> */}
               </div>
             )
           }

@@ -83,32 +83,6 @@ class Student(models.Model):
         db_table            = 'Students'
         verbose_name_plural = 'students'
 
-
-class Class_Quiz(models.Model):
-    Class_QuizID  = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    ClassID       = models.ForeignKey('Class', on_delete=models.CASCADE)
-    QuizID        = models.ForeignKey('Quiz', on_delete=models.CASCADE)
-    created_at    = models.DateTimeField(auto_now_add=True)
-    last_modified = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        db_table            = 'Class_Quiz'
-        verbose_name_plural = 'Class_Quiz'
-
-
-class Student_Quiz(models.Model):
-    Student_QuizID = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    Student        = models.ForeignKey('Student', on_delete=models.CASCADE)
-    Quiz           = models.ForeignKey('Quiz', on_delete=models.CASCADE)
-    Grade          = models.IntegerField()
-    created_at     = models.DateTimeField(auto_now_add=True)
-    last_modified  = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        db_table            = 'Student_Quiz'
-        verbose_name_plural = 'Student_Quiz'
-
-
 class QuizQuestionChoice(models.Model):
     QQCID    = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     Quiz     = models.ForeignKey('Quiz', on_delete=models.CASCADE)
@@ -120,6 +94,7 @@ class QuizScores(models.Model):
     QuizScoresID  = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     StudentID     = models.UUIDField(blank=False)
     QuizID        = models.UUIDField(blank=False)
+    QuizName      = models.CharField(max_length=256, blank=False)
     ClassID       = models.ForeignKey('Class', on_delete=models.CASCADE)
     Score         = models.IntegerField(default=0)
     created_at    = models.DateTimeField(auto_now_add=True)
