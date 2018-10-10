@@ -9,7 +9,7 @@ import './App.css'
 class App extends Component {
   render () {
     return (
-      <div className='app'>
+      <div className='container-fluid app'>
         <Switch>
           <Route exact path='/' component={Landing} />
           {localStorage.getItem('token') ? <Route exact path='/rocket/:page' component={RocketList} /> : null}
