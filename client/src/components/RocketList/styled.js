@@ -17,10 +17,11 @@ export const WelcomeHeader = styled.span`
 `
 
 export const BreadcrumbItemStyled = styled(BreadcrumbItem)`
-  font-family: monospace;
-  font-size: 13px;
+  display: none;
 
   @media (min-width: 818px) {
+    display: block;
+    font-family: monospace;
     font-size: 20px;
   }
 `
