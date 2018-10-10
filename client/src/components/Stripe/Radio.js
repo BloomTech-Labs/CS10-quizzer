@@ -1,28 +1,32 @@
 import React from 'react'
 import { func, number, string } from 'prop-types'
-import { Col, Row } from 'reactstrap'
+import { Col, Row, Input, Label } from 'reactstrap'
+
+import { InputStyled, LabelStyled } from './styles'
 
 const Radio = props => {
   const { name, onClick, price, type, value, labelValue } = props
 
   return (
-    <Row>
+    <React.Fragment>
       <Col>
-        <input
+        <InputStyled
           data-price={price}
           name={name}
           onClick={onClick}
           type={type}
           value={value}
         />
-        <label
-          className='lead'
+      </Col>
+
+      <Col className='mb-3'>
+        <LabelStyled
           htmlFor={value}
         >
           {labelValue}
-        </label>
+        </LabelStyled>
       </Col>
-    </Row>
+    </React.Fragment>
   )
 }
 
