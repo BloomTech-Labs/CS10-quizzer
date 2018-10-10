@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 
 function ClassCard (props) {
   const { quizscoresSet } = props.classItem
-  console.log(quizscoresSet)
 
   const allQuizScores = quizscoresSet.reduce((acc, next) => {
     return acc + next.Score

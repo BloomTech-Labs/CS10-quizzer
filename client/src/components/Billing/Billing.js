@@ -12,7 +12,7 @@ class Billing extends Component {
     const token = localStorage.getItem('token')
     const req = {
       method: 'POST',
-      url: `${ apiURI }api/payments/unsubscribe`,
+      url: `${apiURI}api/payments/unsubscribe`,
       data: token
     }
 

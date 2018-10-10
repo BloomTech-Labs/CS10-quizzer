@@ -59,7 +59,7 @@ class CreateSubscription:
         self.Teacher.CustomerID = self.customer.id
         self.Teacher.Subscription = self.sub
         print(self.Teacher.CustomerID)
-        self.Teacher.save(update_fields=['CustomerID'])
+        self.Teacher.save(update_fields=['CustomerID', 'Subscription'])
 
     def create_subscription(self):
         self.update_teacher()
