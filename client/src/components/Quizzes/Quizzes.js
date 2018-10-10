@@ -64,7 +64,7 @@ class Quizzes extends Component {
     return (
       <Styles>
         <QuizPaywallModal isOpen={this.state.toggleModal} toggle={this.togglePaywallModal} />
-        <Query query={getCurrentInformation} variables={{ token: localStorage.getItem('token') }}>
+        <Query query={getCurrentInformation} variables={{ token: localStorage.getItem('token') }} fetchPolicy='cache-and-network'>
           {({ loading, error, data }) => {
             if (loading) {
               return <span>Loading...</span>
