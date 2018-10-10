@@ -1,0 +1,23 @@
+.question_fieldset {
+  margin: 10px 0 0 5%;
+}
+
+.question_fieldset div {
+  margin: 0 0 10px 0; 
+}
+
+.question_fieldset div input:first-child {
+  margin: 0;
+  width: 2%;
+}
+
+.question_fieldset div input:nth-child(2) {
+  margin: 0 0 0 2%;
+}
+
+.delete_question {
+  font-family: monospace;
+  font-size: 20px !important;
+  font-weight: bold !important;
+  margin: 0 0 0 5%;
+}
