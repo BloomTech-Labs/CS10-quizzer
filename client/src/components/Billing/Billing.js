@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Col, Button, Row } from 'reactstrap'
+import { Form } from 'reactstrap'
 
 import Stripe from '../Stripe/Stripe'
 
-import { BillingContainerStyled } from './styled'
+import { BillingContainerStyled, ColStyled } from './styled'
 
 class Billing extends Component {
   unsubscribe = async () => {
@@ -12,7 +12,7 @@ class Billing extends Component {
     const token = localStorage.getItem('token')
     const req = {
       method: 'POST',
-      url: `${ apiURI }api/payments/unsubscribe`,
+      url: `${apiURI}api/payments/unsubscribe`,
       data: token
     }
 
@@ -25,26 +25,32 @@ class Billing extends Component {
 
   render () {
     return (
-      <div className='billing_container'>
-        <h1>Add Billing Statement</h1>
+      <BillingContainerStyled className='mt-5'>
+        <ColStyled className='col-12 col-sm-8 col-sm-offset-2 mx-auto'>
+          <h1
+            className='mb-5'
+            style={{
+              fontSize: '1.5rem',
+              textAlign: 'center'
+            }}
+          >
+            Add Billing Statement
+          </h1>
 
-        {/**
-          * this is a component brought in by react-stripe-checkout
-          * this component takes a lot of possible attributes but this is all that
-          * is needed for now. If we need more options make sure to check the docs
-          * at https://github.com/azmenak/react-stripe-checkout
-          *
-          * TODO: dynamically set the currency attribute depending on the users
-          *       location
-          */}
-        <Stripe />
-        
-        <Button
-          onClick={this.unsubscribe}
-        >
-          Cancel Subscription
-        </Button>
-      </div>
+          {/**
+            * this is a component brought in by react-stripe-checkout
+            * this component takes a lot of possible attributes but this is all that
+            * is needed for now. If we need more options make sure to check the docs
+            * at https://github.com/azmenak/react-stripe-checkout
+            *
+            * TODO: dynamically set the currency attribute depending on the users
+            *       location
+            */}
+          <Form onSubmit={e => e.preventDefault()}>
+            <Stripe />
+          </Form>
+        </ColStyled>
+      </BillingContainerStyled>
     )
   }
 }
