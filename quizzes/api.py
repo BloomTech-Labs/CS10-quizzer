@@ -160,16 +160,30 @@ def send_email(req):
     classroom = Class.objects.get(ClassID=class_id)
     cc_teacher = classroom.cc_emails
 
-    print(cc_teacher)
-
     if len(students) > 0:
+        if cc_teacher:
+            to_email = Email(teacher_email)
+            subject = f'Reminder: {quiz_name} sent out to students of {class_name}'
+
+            content = Content(
+                'text/html',
+                f'''
+                <p>This is an automated reminder that you have sent out {quiz_name} to all students in {class_name}.</p>
+                <br></br>
+                <p>To unsubsribe from reminders in {class_name} please uncheck the "CC Me on Class Emails" checkbox in the Edit Class view.</p>
+                '''
+            )
+
+            mail = Mail(from_email, subject, to_email, content)
+            response = sg.client.mail.send.post(request_body=mail.get())
+
         for student in students:
             student_id = student['id']
             student_name = student['name']
             student_email = student['email']
 
             to_email = Email(student_email)
-            subject = f'New quiz from {teacher_name}'
+            subject = f'New quiz {quiz_name} from {teacher_name}'
 
             content = Content(
                 'text/html',
