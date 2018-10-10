@@ -3,6 +3,9 @@ import axios from 'axios'
 import StripeCheckout from 'react-stripe-checkout'
 
 import Radio from './Radio'
+import { Button, FormGroup } from 'reactstrap'
+
+import { ButtonStyled } from './styles'
 
 class Stripe extends Component {
   state = {
@@ -43,7 +46,7 @@ class Stripe extends Component {
   // render
   render () {
     return (
-      <React.Fragment>
+      <FormGroup>
         <Radio
           price={999}
           labelValue='1 Year Subscription - $9.99'
@@ -70,14 +73,33 @@ class Stripe extends Component {
         * TODO: dynamically set the currency attribute depending on the users
         *       location
         */}
-        <StripeCheckout
-          amount={this.state.subscriptionAmount}
-          currency='USD'
-          name='Quizzer'
-          token={this.getStripeToken}
-          stripeKey='pk_test_sm2QijqfOE0vqBK0c7W0CYGV'
-        />
-      </React.Fragment>
+
+        <FormGroup
+          className='d-flex flex-wrap flex-column flex-sm-row justify-content-center justify-content-sm-around'
+        >
+          <StripeCheckout
+            amount={this.state.subscriptionAmount}
+            currency='USD'
+            name='Quizzer'
+            token={this.getStripeToken}
+            stripeKey='pk_test_sm2QijqfOE0vqBK0c7W0CYGV'
+          >
+            <Button
+              className='btn-info mx-auto mb-4 mb-sm-0 d-block w-100'
+              style={{ border: '2px solid #008495' }}
+            >
+              Pay With Card
+            </Button>
+          </StripeCheckout>
+
+          <ButtonStyled
+            className='btn-light'
+            onClick={this.unsubscribe}
+          >
+            Cancel Subscription
+          </ButtonStyled>
+        </FormGroup>
+      </FormGroup>
     )
   }
 }
