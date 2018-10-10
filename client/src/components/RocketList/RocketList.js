@@ -1,4 +1,10 @@
 import React, { Component } from 'react'
+import gql from 'graphql-tag'
+import { object } from 'prop-types'
+import { Query } from 'react-apollo'
+import { Route, Switch, Redirect, withRouter } from 'react-router-dom'
+import { Breadcrumb, Button, Row, Col } from 'reactstrap'
+
 import Quizzes from '../Quizzes/Quizzes'
 import Classes from '../Classes/Classes'
 import Billing from '../Billing/Billing'
@@ -6,14 +12,18 @@ import Settings from '../Settings/Settings'
 import CreateQuiz from '../CreateQuiz/CreateQuiz'
 import PageError from '../PageError/PageError'
 import EditClass from '../Classes/EditClass'
-import { Breadcrumb, BreadcrumbItem, Button } from 'reactstrap'
-import { Route, Switch, Redirect, withRouter } from 'react-router-dom'
-import gql from 'graphql-tag'
 import { client } from '../../index'
-import { Query } from 'react-apollo'
 
 import './RocketList.css'
-import { SideNavButton, RocketListNavBar, RocketSideNav, SideNavLinks } from './styled'
+
+import {
+  BreadcrumbItemStyled,
+  RocketListNavBar,
+  RocketSideNav,
+  SideNavButton,
+  SideNavLinks,
+  WelcomeHeader
+} from './styled'
 
 const GET_CURRENT_USER = gql`
   query getUser($token:String!) {
@@ -27,12 +37,30 @@ class RocketList extends Component {
     super()
     this.state = {
       redirect: false,
-      sideNavHidden: true
+      hideSideNav: true
     }
   }
 
+  capitalizeCurrentBreadCrumb = () => {
+    const { params } = this.props.match
+    const breadcrumbs = []
+
+    for (const param in params) {
+      const firstCharCapitalized = params[ param ].charAt(0).toUpperCase()
+      const restOfTheString = params[ param ].substr(1)
+      const paramData = {
+        url: params[ param ],
+        displayText: firstCharCapitalized + restOfTheString
+      }
+
+      breadcrumbs.push(paramData)
+    }
+
+    return breadcrumbs
+  }
+
   hideSideNav = () => {
-    this.setState({ sideNavHidden: !this.state.sideNavHidden })
+    this.setState({ hideSideNav: !this.state.hideSideNav })
   }
 
   logOut = () => {
@@ -58,58 +86,53 @@ class RocketList extends Component {
 
               if (name) {
                 return (
-                  <span className='username'>Welcome {name}</span>
+                  <WelcomeHeader className='username'>Welcome {name}</WelcomeHeader>
                 )
               }
             }}
           </Query> : null}
-        {window.location.pathname === '/rocket/quizzes' || window.location.pathname === '/rocket/quizzes/'
-          ? <Breadcrumb tag='nav' className='nav_bread_crumb'>
-            <BreadcrumbItem tag='a' href='/'>Home</BreadcrumbItem>
-            <BreadcrumbItem active>Quizzes</BreadcrumbItem>
-          </Breadcrumb>
-          : null }
-        {window.location.pathname === '/rocket/classes' || window.location.pathname === '/rocket/classes/'
-          ? <Breadcrumb tag='nav' className='nav_bread_crumb'>
-            <BreadcrumbItem tag='a' href='/'>Home</BreadcrumbItem>
-            <BreadcrumbItem active>Classes</BreadcrumbItem>
-          </Breadcrumb>
-          : null }
-        {window.location.pathname === '/rocket/classes/editclass' || window.location.pathname === '/rocket/classes/editclass/'
-          ? <Breadcrumb tag='nav' className='nav_bread_crumb'>
-            <BreadcrumbItem tag='a' href='/'>Home</BreadcrumbItem>
-            <BreadcrumbItem tag='a' href='/rocket/classes'>Classes</BreadcrumbItem>
-            <BreadcrumbItem active>Edit Class</BreadcrumbItem>
-          </Breadcrumb>
-          : null }
-        {window.location.pathname === '/rocket/billing' || window.location.pathname === '/rocket/billing/'
-          ? <Breadcrumb tag='nav' className='nav_bread_crumb'>
-            <BreadcrumbItem tag='a' href='/'>Home</BreadcrumbItem>
-            <BreadcrumbItem active>Billing</BreadcrumbItem>
-          </Breadcrumb>
-          : null }
-        {window.location.pathname === '/rocket/settings' || window.location.pathname === '/rocket/settings/'
-          ? <Breadcrumb tag='nav' className='nav_bread_crumb'>
-            <BreadcrumbItem tag='a' href='/'>Home</BreadcrumbItem>
-            <BreadcrumbItem active>Settings</BreadcrumbItem>
-          </Breadcrumb>
-          : null }
-        {window.location.pathname === '/rocket/quizzes/createquiz' || window.location.pathname === '/rocket/quizzes/createquiz/'
-          ? <Breadcrumb tag='nav' className='nav_bread_crumb'>
-            <BreadcrumbItem tag='a' href='/'>Home</BreadcrumbItem>
-            <BreadcrumbItem tag='a' href='/rocket/quizzes'>Quizzes</BreadcrumbItem>
-            <BreadcrumbItem active>Create Quiz</BreadcrumbItem>
-          </Breadcrumb>
-          : null }
 
-        <div className='rocket_list_main'>
-          <RocketSideNav>
+        <Row>
+          <Col className='col-6'>
+            <Breadcrumb tag='nav' className='nav_bread_crumb'>
+              <BreadcrumbItemStyled
+                tag='a'
+                href='/'
+              >
+                Home
+              </BreadcrumbItemStyled>
+
+              {/**
+                * '.map()' over the available parameters from
+                *  'this.props.match.params' and generates breadcrumbs depending
+                *  on the current URL
+                */}
+              {this.capitalizeCurrentBreadCrumb().map(({ url, displayText }, ind, arr) => {
+                return (
+                  arr[ ind + 1 ]
+                    ? <BreadcrumbItemStyled key={url} tag='a' href={url}>
+                      { displayText }
+                    </BreadcrumbItemStyled>
+                    : <BreadcrumbItemStyled key={url} active>
+                      { displayText }
+                    </BreadcrumbItemStyled>
+                )
+              })}
+
+            </Breadcrumb>
+          </Col> {/* COL */}
+
+          <Col className='col-6 d-flex justify-content-end'>
             <SideNavButton onClick={this.hideSideNav}>
               =
             </SideNavButton>
+          </Col> {/* COL */}
+        </Row> {/* ROW */}
 
+        <div className='rocket_list_main'>
+          <RocketSideNav>
             <RocketListNavBar
-              display={this.state.sideNavHidden ? 'none' : 'flex'}
+              right={this.state.hideSideNav ? '-100%' : '0'}
             >
               <SideNavLinks to='/rocket/quizzes/'>Quizzes</SideNavLinks>
               <SideNavLinks to='/rocket/classes/'>Classes</SideNavLinks>
@@ -133,6 +156,10 @@ class RocketList extends Component {
       </div>
     )
   }
+}
+
+RocketList.propTypes = {
+  match: object
 }
 
 export default withRouter(RocketList)

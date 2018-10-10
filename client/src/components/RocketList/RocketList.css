@@ -5,15 +5,6 @@
     width: 100%
 }
 
-.username {
-    align-self: flex-end;
-    color: #003366;
-    font-family: monospace;
-    font-size: 25px;
-    font-weight: bold;
-    margin: 15px 5% 0 0;
-}
-
 .nav_bread_crumb {
     margin: 0 0 0 2%;
 }
@@ -26,13 +17,7 @@
 .breadcrumb a {
     color: #003366;
     font-family: monospace;
-    font-size: 20px;
     font-weight: bold;
-}
-
-.breadcrumb-item.active {
-    font-family: monospace; 
-    font-size: 20px; 
 }
 
 .rocket_list_main {
