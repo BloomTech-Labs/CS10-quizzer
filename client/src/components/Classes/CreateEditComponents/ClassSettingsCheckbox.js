@@ -23,7 +23,7 @@ export default class ClassSettingsCheckbox extends Component {
 
     return (
       <Mutation mutation={UPDATE_CC_EMAIL_SETTING}>
-        {(updateCCEmailSetting, { loading, error, data }) => (
+        {(updateCCEmailSetting, { loading, error }) => (
           <div>
             <input
               type='checkbox'
