@@ -1,8 +1,6 @@
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
-<<<<<<< HEAD
-=======
 export const RocketSideNav = styled.div`
   @media (min-width: 818px) {
     flex: 1;
@@ -10,7 +8,6 @@ export const RocketSideNav = styled.div`
   }
 `
 
->>>>>>> 6c69c6b40ec3c81c0703a2ff48ada5d8f40d0880
 export const SideNavButton = styled.button`
   background: none;
   border: none;

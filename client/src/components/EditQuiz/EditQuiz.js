@@ -17,7 +17,9 @@ class EditQuiz extends Component {
   }
 
   componentDidMount () {
+    
     if (this.props.location.state) {
+      
       this.setState({
         quizId: this.props.location.state
       })
@@ -30,7 +32,9 @@ class EditQuiz extends Component {
 
   quizNameChange = (event) => {
     const obj = Object.assign({}, this.state.quizData)
+    
     obj.QuizName = event.target.value
+    
     this.setState({
       quizData: obj
     })
@@ -39,7 +43,9 @@ class EditQuiz extends Component {
   questionTextChange = (event) => {
     const obj = Object.assign({}, this.state.quizData)
     const index = event.target.name
+    
     obj.questionSet[index].Question = event.target.value
+    
     this.setState({
       quizData: obj
     })
@@ -49,15 +55,17 @@ class EditQuiz extends Component {
     const obj = Object.assign({}, this.state.quizData)
     const question = Number(event.target.name)
     const choice = Number(event.target.id)
+    
     if (!obj.questionSet[question].choiceSet[choice].isCorrect) {
-      obj.questionSet[question].choiceSet.forEach((choice, index) => {
+      obj.questionSet[question].choiceSet.forEach((item, index) => {
         if (index === choice) {
-          choice.isCorrect = true
+          item.isCorrect = true
         } else {
-          choice.isCorrect = false
+          item.isCorrect = false
         }
       })
     }
+    
     this.setState({
       quizData: obj
     })
@@ -67,7 +75,9 @@ class EditQuiz extends Component {
     const obj = Object.assign({}, this.state.quizData)
     const question = Number(event.target.name)
     const choice = Number(event.target.id)
+    
     obj.questionSet[question].choiceSet[choice].ChoiceText = event.target.value
+    
     this.setState({
       quizData: obj
     })
@@ -77,7 +87,7 @@ class EditQuiz extends Component {
     if (!this.state.quizId) {
       return <span>Loading...</span>
     }
-    console.log('State ', this.state)
+    
     return (
       <Query 
         query={GET_QUIZ_INFORMATION} 
@@ -114,10 +124,10 @@ class EditQuiz extends Component {
                    choiceChecked={this.choiceChecked} 
                    choiceTextChange={this.choiceTextChange} 
                  />
-                 <Button color='secondary' className='edit_quiz_button'>Add Question</Button>
-                 <div className='saveOrDelete'> 
-                   <Button color='info' className='edit_quiz_button'>Save Changes</Button>
-                   <Button color='danger' className='edit_quiz_button'>Delete Quiz</Button> 
+                 <div className='edit_quiz_buttons'> 
+                   <Button color='secondary'>Add Question</Button>
+                   <Button color='info'>Save Changes</Button>
+                   <Button color='danger'>Delete Quiz</Button> 
                  </div> 
                 </form> 
               </div>

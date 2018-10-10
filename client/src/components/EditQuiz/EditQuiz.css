@@ -1,6 +1,5 @@
 .edit_quiz_container {
     min-height: 100vh;
-    margin: 10px 0 0 0;
     width: 78%;
 }
 
@@ -36,10 +35,15 @@
     width: 80%;
 }
 
-.edit_quiz_button {
+.edit_quiz_buttons {
+  display: flex;
+  margin: 20px 0 10px 5%;
+}
+
+.edit_quiz_buttons button {
   font-family: monospace;
   font-size: 20px !important;
   font-weight: bold !important;
-  margin: 20px 0 0 5%;
+  margin: 0 2% 0 0;
   width: 20%;
 }
