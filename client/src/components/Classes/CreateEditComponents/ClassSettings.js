@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
 import ClassNameInput from './ClassNameInput'
-// import { InputGroup, Input, Button } from 'reactstrap'
+// import { Button } from 'reactstrap'
 import { Query } from 'react-apollo'
 import { string } from 'prop-types'
 import gql from 'graphql-tag'
+import ClassSettingsCheckbox from './ClassSettingsCheckbox'
 
 const GET_SINGLE_CLASS = gql`
   query GetSingleClass($ClassID: String!) {
     classroom: singleClass(ClassID: $ClassID) {
       ClassName
+      ccEmails
     }
   }`
 
@@ -27,17 +29,15 @@ class ClassSettings extends Component {
           if (error) return <span>{error.message}</span>
           if (data) {
             const className = data.classroom.ClassName
+            const ccEmails = data.classroom.ccEmails
 
             return (
               <div>
                 <h1>Editing {className}</h1>
                 <h4>Settings</h4>
                 <ClassNameInput className={className} classID={classID} />
-                {/* <InputGroup>
-                  <Input type='checkbox' />
-                  <p>CC Me on Class Emails</p>
-                </InputGroup>
-                <Button>Import CSV</Button> */}
+                <ClassSettingsCheckbox ccEmails={ccEmails} />
+                {/* <Button>Import CSV</Button> */}
               </div>
             )
           }
