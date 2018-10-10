@@ -61,7 +61,6 @@ function QuizPanel (props) {
               return null
             }
           }
-          return <span>Something broke!</span>
         }}
       </Query>
       <QuizSelector classID={classID} />
