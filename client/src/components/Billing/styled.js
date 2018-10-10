@@ -13,5 +13,5 @@ export const BillingContainerStyled = styled(Row)`
 export const ColStyled = styled(Col)`
   @media (min-width: 818px) {
     max-width: 473px !important;
-}
+  }
 `

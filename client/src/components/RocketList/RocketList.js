@@ -12,6 +12,7 @@ import Settings from '../Settings/Settings'
 import CreateQuiz from '../CreateQuiz/CreateQuiz'
 import PageError from '../PageError/PageError'
 import EditClass from '../Classes/EditClass'
+import EditQuiz from '../EditQuiz/EditQuiz'
 import { client } from '../../index'
 
 import './RocketList.css'
@@ -149,6 +150,7 @@ class RocketList extends Component {
             <Route exact path='/rocket/settings' component={Settings} />
             <Route exact path='/rocket/quizzes/createquiz' component={CreateQuiz} />
             <Route exact path='/rocket/classes/editclass' component={EditClass} />
+            <Route exact path='/rocket/quizzes/editquiz' component={EditQuiz} />
             <Route component={PageError} />
           </Switch>
         </div>

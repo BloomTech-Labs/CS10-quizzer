@@ -73,8 +73,15 @@ export const RocketListNavBar = styled.div`
 
   @media (min-width: 818px) {
     display: flex;
+<<<<<<< HEAD
+<<<<<<< HEAD
+    width: 230%
+=======
+=======
     position: inherit;
+>>>>>>> 185f3b5b98ef89746698cee33a94be4145c49af2
     width: auto;
+>>>>>>> 6c69c6b40ec3c81c0703a2ff48ada5d8f40d0880
   }
 `
 
