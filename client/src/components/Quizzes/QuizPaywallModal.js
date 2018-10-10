@@ -1,19 +1,32 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Button, Modal, ModalBody } from 'reactstrap'
-import { Link } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-export default function QuizPaywallModal (props) {
-  const { toggle, isOpen } = props
+export default class QuizPaywallModal extends Component {
+  state = {
+    redirect: false
+  }
 
-  return (
-    <Modal isOpen={isOpen} toggle={toggle}>
-      <ModalBody>
-        You have reached your maximum quizzes. <Link to='/rocket/billing'>Upgrade your plan?</Link>
-      </ModalBody>
-      <Button color='info' onClick={toggle}>Understood</Button>
-    </Modal>
-  )
+  upgradePlan = () => {
+    this.setState({
+      redirect: true
+    })
+  }
+
+  render () {
+    const { toggle, isOpen } = this.props
+    return (
+      <Modal isOpen={isOpen} toggle={toggle}>
+        <ModalBody>
+          You have reached your maximum quizzes. Upgrade your plan?
+        </ModalBody>
+        <Button color='success' onClick={this.upgradePlan}>Upgrade!</Button>
+        <Button color='danger' onClick={toggle}>No thanks</Button>
+        {this.state.redirect ? <Redirect to={'/rocket/billing'} /> : null}
+      </Modal>
+    )
+  }
 }
 
 QuizPaywallModal.propTypes = {
