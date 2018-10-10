@@ -1,0 +1,11 @@
+.question_choices {
+  margin: 0 0 0 2%;
+}
+
+.enable_disable_choice {
+  font-family: monospace;
+  font-size: 15px !important;
+  font-weight: bold !important;
+  margin: 0 0 7px 2%;
+}
+
