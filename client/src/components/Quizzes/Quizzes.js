@@ -58,7 +58,7 @@ class Quizzes extends Component {
 
               return (
                 <AddQuizContainer className='add_quiz_container'>
-                  <Cards>
+                  <Cards className='cards'>
                     <Card className='quiz_card'>
                       <CardBody className='quiz_card_body'>
                         <CardTitle className='quiz_card_title'>New Quiz</CardTitle>
