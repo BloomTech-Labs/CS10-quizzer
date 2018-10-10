@@ -36,7 +36,7 @@ class ClassSettings extends Component {
                 <h1>Editing {className}</h1>
                 <h4>Settings</h4>
                 <ClassNameInput className={className} classID={classID} />
-                <ClassSettingsCheckbox ccEmails={ccEmails} />
+                <ClassSettingsCheckbox classID={classID} ccEmails={ccEmails} />
                 {/* <Button>Import CSV</Button> */}
               </div>
             )
