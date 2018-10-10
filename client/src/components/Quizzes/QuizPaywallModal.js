@@ -9,7 +9,7 @@ export default function QuizPaywallModal (props) {
   return (
     <Modal isOpen={isOpen} toggle={toggle}>
       <ModalBody>
-        Your have reached your maximum quizzes. <Link to='/rocket/billing'>Upgrade your plan?</Link>
+        You have reached your maximum quizzes. <Link to='/rocket/billing'>Upgrade your plan?</Link>
       </ModalBody>
       <Button color='info' onClick={toggle}>Understood</Button>
     </Modal>
