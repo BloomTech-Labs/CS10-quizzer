@@ -83,7 +83,7 @@ class Quizzes extends Component {
                   {quizzesLength >= FREE_PLAN && Subscription === '' ? <span>The free plan has a limit of {FREE_PLAN} quizzes. <Link to='/rocket/billing'>Upgrade your plan?</Link></span> : null}
                   {quizzesLength >= BASIC_PLAN && Subscription === 'Basic' ? <span>The basic plan has a limit of {BASIC_PLAN} quizzes. <Link to='/rocket/billing'>Upgrade your plan?</Link></span> : null}
                   <AddQuizContainer className='add_quiz_container'>
-                    <Cards>
+                    <Cards className='cards'>
                       <Card className='quiz_card'>
                         <CardBody className='quiz_card_body'>
                           <CardTitle className='quiz_card_title'>New Quiz</CardTitle>
@@ -93,7 +93,6 @@ class Quizzes extends Component {
                         </CardBody>
                       </Card>
                     </Cards>
-
                     {quizSet.map(quiz => {
                       const { QuizID, QuizName, Classes } = quiz
                       const amountOfClasses = Classes.length
