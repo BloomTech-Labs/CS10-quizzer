@@ -256,6 +256,41 @@ class CreateQuizMutation(graphene.ObjectType):
 end CreateQuiz
 '''
 
+'''
+start UpdateQuizName
+''' 
+class UpdateQuizName(graphene.Mutation): 
+  class Arguments: 
+    QuizID = graphene.String(required=True) 
+    QuizName = graphene.String(required=True)
+    enc_jwt = graphene.String(required=True) 
+
+  updated_quiz = graphene.Field(lambda: UpdateQuizNameMutation)
+
+  @staticmethod
+  def mutate(self, info, QuizID, QuizName, enc_jwt):
+    dec_jwt = decode_jwt(enc_jwt)
+    teacherID = dec_jwt['sub']['id']
+    teacher = Teacher.objects.get(TeacherID=teacherID)
+    updated_quiz = Quiz.objects.get(QuizID=QuizID)
+
+    if teacher and updated_quiz:
+      # object.save() cannot take any args, so just change entries first
+      updated_quiz.QuizName = QuizName if len(QuizName) > 0 else updated_quiz.QuizName
+      updated_quiz.save()
+
+      # this is what GraphQL is going to return 
+      return UpdateQuizName(updated_quiz=updated_quiz)
+    
+    else: 
+      raise GraphQLError('Something went wrong.')
+
+class UpdateQuizNameMutation(graphene.ObjectType):
+  QuizID = graphene.String() 
+  QuizName = graphene.String() 
+'''
+end UpdateQuizName
+'''
 
 '''
 start AddQuizToClass
@@ -416,7 +451,6 @@ class UpdateClassNameMutation(graphene.ObjectType):
 '''
 end UpdateClassName
 '''
-
 
 '''
 start UpdateQuizScore
