@@ -92,7 +92,7 @@ class QuizSelectModal extends Component {
                                   encJWT: window.localStorage.getItem('token'),
                                   QuizID: this.state.value
                                 },
-                                refetchQueries: ['GetClassQuizzes', 'getClasses']
+                                refetchQueries: ['GetClassQuizzes', 'getClasses', 'GetStudentScores']
                               })
                             }
                           }}>{(this.state.value === 'none') ? 'Create New Quiz' : 'Add Quiz to Class'}</Button>
