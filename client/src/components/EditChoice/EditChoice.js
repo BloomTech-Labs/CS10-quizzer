@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Button } from 'reactstrap'
-import './EditChoice.css'
 
 class EditChoice extends Component {
   constructor (props) {
