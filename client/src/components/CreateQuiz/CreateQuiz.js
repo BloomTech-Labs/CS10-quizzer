@@ -240,7 +240,7 @@ class CreateQuiz extends Component {
                       })
                       createdQuiz
                         .then(data => {
-                          const quizId = data.data.quiz.QuizID
+                          const quizId = data.data.createQuiz.quiz.QuizID
                           this.state.questions.forEach((question, index) => {
                             const createdQuestion = createNewQuestion({
                               variables: {
