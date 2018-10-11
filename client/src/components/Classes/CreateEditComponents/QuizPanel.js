@@ -57,11 +57,9 @@ function QuizPanel (props) {
                   })}
                 </Fragment>
               )
-            } else {
-              return null
             }
           }
-          return <span>Something broke!</span>
+          return null
         }}
       </Query>
       <QuizSelector classID={classID} />
