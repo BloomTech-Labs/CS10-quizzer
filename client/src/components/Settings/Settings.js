@@ -1,9 +1,15 @@
 import React, { Component } from 'react'
-import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
+import { Mutation } from 'react-apollo'
 import { Button } from 'reactstrap'
+
 import QueryComponent from './QueryComponent'
+
 import './Settings.css'
+import {
+  SettingsContainerStyled,
+  SettingsContainerFormWrapperStyled
+} from './styled'
 
 // GraphQL Mutation to update user information
 const updateInformation = gql`
@@ -34,11 +40,15 @@ class Settings extends Component {
 
   render () {
     const { name, email, oldPassword, newPassword } = this.state
+
     return (
-      <div className='settings_container'>
+      // <div className='settings_container'>
+      <SettingsContainerStyled className='settings_container'>
         <Mutation mutation={updateInformation}>
           {(updateTeacher, { loading, error, data }) => (
-            <div>
+            <SettingsContainerFormWrapperStyled
+              className='settings_container__form_wrapper'
+            >
               <form onSubmit={event => {
                 event.preventDefault()
                 const updatedInfo = updateTeacher({
@@ -58,16 +68,25 @@ class Settings extends Component {
                 })
               }
               }>
-                <QueryComponent name={name} email={email} oldPassword={oldPassword} newPassword={newPassword} handleInputChange={this.handleInputChange} />
+                <QueryComponent
+                  email={email}
+                  handleInputChange={this.handleInputChange}
+                  name={name}
+                  newPassword={newPassword}
+                  oldPassword={oldPassword}
+                />
+
                 <Button type='submit' color='info' className='settings_save_button'>Save</Button>
               </form>
+
               {loading && <span>Loading...</span>}
               {error && <span>{error.message}</span>}
               {data && <span>Successfully updated!</span>}
-            </div>
+            </SettingsContainerFormWrapperStyled>
           )}
         </Mutation>
-      </div>
+      </SettingsContainerStyled>
+      // </div>
     )
   }
 }
