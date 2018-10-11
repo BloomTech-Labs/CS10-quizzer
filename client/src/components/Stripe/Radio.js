@@ -4,12 +4,24 @@ import { Col, Row, Input, Label } from 'reactstrap'
 
 import { InputStyled, LabelStyled } from './styles'
 
+import styled from 'styled-components'
+
+const InputWrapperStyled = styled(Col)`
+  @media (min-width: 576px) {
+    margin-left: 0;
+  }
+`
+
+const LabelWrapperStyled = styled(InputWrapperStyled)`
+  margin-bottom: 1rem;
+`
+
 const Radio = props => {
   const { name, onClick, price, type, value, labelValue } = props
 
   return (
     <React.Fragment>
-      <Col>
+      <InputWrapperStyled className='billing_container__form__input_wrapper'>
         <InputStyled
           data-price={price}
           name={name}
@@ -17,15 +29,15 @@ const Radio = props => {
           type={type}
           value={value}
         />
-      </Col>
+      </InputWrapperStyled>
 
-      <Col className='mb-3'>
+      <LabelWrapperStyled className='billing_container__form__label_wrapper'>
         <LabelStyled
           htmlFor={value}
         >
           {labelValue}
         </LabelStyled>
-      </Col>
+      </LabelWrapperStyled>
     </React.Fragment>
   )
 }

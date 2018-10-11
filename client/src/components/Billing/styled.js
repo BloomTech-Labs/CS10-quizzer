@@ -11,7 +11,14 @@ export const BillingContainerStyled = styled(Row)`
 `
 
 export const ColStyled = styled(Col)`
+  margin-right: auto;
+  margin-left: auto;
+
+  @media (min-width: 576px) {
+    max-width: 400px !important;
+  }
+
   @media (min-width: 818px) {
-    max-width: 473px !important;
+    margin-left: 3rem !important;
   }
 `
