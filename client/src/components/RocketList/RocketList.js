@@ -93,7 +93,7 @@ class RocketList extends Component {
             }}
           </Query> : null}
 
-        <Row>
+        <Row className='mb-5'>
           <Col className='col-6'>
             <Breadcrumb tag='nav' className='nav_bread_crumb'>
               <BreadcrumbItemStyled
