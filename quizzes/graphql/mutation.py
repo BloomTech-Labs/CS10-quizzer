@@ -451,7 +451,42 @@ end CreateChoice
 '''
 
 '''
+start UpdateChoice
+'''
+class UpdateChoice(graphene.Mutation): 
+    class Arguments: 
+        ChoiceID = graphene.String(required=True)
+        ChoiceText = graphene.String(required=True)
+        isCorrect = graphene.Boolean(required=True)
+        enc_jwt = graphene.String(required=True)
+    
+    updated_choice = graphene.Field(lambda: UpdateChoiceMutation)
+    
+    @staticmethod
+    def mutate(self, info, ChoiceID, ChoiceText, isCorrect, enc_jwt):
+        dec_jwt = decode_jwt(enc_jwt)
+        teacherID = dec_jwt['sub']['id']
+        teacher = Teacher.objects.get(TeacherID=teacherID)
+        updated_choice = Choice.objects.get(ChoiceID=ChoiceID)
 
+        if teacher and updated_choice: 
+            # object.save() cannot take any args, so just change entries first
+            updated_choice.ChoiceText = ChoiceText if len(ChoiceText) > 0 else updated_choice.ChoiceText
+            updated_choice.isCorrect = isCorrect if isCorrect != updated_choice.isCorrect else updated_choice.isCorrect
+            updated_choice.save() 
+
+            # this is what GraphQL is going to return
+            return UpdateChoice(updated_choice=updated_choice)
+        
+        else: 
+            raise GraphQLError('Something went wrong.')
+        
+class UpdateChoiceMutation(graphene.ObjectType): 
+    ChoiceID = graphene.String()
+    ChoiceText = graphene.String() 
+    isCorrect = graphene.Boolean()
+'''
+end UpdateChoice
 '''
 
 '''
