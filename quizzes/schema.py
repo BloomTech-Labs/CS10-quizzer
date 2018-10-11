@@ -41,6 +41,7 @@ class Mutation(graphene.ObjectType):
     create_choice     = CreateChoice.Field()
     add_quiz_to_class = AddQuizToClass.Field()
     update_quiz_score = UpdateQuizScore.Field()
+    update_cc_emails  = UpdateCCEmails.Field()
 
 
 class Query(graphene.ObjectType):

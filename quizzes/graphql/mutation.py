@@ -560,3 +560,20 @@ class UpdateQuizScoreMutation(graphene.ObjectType):
 '''
 end UpdateQuizScore
 '''
+
+class UpdateCCEmails(graphene.Mutation):
+    class Arguments:
+        ClassID = graphene.String(required=True)
+
+    updated_cc_emails = graphene.Field(lambda: UpdateCCEmailsMutation)
+
+    @staticmethod
+    def mutate(self, info, ClassID):
+        classroom = Class.objects.get(ClassID=ClassID)
+        classroom.cc_emails = not classroom.cc_emails
+        classroom.save(update_fields=['cc_emails'])
+
+        return UpdateCCEmails(updated_cc_emails=classroom)
+
+class UpdateCCEmailsMutation(graphene.ObjectType):
+    cc_emails = graphene.Boolean()

@@ -21,6 +21,7 @@ class Class(models.Model):
     ClassID       = models.UUIDField(primary_key=True, default = uuid4, editable = False)
     ClassName     = models.CharField(max_length = 50, blank = False)
     Teacher       = models.ForeignKey('Teacher', on_delete=models.CASCADE)
+    cc_emails     = models.BooleanField(default=False)
     created_at    = models.DateTimeField(auto_now_add = True)
     last_modified = models.DateTimeField(auto_now = True)
 

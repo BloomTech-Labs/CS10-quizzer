@@ -62,12 +62,14 @@ function QuizCard (props) {
               if (value.Score > 0) completedCount++
             })
             return (
-              <p>Completed: {completedCount} / {studentArray.length}</p>
+              <div>
+                <p>Completed: {completedCount} / {studentArray.length}</p>
+                <Button onClick={event => sendEmail(event, postData)}>Email to Students</Button>
+              </div>
             )
           }
         }}
       </Query>
-      <Button onClick={event => sendEmail(event, postData)}>Email to Students</Button>
     </div>
   )
 }
