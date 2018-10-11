@@ -12,8 +12,7 @@ from quizzes.models import Class, Quiz, Question, Choice, Teacher, Student, Quiz
 from quizzes.graphql.mutation import (
     CreateTeacher, QueryTeacher, CreateStudent, CreateQuiz, CreateQuestion,
     CreateChoice, UpdateTeacherInformation, AddQuizToClass, DeleteStudent,
-    UpdateClassName, UpdateQuizName, UpdateQuestionText, UpdateChoice, UpdateQuizScore,
-    UpdateCCEmails
+    UpdateClassName, UpdateQuizName, UpdateQuestionText, UpdateChoice, UpdateQuizScore, UpdateCCEmails
 )
 
 from quizzes.graphql.query import (
