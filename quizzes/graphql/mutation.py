@@ -451,6 +451,10 @@ end CreateChoice
 '''
 
 '''
+
+'''
+
+'''
 start UpdateClassName
 '''
 class UpdateClassName(graphene.Mutation):
