@@ -46,7 +46,7 @@ class Quiz(models.Model):
 class Question(models.Model):
     QuestionID    = models.UUIDField(primary_key=True, default = uuid4, editable = False)
     QuizID        = models.ForeignKey('Quiz', on_delete = models.CASCADE)
-    Question      = models.TextField(blank = False)
+    QuestionText  = models.TextField(blank = False)
     isMajor       = models.BooleanField(default=True, blank=False)
     created_at    = models.DateTimeField(auto_now_add = True)
     last_modified = models.DateTimeField(auto_now = True)
