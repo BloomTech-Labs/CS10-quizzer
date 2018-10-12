@@ -60,7 +60,7 @@ class Question(models.Model):
 class Choice(models.Model):
     ChoiceID      = models.UUIDField(primary_key=True, default = uuid4, editable = False)
     QuestionID    = models.ForeignKey('Question', on_delete = models.CASCADE)
-    ChoiceText    = models.TextField(blank = False)
+    ChoiceText    = models.TextField()
     isCorrect     = models.BooleanField()
     created_at    = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
