@@ -7,7 +7,7 @@ export const GET_QUIZ_INFORMATION = gql`
       QuizName
       questionSet {
       QuestionID
-      Question
+      QuestionText
       choiceSet {
         ChoiceID
         ChoiceText
