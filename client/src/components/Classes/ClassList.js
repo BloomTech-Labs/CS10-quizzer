@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Row } from 'reactstrap'
+import NewClassCard from './NewClassCard'
 
 import ClassCard from './ClassCard'
 
@@ -9,6 +10,7 @@ const ClassList = props => {
 
   return (
     <Row>
+      <NewClassCard />
       {props.classSet.length > 0
         ? classSet.map(classItem => {
           return (
