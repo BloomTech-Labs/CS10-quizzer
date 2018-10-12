@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, CardTitle, CardBody, CardText, Col } from 'reactstrap'
+import { Card, CardTitle, CardBody, CardText } from 'reactstrap'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
@@ -13,18 +13,16 @@ function ClassCard (props) {
   const averageGrade = allQuizScores / quizscoresSet.length
 
   return (
-    <Col className='mb-3 col-12 col-sm-6 col-lg-4'>
+    <Card className='quiz_card'>
       <Link to={{ pathname: '/rocket/classes/editclass/', state: { classItem: props.classItem } }}>
-        <Card>
-          <CardTitle>{props.classItem.ClassName}</CardTitle>
-          <CardBody>
-            <CardText>Students: {props.classItem.studentSet.length}</CardText>
-            <CardText>Average Grade: { isNaN(averageGrade) ? 'No grades yet' : `${averageGrade}%` }</CardText>
-            <CardText>Quizzes: {props.classItem.quizSet.length}</CardText>
-          </CardBody>
-        </Card>
+        <CardBody>
+          <CardTitle className='quiz_card_title'>{props.classItem.ClassName}</CardTitle>
+          <CardText className='quiz_card_text'>Students: {props.classItem.studentSet.length}</CardText>
+          <CardText className='quiz_card_text'>Average Grade: { isNaN(averageGrade) ? 'No grades yet' : `${averageGrade}%` }</CardText>
+          <CardText className='quiz_card_text'>Quizzes: {props.classItem.quizSet.length}</CardText>
+        </CardBody>
       </Link>
-    </Col>
+    </Card>
   )
 }
 

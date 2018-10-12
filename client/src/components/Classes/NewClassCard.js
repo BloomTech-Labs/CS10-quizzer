@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import NewClassModal from './NewClassModal/NewClassModal'
-import { CardTitle, Button } from 'reactstrap'
-
-import { NewClassCardStyles } from './styles'
+import { Card, CardTitle, CardBody, Button } from 'reactstrap'
 
 class NewClassCard extends Component {
   constructor () {
@@ -20,19 +18,18 @@ class NewClassCard extends Component {
 
   render () {
     return (
-      <NewClassCardStyles className='classes_newClassContainer_Card pt-3'>
-        <CardTitle>New Class</CardTitle>
-
-        <Button
-          className='add_quiz_button'
-          color='warning'
-          onClick={this.toggleNewClassModal}
-        >
-          <span role='img' aria-labelledby='Plus Symbol'>&#x2795;</span>
-        </Button>
-
-        <NewClassModal openNewClassModal={this.state.openNewClassModal} toggleNewClassModal={this.toggleNewClassModal} />
-      </NewClassCardStyles>
+      <Card className='quiz_card'>
+        <CardBody className='quiz_card_body'>
+          <CardTitle className='quiz_card_title'>New Class</CardTitle>
+          <Button
+            color='warning'
+            onClick={this.toggleNewClassModal}
+          >
+            <span role='img' aria-labelledby='Plus Symbol'>&#x2795;</span>
+          </Button>
+          <NewClassModal openNewClassModal={this.state.openNewClassModal} toggleNewClassModal={this.toggleNewClassModal} />
+        </CardBody>
+      </Card>
     )
   }
 }

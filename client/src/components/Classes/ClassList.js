@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Row } from 'reactstrap'
 import NewClassCard from './NewClassCard'
+import { Cards } from '../Quizzes/styled'
 
 import ClassCard from './ClassCard'
 
@@ -9,7 +9,7 @@ const ClassList = props => {
   const { classSet } = props
 
   return (
-    <Row>
+    <Cards className='cards'>
       <NewClassCard />
       {props.classSet.length > 0
         ? classSet.map(classItem => {
@@ -21,7 +21,7 @@ const ClassList = props => {
           )
         })
         : null}
-    </Row>
+    </Cards>
   )
 }
 

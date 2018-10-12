@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import gql from 'graphql-tag'
 import { Query } from 'react-apollo'
-import { Row } from 'reactstrap'
 
 import ViewQuizOrClass from '../ViewQuizOrClass/ViewQuizOrClass'
 import ClassList from './ClassList'
+import { AddQuizContainer } from '../Quizzes/styled'
 
 import './Classes.css'
 
@@ -41,7 +41,6 @@ class Classes extends Component {
     return (
       <ViewQuizOrClass
         key={classSet.ClassID}
-        maxWidth='100%'
         render={() => (
           <ClassList
             classSet={classSet}
@@ -54,7 +53,7 @@ class Classes extends Component {
   render () {
     return (
       <Styles>
-        <Row className='h-100 m-0 px-3'>
+        <AddQuizContainer className='add_quiz_container'>
           <Query query={GET_CLASSES_INFORMATION} variables={{ token: localStorage.getItem('token') }}>
             {({ loading, data, error }) => {
               if (loading) return <span>Loading...</span>
@@ -65,7 +64,7 @@ class Classes extends Component {
               }
             }}
           </Query>
-        </Row>
+        </AddQuizContainer>
       </Styles>
     )
   }
