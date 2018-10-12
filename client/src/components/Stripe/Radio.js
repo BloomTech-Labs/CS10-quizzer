@@ -20,25 +20,21 @@ const Radio = props => {
   const { name, onClick, price, type, value, labelValue } = props
 
   return (
-    <React.Fragment>
-      <InputWrapperStyled className='billing_container__form__input_wrapper'>
-        <InputStyled
-          data-price={price}
-          name={name}
-          onClick={onClick}
-          type={type}
-          value={value}
-        />
-      </InputWrapperStyled>
+    <Col>
+      <InputStyled
+        data-price={price}
+        name={name}
+        onClick={onClick}
+        type={type}
+        value={value}
+      />
 
-      <LabelWrapperStyled className='billing_container__form__label_wrapper'>
-        <LabelStyled
-          htmlFor={value}
-        >
-          {labelValue}
-        </LabelStyled>
-      </LabelWrapperStyled>
-    </React.Fragment>
+      <LabelStyled
+        htmlFor={value}
+      >
+        {labelValue}
+      </LabelStyled>
+    </Col>
   )
 }
 
