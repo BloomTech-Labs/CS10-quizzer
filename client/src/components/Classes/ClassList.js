@@ -6,7 +6,7 @@ import ClassCard from './ClassCard'
 const ClassList = props => {
   return (
     <div>
-      <ClassCard classItem={props.classroom} />
+      <ClassCard classroom={props.classroom} />
     </div>
   )
 }

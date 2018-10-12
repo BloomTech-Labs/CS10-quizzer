@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 function ClassCard (props) {
-  const { quizscoresSet } = props.classItem
+  const { quizscoresSet } = props.classroom
 
   const allQuizScores = quizscoresSet.reduce((acc, next) => {
     return acc + next.Score
@@ -14,12 +14,12 @@ function ClassCard (props) {
 
   return (
     <Card className='quiz_card'>
-      <Link to={{ pathname: '/rocket/classes/editclass/', state: { classItem: props.classItem } }}>
+      <Link to={{ pathname: '/rocket/classes/editclass/', state: { classItem: props.classroom } }}>
         <CardBody>
-          <CardTitle className='quiz_card_title'>{props.classItem.ClassName}</CardTitle>
-          <CardText className='class_card_text'>Students: {props.classItem.studentSet.length}</CardText>
+          <CardTitle className='quiz_card_title'>{props.classroom.ClassName}</CardTitle>
+          <CardText className='class_card_text'>Students: {props.classroom.studentSet.length}</CardText>
           <CardText className='class_card_text'>Average Grade: { isNaN(averageGrade) ? 'No grades yet' : `${averageGrade}%` }</CardText>
-          <CardText className='class_card_text'>Quizzes: {props.classItem.quizSet.length}</CardText>
+          <CardText className='class_card_text'>Quizzes: {props.classroom.quizSet.length}</CardText>
         </CardBody>
       </Link>
     </Card>
@@ -27,7 +27,7 @@ function ClassCard (props) {
 }
 
 ClassCard.propTypes = {
-  classItem: PropTypes.object
+  classroom: PropTypes.object
 }
 
 export default ClassCard
