@@ -6,6 +6,16 @@ import { string } from 'prop-types'
 import gql from 'graphql-tag'
 import ClassSettingsCheckbox from './ClassSettingsCheckbox'
 
+import styled from 'styled-components'
+
+const ClassSettingsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 220px;
+  margin-bottom: 2rem;
+`
+
 const GET_SINGLE_CLASS = gql`
   query GetSingleClass($ClassID: String!) {
     classroom: singleClass(ClassID: $ClassID) {
@@ -32,13 +42,13 @@ class ClassSettings extends Component {
             const ccEmails = data.classroom.ccEmails
 
             return (
-              <div>
+              <ClassSettingsWrapper className='class_settings_wrapper'>
                 <h1>Editing {className}</h1>
                 <h4>Settings</h4>
                 <ClassNameInput className={className} classID={classID} />
                 <ClassSettingsCheckbox classID={classID} ccEmails={ccEmails} />
                 {/* <Button>Import CSV</Button> */}
-              </div>
+              </ClassSettingsWrapper>
             )
           }
         }}

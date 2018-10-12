@@ -5,6 +5,27 @@ import { string } from 'prop-types'
 import gql from 'graphql-tag'
 import StudentList from './StudentList'
 
+import styled from 'styled-components'
+
+const AddStudentsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 250px;
+`
+
+const AddStudentsFormWrapper = styled(InputGroup)`
+  height: 140px;
+  margin-bottom: 2rem;
+`
+
+const AddStudentsForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+`
+
 const CREATE_NEW_STUDENT = gql`
 mutation CreateNewStudent($ClassID: String!, $StudentName: String!, $StudentEmail: String!, $encJwt: String!) {
   createStudent(ClassID: $ClassID, StudentName: $StudentName, StudentEmail: $StudentEmail, encJwt: $encJwt) {
@@ -33,13 +54,14 @@ class StudentPanel extends Component {
     const { classID } = this.props
     const { name, email } = this.state
     return (
-      <div>
+      <AddStudentsWrapper className='add_student_wrapper'>
         <h4>Add Students</h4>
-        <InputGroup>
+
+        <AddStudentsFormWrapper className='add_student_wrapper__add_students_form'>
           <Mutation mutation={CREATE_NEW_STUDENT}>
             {(createNewStudent, { loading, error }) => (
-              <div>
-                <form onSubmit={event => {
+              <div style={{ width: '100%' }}>
+                <AddStudentsForm onSubmit={event => {
                   event.preventDefault()
                   createNewStudent({
                     variables: {
@@ -58,15 +80,16 @@ class StudentPanel extends Component {
                   <Input type='text' value={name} placeholder={'Name'} name='name' onChange={this.handleInputChange} required />
                   <Input type='email' value={email} placeholder={'Email'} name='email' onChange={this.handleInputChange} required />
                   <Button type='submit'>Add</Button>
-                </form>
+                </AddStudentsForm>
                 {loading && <span>Saving student...</span>}
                 {error && <span>{error.message}</span>}
               </div>
             )}
           </Mutation>
-        </InputGroup>
+        </AddStudentsFormWrapper>
+
         <StudentList classID={classID} />
-      </div>
+      </AddStudentsWrapper>
     )
   }
 }

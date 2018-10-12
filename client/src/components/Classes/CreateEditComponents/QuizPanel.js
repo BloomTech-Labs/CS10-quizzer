@@ -5,6 +5,14 @@ import { Query } from 'react-apollo'
 import { string } from 'prop-types'
 import gql from 'graphql-tag'
 
+import styled from 'styled-components'
+
+const QuizListWrapper = styled.div`
+  display: grid;
+  grid-template: auto / 1fr
+  grid-row-gap: 50px;
+`
+
 const GET_CLASS_QUIZZES = gql`
 query GetClassQuizzes($ClassID: String!, $encJWT: String!) {
   classQuizzes(ClassID: $ClassID) {
@@ -28,10 +36,13 @@ function QuizPanel (props) {
   return (
     <div>
       <h4>Quizzes</h4>
+
       <Query query={GET_CLASS_QUIZZES} variables={{ ClassID: classID, encJWT: localStorage.getItem('token') }}>
         {({ loading, error, data }) => {
           if (loading) return 'Loading...'
+
           if (error) return error.message
+
           if (data && data.classQuizzes && data.classStudents && data.teacher) {
             const quizzes = data.classQuizzes
             const students = data.classStudents
@@ -40,7 +51,7 @@ function QuizPanel (props) {
 
             if (quizzes.length > 0) {
               return (
-                <Fragment>
+                <QuizListWrapper className='quiz_list_wrapper'>
                   {quizzes.map((quiz) => {
                     return (
                       <QuizCard
@@ -55,7 +66,7 @@ function QuizPanel (props) {
                       />
                     )
                   })}
-                </Fragment>
+                </QuizListWrapper>
               )
             }
           }
