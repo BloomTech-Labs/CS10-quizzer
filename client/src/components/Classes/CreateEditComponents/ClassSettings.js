@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ClassNameInput from './ClassNameInput'
-// import { Button } from 'reactstrap'
+import { ImportCSV } from './ImportCSV'
 import { Query } from 'react-apollo'
 import { string } from 'prop-types'
 import gql from 'graphql-tag'
@@ -37,7 +37,7 @@ class ClassSettings extends Component {
                 <h4>Settings</h4>
                 <ClassNameInput className={className} classID={classID} />
                 <ClassSettingsCheckbox classID={classID} ccEmails={ccEmails} />
-                {/* <Button>Import CSV</Button> */}
+                <ImportCSV />
               </div>
             )
           }
