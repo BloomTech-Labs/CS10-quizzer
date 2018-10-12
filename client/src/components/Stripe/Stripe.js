@@ -75,7 +75,7 @@ class Stripe extends Component {
         */}
 
         <FormGroup
-          className='d-flex flex-wrap flex-column flex-sm-row justify-content-center justify-content-sm-around'
+          className='d-flex flex-wrap flex-column flex-sm-row justify-content-center justify-content-sm-between'
         >
           <StripeCheckout
             amount={this.state.subscriptionAmount}
