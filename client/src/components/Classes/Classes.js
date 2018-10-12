@@ -68,8 +68,8 @@ class Classes extends Component {
         <Row className='h-100 m-0 px-3'>
           <Query query={GET_CLASSES_INFORMATION} variables={{ token: localStorage.getItem('token') }}>
             {({ loading, data, error }) => {
-              if (loading) return <h1>Loading...</h1>
-              if (error) return <h1>{error.message}</h1>
+              if (loading) return <span>Loading...</span>
+              if (error) return <span>{error.message}</span>
 
               if (data) {
                 return (this.renderClassComponent(data))
