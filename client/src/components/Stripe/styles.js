@@ -6,6 +6,10 @@ export const ButtonStyled = styled(Button)`
 `
 
 export const InputStyled = styled(Input)`
+  @media (min-width: 576px) {
+    margin-left: -8px !important;
+  }
+
   @media (min-width: 578px) {
     margin-left: -6px !important;
   }
@@ -16,6 +20,10 @@ export const InputStyled = styled(Input)`
 `
 
 export const LabelStyled = styled(Label)`
+  @media (min-width: 576px) {
+    margin-left: 1rem;
+  }
+
   @media (min-width: 578px) {
     margin-left: 14px;
   }
