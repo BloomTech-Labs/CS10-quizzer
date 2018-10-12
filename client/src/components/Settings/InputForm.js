@@ -1,10 +1,12 @@
 import React from 'react'
-import { InputGroup, InputGroupAddon, Input } from 'reactstrap'
 import PropTypes from 'prop-types'
+import { InputGroup, InputGroupAddon, Input } from 'reactstrap'
+
+import { DivStyled } from './styled'
 
 const InputForm = (props) => {
   return (
-    <div>
+    <DivStyled className='settings_container__input_form'>
       <InputGroup>
         <InputGroupAddon addonType='prepend'>Name:</InputGroupAddon>
         <Input placeholder={props.data.teacher ? props.data.teacher[0].TeacherName : 'Loading...'} type='text' name='name' value={props.name} onChange={props.handleInputChange} />
@@ -24,7 +26,7 @@ const InputForm = (props) => {
         <InputGroupAddon addonType='prepend'>New Password: </InputGroupAddon>
         <Input type='password' name='newPassword' value={props.newPassword} onChange={props.handleInputChange} />
       </InputGroup>
-    </div>
+    </DivStyled>
   )
 }
 

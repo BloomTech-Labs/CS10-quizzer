@@ -1,10 +1,20 @@
 import React, { Component } from 'react'
+import { Mutation } from 'react-apollo'
+
+import { CREATE_QUIZ, CREATE_QUESTION, CREATE_CHOICE } from '../Mutations'
 import CreateQuestions from '../CreateQuestion/CreateQuestion'
 import ModalMessage from '../Modals/ModalMessage'
-import { CREATE_QUIZ, CREATE_QUESTION, CREATE_CHOICE } from '../Mutations'
-import { Button } from 'reactstrap'
-import { Mutation } from 'react-apollo'
+
 import './CreateQuiz.css'
+
+import {
+  ContainerStyled,
+  HeaderStyled,
+  ChecklistStyled,
+  CheclistItemStyled,
+  InputStyled,
+  AddQuizBtn
+} from './styled'
 
 class CreateQuiz extends Component {
   constructor () {
@@ -178,11 +188,17 @@ class CreateQuiz extends Component {
 
   render () {
     return (
-      <div className='create_quiz_container'>
-        <h4 className='create_quiz_instructions'>
-          To create a quiz, you must provide a quiz name and add at least one question. You must also
-          add at least two answer choices per question, but each question is limited to four answer choices.
-        </h4>
+      <ContainerStyled className='create_quiz_container'>
+        <HeaderStyled className='create_quiz_container__quiz_header'>
+          To create a quiz you must
+        </HeaderStyled>
+
+        <ChecklistStyled className='create_quiz_container__checklist'>
+          <CheclistItemStyled className='create_quiz_container__checklist__item'>Have a Quiz Name</CheclistItemStyled>
+          <CheclistItemStyled className='create_quiz_container__checklist__item'>Have at least one question</CheclistItemStyled>
+          <CheclistItemStyled className='create_quiz_container__checklist__item'>Have at least two answer choices</CheclistItemStyled>
+        </ChecklistStyled>
+
         <Mutation mutation={CREATE_QUIZ}>
           {(createNewQuiz) => (
             <Mutation mutation={CREATE_QUESTION}>
@@ -295,14 +311,15 @@ class CreateQuiz extends Component {
                           })
                         })
                     }}>
-                      <input
+                      <InputStyled
                         name='quizName'
                         onChange={this.handleOnChange}
-                        placeholder='Name'
+                        placeholder='Quiz Name'
                         required
                         type='text'
                         value={this.state.quizName}
                       />
+
                       <CreateQuestions
                         state={this.state}
                         questionChange={this.questionChange}
@@ -311,19 +328,21 @@ class CreateQuiz extends Component {
                         deleteQuestion={this.deleteQuestion}
                         enableOrDisable={this.enableOrDisable}
                       />
-                      <Button
+
+                      <AddQuizBtn
                         color='secondary'
                         className='create_quiz_button'
                         onClick={this.addQuestion}
                       >
-                      Add Question
-                      </Button>
-                      <Button
+                        Add Question
+                      </AddQuizBtn>
+
+                      <AddQuizBtn
                         color='info'
                         className='create_quiz_button'
                       >
                       Create Quiz
-                      </Button>
+                      </AddQuizBtn>
                     </form>
                   )}
                 </Mutation>
@@ -339,7 +358,7 @@ class CreateQuiz extends Component {
           modalSuccess={this.state.modalSuccess}
           toggleModalMessage={this.toggleModalMessage}
         />
-      </div>
+      </ContainerStyled>
     )
   }
 }

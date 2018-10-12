@@ -25,8 +25,10 @@ class Billing extends Component {
 
   render () {
     return (
-      <BillingContainerStyled className='mt-5'>
-        <ColStyled className='col-12 col-sm-8 col-sm-offset-2 mx-auto'>
+      <BillingContainerStyled className='billing_container'>
+        <ColStyled
+          className='col-12 col-sm-8 col-sm-offset-2 billing_container__form_wrapper'
+        >
           <h1
             className='mb-5'
             style={{
