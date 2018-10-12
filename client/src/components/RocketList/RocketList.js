@@ -65,12 +65,12 @@ class RocketList extends Component {
   }
 
   logOut = () => {
-    client.clearStore()
-    localStorage.clear()
-    this.forceUpdate()
     this.setState({
       redirect: true
     })
+    client.clearStore()
+    localStorage.clear()
+    this.forceUpdate()
   }
 
   render () {
