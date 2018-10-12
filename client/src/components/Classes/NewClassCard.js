@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import NewClassModal from './NewClassModal/NewClassModal'
 import { Card, CardTitle, CardBody, Button } from 'reactstrap'
+import { Cards } from '../Quizzes/styled'
 
 class NewClassCard extends Component {
   constructor () {
@@ -18,18 +19,20 @@ class NewClassCard extends Component {
 
   render () {
     return (
-      <Card className='quiz_card'>
-        <CardBody className='quiz_card_body'>
-          <CardTitle className='quiz_card_title'>New Class</CardTitle>
-          <Button
-            color='warning'
-            onClick={this.toggleNewClassModal}
-          >
-            <span role='img' aria-labelledby='Plus Symbol'>&#x2795;</span>
-          </Button>
-          <NewClassModal openNewClassModal={this.state.openNewClassModal} toggleNewClassModal={this.toggleNewClassModal} />
-        </CardBody>
-      </Card>
+      <Cards className='cards'>
+        <Card className='quiz_card'>
+          <CardBody className='quiz_card_body'>
+            <CardTitle className='quiz_card_title'>New Class</CardTitle>
+            <Button
+              color='warning'
+              onClick={this.toggleNewClassModal}
+            >
+              <span role='img' aria-labelledby='Plus Symbol'>&#x2795;</span>
+            </Button>
+            <NewClassModal openNewClassModal={this.state.openNewClassModal} toggleNewClassModal={this.toggleNewClassModal} />
+          </CardBody>
+        </Card>
+      </Cards>
     )
   }
 }

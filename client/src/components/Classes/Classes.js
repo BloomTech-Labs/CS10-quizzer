@@ -39,32 +39,34 @@ class Classes extends Component {
   renderClassComponent = data => {
     const classSet = data.teacher[0].classSet
     return (
-      <ViewQuizOrClass
-        key={classSet.ClassID}
-        render={() => (
-          <ClassList
-            classSet={classSet}
-          />
-        )}
-      />
+      <AddQuizContainer className='add_quiz_container'>
+        <ViewQuizOrClass
+          key={classSet.ClassID}
+          maxWidth='100%'
+          render={() => (
+            <ClassList
+              classSet={classSet}
+            />
+          )}
+        />
+      </AddQuizContainer>
     )
   }
 
   render () {
     return (
       <Styles>
-        <AddQuizContainer className='add_quiz_container'>
-          <Query query={GET_CLASSES_INFORMATION} variables={{ token: localStorage.getItem('token') }}>
-            {({ loading, data, error }) => {
-              if (loading) return <span>Loading...</span>
-              if (error) return <span>{error.message}</span>
+        <div />
+        <Query query={GET_CLASSES_INFORMATION} variables={{ token: localStorage.getItem('token') }}>
+          {({ loading, data, error }) => {
+            if (loading) return <span>Loading...</span>
+            if (error) return <span>{error.message}</span>
 
-              if (data) {
-                return (this.renderClassComponent(data))
-              }
-            }}
-          </Query>
-        </AddQuizContainer>
+            if (data) {
+              return (this.renderClassComponent(data))
+            }
+          }}
+        </Query>
       </Styles>
     )
   }

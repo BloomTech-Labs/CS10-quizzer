@@ -1,3 +1,9 @@
 .classes_container {
     min-height: 100vh;
 }
+
+.class_card_text {
+    font-family: monospace;
+    font-size: 10px;
+    font-weight: bold;
+}
