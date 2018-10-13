@@ -337,6 +337,28 @@ end AddQuizToClass
 '''
 
 '''
+start DeleteQuiz
+'''
+class DeleteQuiz(graphene.Mutation):
+    class Arguments: 
+        QuizID = graphene.String(required=True)
+        enc_jwt = graphene.String(required=True)
+    
+    quiz = graphene.Field(lambda: DeleteQuizMutation)
+
+    @staticmethod
+    def mutate(self, info, QuizID, enc_jwt):
+        quiz = Quiz.objects.get(QuizID=QuizID).delete()
+
+        return DeleteQuiz(quiz=quiz)
+
+class DeleteQuizMutation(graphene.ObjectType):
+    QuizID = graphene.String() 
+'''
+end DeleteQuiz
+'''
+
+'''
 start CreateQuestion
 '''
 class CreateQuestion(graphene.Mutation):
@@ -409,6 +431,28 @@ class UpdateQuestionTextMutation(graphene.ObjectType):
   QuestionText = graphene.String()
 '''
 endUpdateQuestion
+'''
+
+'''
+start DeleteQuestion
+'''
+class DeleteQuestion(graphene.Mutation):
+    class Arguments: 
+        QuestionID = graphene.String(required=True)
+        enc_jwt = graphene.String(required=True)
+    
+    question = graphene.Field(lambda: DeleteQuestionMutation)
+
+    @staticmethod
+    def mutate(self, info, QuestionID, enc_jwt): 
+        question = Question.objects.get(QuestionID=QuestionID).delete()
+
+        return DeleteQuestion(question=question)
+
+class DeleteQuestionMutation(graphene.ObjectType):
+    QuestionID = graphene.String() 
+'''
+end DeleteQuestion
 '''
 
 '''
@@ -487,6 +531,28 @@ class UpdateChoiceMutation(graphene.ObjectType):
     isCorrect = graphene.Boolean()
 '''
 end UpdateChoice
+'''
+
+'''
+start DeleteChoice 
+'''
+class DeleteChoice(graphene.Mutation):
+    class Arguments: 
+        ChoiceID = graphene.String(required=True)
+        enc_jwt = graphene.String(required=True)
+
+    choice = graphene.Field(lambda: DeleteChoiceMutation)
+
+    @staticmethod
+    def mutate(self, info, ChoiceID, enc_jwt):
+        choice = Choice.objects.get(ChoiceID=ChoiceID).delete()
+
+        return DeleteChoice(choice=choice)
+
+class DeleteChoiceMutation(graphene.ObjectType): 
+    ChoiceID = graphene.String() 
+'''
+end DeleteChoice
 '''
 
 '''
