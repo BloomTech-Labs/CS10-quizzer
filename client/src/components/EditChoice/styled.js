@@ -1,16 +1,13 @@
 import { Button, Input } from 'reactstrap'
 import styled from 'styled-components'
 
-export const AnswerWrapperStyled = styled.div`
+export const ChoiceContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-`
-
-export const AnswerInputWrapperStyled = styled.div`
   width: 100%;
 `
 
-export const ChoiceRadioStyled = styled(Input)`
+export const ChoiceRadio = styled(Input)`
   margin-top: 12px !important;
   width: auto;
 
@@ -19,13 +16,13 @@ export const ChoiceRadioStyled = styled(Input)`
   }
 `
 
-export const ChoiceTextStyled = styled(Input)`
+export const ChoiceText = styled(Input)`
   margin: 0 0 20px 0;
 `
 
-export const EnableDisableChoiceBtnStyled = styled(Button)`
+export const EnableOrDisable = styled(Button)`
   font-family: monospace;
   font-size: 15px !important;
   font-weight: bold !important;
-  margin-bottom: 1rem;
+  margin: 0 0 1rem 0;
 `

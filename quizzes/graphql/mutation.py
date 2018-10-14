@@ -110,7 +110,6 @@ class UpdateTeacherInformationMutation(graphene.ObjectType):
 end UpdateTeacherInformation
 '''
 
-
 '''
 start QueryTeacher
 '''
@@ -146,8 +145,6 @@ class QueryTeacher(graphene.Mutation):
         else:
             raise GraphQLError('Please supply a valid password')
 
-
-
 class QueryTeacherMutation(graphene.ObjectType):
     TeacherID    = graphene.String()
     TeacherEmail = graphene.String()
@@ -155,7 +152,6 @@ class QueryTeacherMutation(graphene.ObjectType):
 '''
 end QueryTeacher
 '''
-
 
 '''
 start CreateStudent
@@ -191,7 +187,6 @@ class CreateStudent(graphene.Mutation):
         
         return CreateStudent(student=student)
 
-
 class CreateStudentMutation(graphene.ObjectType):
     StudentID    = graphene.String()
     StudentName  = graphene.String()
@@ -217,7 +212,6 @@ class DeleteStudent(graphene.Mutation):
 
 class DeleteStudentMutation(graphene.ObjectType):
     StudentID = graphene.String()
-
 
 '''
 start CreateQuiz
@@ -323,7 +317,6 @@ class AddQuizToClass(graphene.Mutation):
         quiz.save()
 
         return AddQuizToClass(quiz=quiz)
-
 
 class AddQuizToClassMutation(graphene.ObjectType):
     QuizID        = graphene.String()

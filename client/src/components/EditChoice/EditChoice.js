@@ -1,6 +1,12 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Button } from 'reactstrap'
+
+import {
+  ChoiceContainer,
+  ChoiceRadio,
+  ChoiceText,
+  EnableOrDisable
+} from './styled'
 
 class EditChoice extends Component {
   constructor (props) {
@@ -13,12 +19,19 @@ class EditChoice extends Component {
   }
 
   render () {
-    const { choices, id, index } = this.state
-    const { choiceChecked, choiceTextChange } = this.props
+    const {
+      choices,
+      id,
+      index
+    } = this.state
+    const {
+      choiceChecked,
+      choiceTextChange
+    } = this.props
 
     return (
-      <div>
-        <input
+      <ChoiceContainer>
+        <ChoiceRadio
           checked={choices.length >= id + 1 ? choices[id].isCorrect : null}
           id={id}
           disabled={choices.length >= id + 1 ? null : true}
@@ -27,8 +40,7 @@ class EditChoice extends Component {
           required
           type='radio'
         />
-        <input
-          className='question_choices'
+        <ChoiceText
           disabled={choices.length >= id + 1 ? null : true}
           id={id}
           name={index}
@@ -39,23 +51,21 @@ class EditChoice extends Component {
         />
         {id > 1
           ? choices.length >= id + 1
-            ? <Button
+            ? <EnableOrDisable
               id={id}
-              className='enable_disable_choice'
               name={index}
             >
             Disable Choice
-            </Button>
-            : <Button
+            </EnableOrDisable>
+            : <EnableOrDisable
               id={id}
               color='info'
-              className='enable_disable_choice'
               name={index}
             >
             Enable Choice
-            </Button>
+            </EnableOrDisable>
           : null}
-      </div>
+      </ChoiceContainer>
     )
   }
 }

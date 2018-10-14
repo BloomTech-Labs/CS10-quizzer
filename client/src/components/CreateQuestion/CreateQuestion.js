@@ -2,7 +2,6 @@ import React from 'react'
 
 import CreateChoice from '../CreateChoice/CreateChoice'
 
-import './CreateQuestion.css'
 import {
   QuestionFieldSetStyled,
   QuizFormQuestionTextStyled,

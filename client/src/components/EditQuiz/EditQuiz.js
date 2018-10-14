@@ -1,11 +1,20 @@
 import React, { Component } from 'react'
-import { GET_QUIZ_INFORMATION } from '../Queries'
-import { Button } from 'reactstrap'
 import PropTypes from 'prop-types'
-import EditQuestion from '../EditQuestion/EditQuestion'
 import { Query } from 'react-apollo'
 import { client } from '../../index'
-import './EditQuiz.css'
+
+import EditQuestion from '../EditQuestion/EditQuestion'
+import { GET_QUIZ_INFORMATION } from '../Queries'
+
+import {
+  EditQuizContainer,
+  Header,
+  CheckList,
+  CheckListItem,
+  EditQuizForm,
+  EditQuizName,
+  EditQuizBtns
+} from './styled'
 
 class EditQuiz extends Component {
   constructor () {
@@ -13,7 +22,8 @@ class EditQuiz extends Component {
     this.state = {
       quizId: '',
       quizData: null,
-      deletedQuestions: []
+      deletedQuestions: [],
+      deleteChoices: []
     }
   }
 
@@ -141,16 +151,22 @@ class EditQuiz extends Component {
           } else if (data && this.state.quizData) {
             const quizData = this.state.quizData
             return (
-              <div className='edit_quiz_container'>
-                <h4 className='edit_quiz_instructions'>
-                  To edit a quiz, it must have a quiz name and have at least one question. Each question
-                  must also have at least two answer choices per question, but each question is limited to
-                  four answer choices.
-                </h4>
-                <form className='edit_quiz_form'>
-                  <input
+              <EditQuizContainer>
+                <Header>
+                  To edit a quiz it must have
+                </Header>
+
+                <CheckList>
+                  <CheckListItem>A quiz name</CheckListItem>
+                  <CheckListItem>Have at least one question</CheckListItem>
+                  <CheckListItem>Have at least two answer choices per question</CheckListItem>
+                </CheckList>
+
+                <EditQuizForm>
+                  <EditQuizName
+                    id={quizData.QuizID}
                     name='QuizName'
-                    placeholder='Name'
+                    placeholder='Quiz Name'
                     onChange={this.quizNameChange}
                     required type='text'
                     value={quizData.QuizName}
@@ -162,13 +178,27 @@ class EditQuiz extends Component {
                     choiceTextChange={this.choiceTextChange}
                     deleteQuestion={this.deleteQuestion}
                   />
-                  <div className='edit_quiz_buttons'>
-                    <Button color='secondary' onClick={this.addQuestion}>Add Question</Button>
-                    <Button color='info'>Save Changes</Button>
-                    <Button color='danger'>Delete Quiz</Button>
-                  </div>
-                </form>
-              </div>
+
+                  <EditQuizBtns
+                    color='secondary'
+                    onClick={this.addQuestion}
+                  >
+                  Add Question
+                  </EditQuizBtns>
+
+                  <EditQuizBtns
+                    color='info'
+                  >
+                  Save Changes
+                  </EditQuizBtns>
+
+                  <EditQuizBtns
+                    color='danger'
+                  >
+                  Delete Quiz
+                  </EditQuizBtns>
+                </EditQuizForm>
+              </EditQuizContainer>
             )
           }
         }}

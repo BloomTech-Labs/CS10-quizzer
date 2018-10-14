@@ -188,15 +188,15 @@ class CreateQuiz extends Component {
 
   render () {
     return (
-      <ContainerStyled className='create_quiz_container'>
-        <HeaderStyled className='create_quiz_container__quiz_header'>
+      <ContainerStyled>
+        <HeaderStyled>
           To create a quiz you must
         </HeaderStyled>
 
-        <ChecklistStyled className='create_quiz_container__checklist'>
-          <CheclistItemStyled className='create_quiz_container__checklist__item'>Have a Quiz Name</CheclistItemStyled>
-          <CheclistItemStyled className='create_quiz_container__checklist__item'>Have at least one question</CheclistItemStyled>
-          <CheclistItemStyled className='create_quiz_container__checklist__item'>Have at least two answer choices</CheclistItemStyled>
+        <ChecklistStyled>
+          <CheclistItemStyled>Provide a Quiz Name</CheclistItemStyled>
+          <CheclistItemStyled>Add at least one question</CheclistItemStyled>
+          <CheclistItemStyled>Add at least two answer choices per question</CheclistItemStyled>
         </ChecklistStyled>
 
         <Mutation mutation={CREATE_QUIZ}>
