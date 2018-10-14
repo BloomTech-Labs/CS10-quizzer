@@ -14,7 +14,8 @@ const EditQuestion = (props) => {
     questionTextChange,
     choiceChecked,
     choiceTextChange,
-    deleteQuestion
+    deleteQuestion,
+    enableOrDisable
   } = props
 
   return (
@@ -34,6 +35,7 @@ const EditQuestion = (props) => {
               choices={question.choiceSet}
               choiceChecked={choiceChecked}
               choiceTextChange={choiceTextChange}
+              enableOrDisable={enableOrDisable}
               id={0}
               index={index}
             />
@@ -41,6 +43,7 @@ const EditQuestion = (props) => {
               choices={question.choiceSet}
               choiceChecked={choiceChecked}
               choiceTextChange={choiceTextChange}
+              enableOrDisable={enableOrDisable}
               id={1}
               index={index}
             />
@@ -48,6 +51,7 @@ const EditQuestion = (props) => {
               choices={question.choiceSet}
               choiceChecked={choiceChecked}
               choiceTextChange={choiceTextChange}
+              enableOrDisable={enableOrDisable}
               id={2}
               index={index}
             />
@@ -55,6 +59,7 @@ const EditQuestion = (props) => {
               choices={question.choiceSet}
               choiceChecked={choiceChecked}
               choiceTextChange={choiceTextChange}
+              enableOrDisable={enableOrDisable}
               id={3}
               index={index}
             />

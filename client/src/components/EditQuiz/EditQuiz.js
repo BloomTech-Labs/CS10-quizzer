@@ -101,12 +101,14 @@ class EditQuiz extends Component {
         {
           ChoiceID: null,
           ChoiceText: '',
-          isCorrect: false
+          isCorrect: false,
+          status: false
         },
         {
           ChoiceID: null,
           ChoiceText: '',
-          isCorrect: false
+          isCorrect: false,
+          status: false
         }
       ]
     })
@@ -126,6 +128,38 @@ class EditQuiz extends Component {
     this.setState({
       quizData: obj,
       deletedQuestions: del
+    })
+  }
+
+  enableOrDisable = (event) => {
+    const obj = Object.assign({}, this.state.quizData)
+    const id = Number(event.target.id)
+    const name = Number(event.target.name)
+    const choiceSet = obj.questionSet[name].choiceSet
+    const choice = obj.questionSet[name].choiceSet[id]
+
+    if (choiceSet.length >= id + 1) {
+      const status = obj.questionSet[name].choiceSet[id].status
+      if (choice.ChoiceID) {
+        if (!status) {
+          choice.ChoiceText = ''
+          choice.isCorrect = false
+        }
+        obj.questionSet[name].choiceSet[id].status = !status
+      } else if (!status) {
+        obj.questionSet[name].choiceSet.splice(id, 1)
+      }
+    } else {
+      obj.questionSet[name].choiceSet.push({
+        ChoiceID: null,
+        ChoiceText: '',
+        isCorrect: false,
+        status: false
+      })
+    }
+
+    this.setState({
+      quizData: obj
     })
   }
 
@@ -176,6 +210,7 @@ class EditQuiz extends Component {
                     choiceChecked={this.choiceChecked}
                     choiceTextChange={this.choiceTextChange}
                     deleteQuestion={this.deleteQuestion}
+                    enableOrDisable={this.enableOrDisable}
                   />
 
                   <EditQuizBtns
