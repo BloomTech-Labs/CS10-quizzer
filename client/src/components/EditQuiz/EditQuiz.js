@@ -22,8 +22,7 @@ class EditQuiz extends Component {
     this.state = {
       quizId: '',
       quizData: null,
-      deletedQuestions: [],
-      deleteChoices: []
+      deletedQuestions: []
     }
   }
 

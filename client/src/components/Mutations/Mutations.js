@@ -19,8 +19,8 @@ export const CREATE_QUESTION = gql`
   }`
 
 export const CREATE_CHOICE = gql`
-  mutation createChoice($ChoiceText: String!, $QuestionID: String!, $encJWT: String!, $isCorrect: Boolean!) {
-    createChoice(ChoiceText: $ChoiceText, QuestionID: $QuestionID, encJWT: $encJWT, isCorrect: $isCorrect) {
+  mutation createChoice($ChoiceText: String!, $QuestionID: String!, $encJWT: String!, $isCorrect: Boolean!, $status: Boolean!) {
+    createChoice(ChoiceText: $ChoiceText, QuestionID: $QuestionID, encJWT: $encJWT, isCorrect: $isCorrect, status: $status) {
       choice {
         ChoiceID
       }

@@ -62,6 +62,7 @@ class Choice(models.Model):
     QuestionID    = models.ForeignKey('Question', on_delete = models.CASCADE)
     ChoiceText    = models.TextField()
     isCorrect     = models.BooleanField()
+    status        = models.BooleanField()
     created_at    = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 

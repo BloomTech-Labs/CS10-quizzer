@@ -259,6 +259,7 @@ class CreateQuiz extends Component {
                                     const createdChoice = createNewChoice({
                                       variables: {
                                         ChoiceText: choice[0],
+                                        status: true,
                                         encJWT: this.state.token,
                                         isCorrect: choice[1],
                                         QuestionID: questionId
