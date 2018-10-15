@@ -7,11 +7,39 @@ import gql from 'graphql-tag'
 
 import styled from 'styled-components'
 
+const QuizSectionHeaderStyled = styled.h4`
+  margin-bottom: 2rem;
+`
+
 const QuizListWrapper = styled.div`
   display: grid;
   grid-template: auto / 1fr
   grid-row-gap: 50px;
+  margin-bottom: 2rem;
+
+  @media (min-width: 420px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (min-width: 636px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 `
+
+// const QuizListWrapper = styled.div`
+//   display: grid;
+//   grid-column-gap: 15px;
+//   grid-template-columns: 100%;
+//   grid-auto-rows: 50px;
+
+//   @media (min-width: 420px) {
+//     grid-template-columns: repeat(2, 1fr);
+//   }
+
+//   @media (min-width: 636px) {
+//     grid-template-columns: repeat(3, 1fr);
+//   }
+// `
 
 const GET_CLASS_QUIZZES = gql`
 query GetClassQuizzes($ClassID: String!, $encJWT: String!) {
@@ -35,7 +63,9 @@ function QuizPanel (props) {
 
   return (
     <div>
-      <h4>Quizzes</h4>
+      <QuizSectionHeaderStyled>
+        Quizzes
+      </QuizSectionHeaderStyled>
 
       <Query query={GET_CLASS_QUIZZES} variables={{ ClassID: classID, encJWT: localStorage.getItem('token') }}>
         {({ loading, error, data }) => {
