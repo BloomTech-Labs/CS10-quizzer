@@ -1,10 +1,10 @@
 import React from 'react'
-import { Card, CardTitle, CardBody, CardText, Col } from 'reactstrap'
+import { Card, CardTitle, CardBody } from 'reactstrap'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 function ClassCard (props) {
-  const { quizscoresSet } = props.classItem
+  const { quizscoresSet } = props.classroom
 
   const allQuizScores = quizscoresSet.reduce((acc, next) => {
     return acc + next.Score
@@ -13,23 +13,23 @@ function ClassCard (props) {
   const averageGrade = allQuizScores / quizscoresSet.length
 
   return (
-    <Col className='mb-3 col-12 col-sm-6 col-lg-4'>
-      <Link to={{ pathname: '/rocket/classes/editclass/', state: { classItem: props.classItem } }}>
-        <Card>
-          <CardTitle>{props.classItem.ClassName}</CardTitle>
-          <CardBody>
-            <CardText>Students: {props.classItem.studentSet.length}</CardText>
-            <CardText>Average Grade: { isNaN(averageGrade) ? 'No grades yet' : `${averageGrade}%` }</CardText>
-            <CardText>Quizzes: {props.classItem.quizSet.length}</CardText>
-          </CardBody>
-        </Card>
+    <Card className='quiz_card'>
+      <Link className='class_card_link' to={{ pathname: '/rocket/classes/editclass/', state: { classItem: props.classroom } }}>
+        <CardBody>
+          <CardTitle className='quiz_card_title'>{props.classroom.ClassName}</CardTitle>
+          <span className='class_card_text'>Students: {props.classroom.studentSet.length}</span>
+          <br />
+          <span className='class_card_text'>Average Grade: { isNaN(averageGrade) ? 'No grades yet' : `${averageGrade}%` }</span>
+          <br />
+          <span className='class_card_text'>Quizzes: {props.classroom.quizSet.length}</span>
+        </CardBody>
       </Link>
-    </Col>
+    </Card>
   )
 }
 
 ClassCard.propTypes = {
-  classItem: PropTypes.object
+  classroom: PropTypes.object
 }
 
 export default ClassCard

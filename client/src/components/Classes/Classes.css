@@ -1,3 +1,14 @@
 .classes_container {
     min-height: 100vh;
 }
+
+.class_card_text {
+    color: black;
+    font-family: monospace;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.class_card_link:hover {
+    text-decoration: none
+}
