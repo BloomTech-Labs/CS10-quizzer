@@ -5,6 +5,42 @@ import { Query } from 'react-apollo'
 import { string } from 'prop-types'
 import gql from 'graphql-tag'
 
+import styled from 'styled-components'
+
+const QuizSectionHeaderStyled = styled.h4`
+  margin-bottom: 2rem;
+`
+
+const QuizListWrapper = styled.div`
+  display: grid;
+  grid-template: auto / 1fr
+  grid-row-gap: 50px;
+  margin-bottom: 2rem;
+
+  @media (min-width: 420px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (min-width: 636px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+`
+
+// const QuizListWrapper = styled.div`
+//   display: grid;
+//   grid-column-gap: 15px;
+//   grid-template-columns: 100%;
+//   grid-auto-rows: 50px;
+
+//   @media (min-width: 420px) {
+//     grid-template-columns: repeat(2, 1fr);
+//   }
+
+//   @media (min-width: 636px) {
+//     grid-template-columns: repeat(3, 1fr);
+//   }
+// `
+
 const GET_CLASS_QUIZZES = gql`
 query GetClassQuizzes($ClassID: String!, $encJWT: String!) {
   classQuizzes(ClassID: $ClassID) {
@@ -27,11 +63,16 @@ function QuizPanel (props) {
 
   return (
     <div>
-      <h4>Quizzes</h4>
+      <QuizSectionHeaderStyled>
+        Quizzes
+      </QuizSectionHeaderStyled>
+
       <Query query={GET_CLASS_QUIZZES} variables={{ ClassID: classID, encJWT: localStorage.getItem('token') }}>
         {({ loading, error, data }) => {
           if (loading) return 'Loading...'
+
           if (error) return error.message
+
           if (data && data.classQuizzes && data.classStudents && data.teacher) {
             const quizzes = data.classQuizzes
             const students = data.classStudents
@@ -40,7 +81,7 @@ function QuizPanel (props) {
 
             if (quizzes.length > 0) {
               return (
-                <Fragment>
+                <QuizListWrapper className='quiz_list_wrapper'>
                   {quizzes.map((quiz) => {
                     return (
                       <QuizCard
@@ -55,7 +96,7 @@ function QuizPanel (props) {
                       />
                     )
                   })}
-                </Fragment>
+                </QuizListWrapper>
               )
             }
           }
