@@ -26,3 +26,62 @@ export const CREATE_CHOICE = gql`
       }
     }
   }`
+
+export const UPDATE_QUIZ = gql`
+  mutation updateQuiz($QuizID: String!, $QuizName: String!, $encJwt: String!) {
+    updateQuiz(QuizID: $QuizID, QuizName: $QuizName, encJwt: $encJwt) {
+      updatedQuiz {
+        QuizID
+        QuizName
+      }
+    }
+  }`
+
+export const UPDATE_QUESTION = gql`
+  mutation ($QuestionID: String!, $QuestionText: String!, $encJwt: String!) {
+    updateQuestion(QuestionID: $QuestionID, QuestionText: $QuestionText, encJwt: $encJwt) {
+      updatedQuestion {
+        QuestionID
+        QuestionText
+      }
+    }
+  }`
+
+export const UPDATE_CHOICE = gql`
+  mutation ($ChoiceID: String!, $ChoiceText: String!, $isCorrect: Boolean!, $status: Boolean!, $encJwt: String!) {
+    updateChoice(ChoiceID: $ChoiceID, ChoiceText: $ChoiceText, isCorrect: $isCorrect, status: $status, encJwt: $encJwt) {
+      updatedChoice {
+        ChoiceID
+        ChoiceText
+        isCorrect
+        status
+      }
+    }
+  }`
+
+export const DELETE_QUIZ = gql`
+  mutation deleteQuiz($QuizID: String!, $encJwt: String!) {
+    deleteQuiz(QuizID: $QuizID, encJwt: $encJwt) {
+     quiz {
+       QuizID
+     }
+    }
+  }`
+
+export const DELETE_QUESTION = gql`
+  mutation deleteQuestion($QuestionID: String!, $encJwt: String!) {
+    deleteQuestion(QuestionID: $QuestionID, encJwt: $encJwt) {
+      question {
+        QuestionID
+      }
+    }
+  }`
+
+export const DELETE_CHOICE = gql`
+  mutation deleteChoice($ChoiceID: String!, $encJwt: String!) {
+    deleteChoice(ChoiceID: $ChoiceID, encJwt: $encJwt) {
+      choice {
+        ChoiceID
+      }
+    }
+  }`

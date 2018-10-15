@@ -455,7 +455,7 @@ class CreateChoice(graphene.Mutation):
     class Arguments:
         ChoiceText = graphene.String(required=True)
         isCorrect  = graphene.Boolean(required=True)
-        status    = graphene.Boolean(required=True)
+        status     = graphene.Boolean(required=True)
         QuestionID = graphene.String(required=True)
         encJWT     = graphene.String(required=True)
 

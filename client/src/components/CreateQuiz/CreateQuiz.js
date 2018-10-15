@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
 import { Mutation } from 'react-apollo'
 
 import { CREATE_QUIZ, CREATE_QUESTION, CREATE_CHOICE } from '../Mutations'
@@ -23,14 +24,15 @@ class CreateQuiz extends Component {
       answerList: [],
       choices: [],
       choicesCount: 0,
-      modalMessage: false,
-      modalSaving: false,
+      modalOpen: false,
+      modalLoading: false,
       modalSuccess: false,
       modalText: '',
       modalTitle: '',
       questions: [],
       quizName: '',
-      token: ''
+      token: '',
+      redirect: false
     }
   }
 
@@ -182,7 +184,13 @@ class CreateQuiz extends Component {
 
   toggleModalMessage = () => {
     this.setState({
-      modalMessage: !this.state.modalMessage
+      modalOpen: !this.state.modalOpen
+    })
+  }
+
+  redirect = () => {
+    this.setState({
+      redirect: true
     })
   }
 
@@ -209,24 +217,24 @@ class CreateQuiz extends Component {
                       event.preventDefault()
                       if (this.state.questions.length === 0) {
                         this.setState({
-                          modalMessage: true,
+                          modalOpen: true,
                           modalText: 'To create a quiz, you must add at least one question.',
                           modalTitle: 'Information'
                         })
                         return
                       } else if (this.state.answerList.indexOf(null) > -1) {
                         this.setState({
-                          modalMessage: true,
+                          modalOpen: true,
                           modalTitle: 'Information',
                           modalText: 'To create a quiz, you must choose an answer for each question you add.'
                         })
                         return
                       } else {
                         this.setState({
-                          modalMessage: true,
+                          modalOpen: true,
                           modalText: 'The quiz is being saved. Please wait...',
                           modalTitle: 'Information',
-                          modalSaving: true
+                          modalLoading: true
                         })
                       }
                       const createdQuiz = createNewQuiz({
@@ -259,7 +267,7 @@ class CreateQuiz extends Component {
                                     const createdChoice = createNewChoice({
                                       variables: {
                                         ChoiceText: choice[0],
-                                        status: true,
+                                        status: false,
                                         encJWT: this.state.token,
                                         isCorrect: choice[1],
                                         QuestionID: questionId
@@ -276,7 +284,7 @@ class CreateQuiz extends Component {
                                             answerList: [],
                                             choices: [],
                                             choicesCount: 0,
-                                            modalMessage: true,
+                                            modalOpen: true,
                                             modalText: 'You have successfully created a quiz. Do you want to go to the quizzes page?',
                                             modalTitle: 'Success',
                                             modalSuccess: true,
@@ -287,7 +295,7 @@ class CreateQuiz extends Component {
                                       })
                                       .catch(() => {
                                         this.setState({
-                                          modalMessage: true,
+                                          modalOpen: true,
                                           modalText: 'An error occurred while creating the quiz.',
                                           modalTitle: 'Error'
                                         })
@@ -297,7 +305,7 @@ class CreateQuiz extends Component {
                               })
                               .catch(() => {
                                 this.setState({
-                                  modalMessage: true,
+                                  modalOpen: true,
                                   modalText: 'An error occurred while creating the quiz.',
                                   modalTitle: 'Error'
                                 })
@@ -306,7 +314,7 @@ class CreateQuiz extends Component {
                         })
                         .catch(() => {
                           this.setState({
-                            modalMessage: true,
+                            modalOpen: true,
                             modalText: 'An error occurred while creating the quiz.',
                             modalTitle: 'Error'
                           })
@@ -334,8 +342,7 @@ class CreateQuiz extends Component {
                         color='secondary'
                         className='create_quiz_button'
                         onClick={this.addQuestion}
-                      >
-                        Add Question
+                      >Add Question
                       </AddQuizBtn>
 
                       <AddQuizBtn
@@ -352,13 +359,15 @@ class CreateQuiz extends Component {
           )}
         </Mutation>
         <ModalMessage
-          modalMessage={this.state.modalMessage}
+          modalOpen={this.state.modalOpen}
           modalTitle={this.state.modalTitle}
           modalText={this.state.modalText}
-          modalSaving={this.state.modalSaving}
+          modalLoading={this.state.modalLoading}
           modalSuccess={this.state.modalSuccess}
-          toggleModalMessage={this.toggleModalMessage}
+          modalFuncOne={this.redirect}
+          modalFuncTwo={this.toggleModalMessage}
         />
+        {this.state.redirect ? <Redirect to='/rocket/quizzes' /> : null}
       </ContainerStyled>
     )
   }
