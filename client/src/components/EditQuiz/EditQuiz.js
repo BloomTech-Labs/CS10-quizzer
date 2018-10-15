@@ -43,7 +43,7 @@ class EditQuiz extends Component {
     const obj = Object.assign({}, this.state.quizData)
     const index = event.target.name
 
-    obj.questionSet[index].Question = event.target.value
+    obj.questionSet[index].QuestionText = event.target.value
 
     this.setState({
       quizData: obj
@@ -86,8 +86,8 @@ class EditQuiz extends Component {
     const obj = Object.assign({}, this.state.quizData)
 
     obj.questionSet.push({
-      Question: '',
       QuestionID: null,
+      QuestionText: '',
       choiceSet: [
         {
           ChoiceID: null,

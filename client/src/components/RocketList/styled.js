@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { BreadcrumbItem } from 'reactstrap';
+import { BreadcrumbItem } from 'reactstrap'
 
 export const WelcomeHeader = styled.span`
   align-self: flex-end;

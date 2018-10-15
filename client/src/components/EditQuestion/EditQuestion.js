@@ -16,7 +16,7 @@ const EditQuestion = (props) => {
             onChange={event => questionTextChange(event)}
             placeholder={`Question ${index + 1}`}
             required rows='5'
-            value={question.Question}
+            value={question.QuestionText}
           />
           <fieldset className='question_fieldset'>
             <EditChoice

@@ -45,7 +45,7 @@ class Migration(migrations.Migration):
             name='Question',
             fields=[
                 ('QuestionID', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('Question', models.TextField()),
+                ('QuestionText', models.TextField()),
                 ('isMajor', models.BooleanField(default=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('last_modified', models.DateTimeField(auto_now=True)),
