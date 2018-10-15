@@ -19,7 +19,7 @@ class QuizSelector extends Component {
     return (
       <div>
         <QuizSelectModal classID={classID} isOpen={this.state.isOpen} toggle={this.toggle} />
-        <Button onClick={this.toggle}>+</Button>
+        <Button onClick={this.toggle}>Add Class</Button>
       </div>
     )
   }
