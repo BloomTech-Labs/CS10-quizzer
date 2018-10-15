@@ -166,10 +166,10 @@ class EditQuiz extends Component {
     const id = Number(event.target.id)
     const name = Number(event.target.name)
     const choiceSet = obj.questionSet[name].choiceSet
-    const choice = obj.questionSet[name].choiceSet[id]
 
-    if (choiceSet.length >= id + 1) {
-      const status = obj.questionSet[name].choiceSet[id].status
+    if (choiceSet[id]) {
+      const choice = choiceSet[id]
+      const status = choice.status
       if (choice.ChoiceID) {
         if (!status) {
           choice.ChoiceText = ''
@@ -177,15 +177,15 @@ class EditQuiz extends Component {
         }
         obj.questionSet[name].choiceSet[id].status = !status
       } else if (!status) {
-        obj.questionSet[name].choiceSet.splice(id, 1)
+        obj.questionSet[name].choiceSet[id] = null
       }
     } else {
-      obj.questionSet[name].choiceSet.push({
+      obj.questionSet[name].choiceSet[id] = {
         ChoiceID: null,
         ChoiceText: '',
         isCorrect: false,
         status: false
-      })
+      }
     }
 
     this.setState({
@@ -214,7 +214,8 @@ class EditQuiz extends Component {
         variables: {
           encJwt: this.state.token,
           QuizID: this.state.quizId
-        }
+        },
+        refetchrefetchQueries: ['GET_QUIZ_INFORMATION']
       })
 
       deletedQuiz
@@ -240,7 +241,8 @@ class EditQuiz extends Component {
               QuestionID: question.QuestionID,
               QuestionText: question.QuestionText,
               encJwt: this.state.token
-            }
+            },
+            refetchrefetchQueries: ['GET_QUIZ_INFORMATION']
           })
           deletedQuestion
             .then(() => {
@@ -268,7 +270,8 @@ class EditQuiz extends Component {
           QuizID: this.state.quizData.QuizID,
           QuizName: this.state.quizData.QuizName,
           encJwt: this.state.token
-        }
+        },
+        refetchrefetchQueries: ['GET_QUIZ_INFORMATION']
       })
 
       updatedQuiz
@@ -292,7 +295,8 @@ class EditQuiz extends Component {
                 QuestionID: question.QuestionID,
                 QuestionText: question.QuestionText,
                 encJwt: this.state.token
-              }
+              },
+              refetchrefetchQueries: ['GET_QUIZ_INFORMATION']
             })
 
             updatedQuestion
@@ -310,7 +314,7 @@ class EditQuiz extends Component {
                 })
 
                 question.choiceSet.forEach(choice => {
-                  if (!choice.ChoiceID) {
+                  if (choice && !choice.ChoiceID) {
                     const createdChoice = createChoice({
                       variables: {
                         ChoiceText: choice.ChoiceText,
@@ -318,7 +322,8 @@ class EditQuiz extends Component {
                         isCorrect: choice.isCorrect,
                         status: false,
                         encJWT: this.state.token
-                      }
+                      },
+                      refetchrefetchQueries: ['GET_QUIZ_INFORMATION']
                     })
 
                     createdChoice
@@ -346,12 +351,13 @@ class EditQuiz extends Component {
                           modalLoading: false
                         })
                       })
-                  } else if (choice.status) {
+                  } else if (choice && choice.status) {
                     const deletedChoice = deleteChoice({
                       variables: {
                         ChoiceID: choice.ChoiceID,
                         encJwt: this.state.token
-                      }
+                      },
+                      refetchrefetchQueries: ['GET_QUIZ_INFORMATION']
                     })
 
                     deletedChoice
@@ -379,7 +385,7 @@ class EditQuiz extends Component {
                           modalLoading: false
                         })
                       })
-                  } else {
+                  } else if (choice) {
                     const updatedChoice = updateChoice({
                       variables: {
                         ChoiceID: choice.ChoiceID,
@@ -387,7 +393,8 @@ class EditQuiz extends Component {
                         isCorrect: choice.isCorrect,
                         status: choice.status,
                         encJwt: this.state.token
-                      }
+                      },
+                      refetchrefetchQueries: ['GET_QUIZ_INFORMATION']
                     })
 
                     updatedChoice
@@ -445,8 +452,6 @@ class EditQuiz extends Component {
     if (!this.state.quizId) {
       return <span>Loading...</span>
     }
-    console.log('Question Count ', this.state.questionCount)
-    console.log('Choice Count ', this.state.choiceCount)
 
     return (
       <Query
@@ -472,98 +477,100 @@ class EditQuiz extends Component {
                   <CheckListItem>Have at least two answer choices per question</CheckListItem>
                 </CheckList>
 
-                <EditQuizForm>
-                  <EditQuizName
-                    id={quizData.QuizID}
-                    name='QuizName'
-                    placeholder='Quiz Name'
-                    onChange={this.quizNameChange}
-                    required type='text'
-                    value={quizData.QuizName}
-                  />
-                  <EditQuestion
-                    questionSet={quizData.questionSet}
-                    questionTextChange={this.questionTextChange}
-                    choiceChecked={this.choiceChecked}
-                    choiceTextChange={this.choiceTextChange}
-                    deleteQuestion={this.deleteQuestion}
-                    enableOrDisable={this.enableOrDisable}
-                  />
+                <Mutation mutation={CREATE_CHOICE}>
+                  {createChoice => (
+                    <Mutation mutation={UPDATE_QUIZ}>
+                      {updateQuiz => (
+                        <Mutation mutation={UPDATE_QUESTION}>
+                          {updateQuestion => (
+                            <Mutation mutation={UPDATE_CHOICE}>
+                              {updateChoice => (
+                                <Mutation mutation={DELETE_QUESTION}>
+                                  {deleteQuestion => (
+                                    <Mutation mutation={DELETE_CHOICE}>
+                                      {deleteChoice => (
+                                        <EditQuizForm onSubmit={event => {
+                                          event.preventDefault()
+                                          this.setState({
+                                            modalOpen: true,
+                                            modalLoading: true,
+                                            modalSuccess: true,
+                                            modalText: 'Are you sure you want to save changes?',
+                                            modalTitle: 'Information',
+                                            mutation: {
+                                              'deleteQuestion': deleteQuestion,
+                                              'deleteChoice': deleteChoice,
+                                              'createChoice': createChoice,
+                                              'updateQuiz': updateQuiz,
+                                              'updateQuestion': updateQuestion,
+                                              'updateChoice': updateChoice
+                                            },
+                                            mutationType: 'saveChanges'
+                                          })
+                                        }}>
 
-                  <EditQuizBtns
-                    color='secondary'
-                    onClick={this.addQuestion}
-                  >
-                  Add Question
-                  </EditQuizBtns>
+                                          <EditQuizName
+                                            id={quizData.QuizID}
+                                            name='QuizName'
+                                            placeholder='Quiz Name'
+                                            onChange={this.quizNameChange}
+                                            required type='text'
+                                            value={quizData.QuizName}
+                                          />
 
-                  <Mutation mutation={CREATE_CHOICE}>
-                    {createChoice => (
-                      <Mutation mutation={UPDATE_QUIZ}>
-                        {updateQuiz => (
-                          <Mutation mutation={UPDATE_QUESTION}>
-                            {updateQuestion => (
-                              <Mutation mutation={UPDATE_CHOICE}>
-                                {updateChoice => (
-                                  <Mutation mutation={DELETE_QUESTION}>
-                                    {deleteQuestion => (
-                                      <Mutation mutation={DELETE_CHOICE}>
-                                        {deleteChoice => (
+                                          <EditQuestion
+                                            questionSet={quizData.questionSet}
+                                            questionTextChange={this.questionTextChange}
+                                            choiceChecked={this.choiceChecked}
+                                            choiceTextChange={this.choiceTextChange}
+                                            deleteQuestion={this.deleteQuestion}
+                                            enableOrDisable={this.enableOrDisable}
+                                          />
+
+                                          <EditQuizBtns
+                                            color='secondary'
+                                            onClick={this.addQuestion}
+                                          >Add Question
+                                          </EditQuizBtns>
+
                                           <EditQuizBtns
                                             color='info'
-                                            onClick={() => {
-                                              this.setState({
-                                                modalOpen: true,
-                                                modalLoading: true,
-                                                modalSuccess: true,
-                                                modalText: 'Are you sure you want to save changes?',
-                                                modalTitle: 'Information',
-                                                mutation: {
-                                                  'deleteQuestion': deleteQuestion,
-                                                  'deleteChoice': deleteChoice,
-                                                  'createChoice': createChoice,
-                                                  'updateQuiz': updateQuiz,
-                                                  'updateQuestion': updateQuestion,
-                                                  'updateChoice': updateChoice
-                                                },
-                                                mutationType: 'saveChanges'
-                                              })
-                                            }}
                                           >Save Changes
                                           </EditQuizBtns>
-                                        )}
-                                      </Mutation>
-                                    )}
-                                  </Mutation>
-                                )}
-                              </Mutation>
-                            )}
-                          </Mutation>
-                        )}
-                      </Mutation>
-                    )}
-                  </Mutation>
 
-                  <Mutation mutation={DELETE_QUIZ}>
-                    {(deleteQuiz) => (
-                      <EditQuizBtns
-                        color='danger'
-                        onClick={() => {
-                          this.setState({
-                            modalOpen: true,
-                            modalLoading: true,
-                            modalSuccess: true,
-                            modalText: 'Are you sure you want to delete this quiz?',
-                            modalTitle: 'Information',
-                            mutation: deleteQuiz,
-                            mutationType: 'deleteQuiz'
-                          })
-                        }}
-                      >Delete Quiz
-                      </EditQuizBtns>
-                    )}
-                  </Mutation>
-                </EditQuizForm>
+                                          <Mutation mutation={DELETE_QUIZ}>
+                                            {(deleteQuiz) => (
+                                              <EditQuizBtns
+                                                color='danger'
+                                                onClick={() => {
+                                                  this.setState({
+                                                    modalOpen: true,
+                                                    modalLoading: true,
+                                                    modalSuccess: true,
+                                                    modalText: 'Are you sure you want to delete this quiz?',
+                                                    modalTitle: 'Information',
+                                                    mutation: deleteQuiz,
+                                                    mutationType: 'deleteQuiz'
+                                                  })
+                                                }}
+                                              >Delete Quiz
+                                              </EditQuizBtns>
+                                            )}
+                                          </Mutation>
+                                        </EditQuizForm>
+                                      )}
+                                    </Mutation>
+                                  )}
+                                </Mutation>
+                              )}
+                            </Mutation>
+                          )}
+                        </Mutation>
+                      )}
+                    </Mutation>
+                  )}
+                </Mutation>
+
                 <ModalMessage
                   modalOpen={this.state.modalOpen}
                   modalTitle={this.state.modalTitle}

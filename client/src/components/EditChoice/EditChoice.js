@@ -24,6 +24,7 @@ class EditChoice extends Component {
       id,
       index
     } = this.state
+
     const {
       choiceChecked,
       choiceTextChange,
@@ -33,39 +34,38 @@ class EditChoice extends Component {
     return (
       <ChoiceContainer>
         <ChoiceRadio
-          checked={choices.length >= id + 1 ? choices[id].isCorrect : null}
+          checked={choices[id] ? choices[id].isCorrect : null}
           id={id}
-          disabled={choices.length >= id + 1 ? choices[id].status : true}
+          disabled={choices[id] ? choices[id].status : true}
           name={index}
           onChange={event => choiceChecked(event)}
           required
           type='radio'
         />
         <ChoiceText
-          disabled={choices.length >= id + 1 ? choices[id].status : true}
+          disabled={choices[id] ? choices[id].status : true}
           id={id}
           name={index}
           onChange={event => choiceTextChange(event)}
           placeholder={`Choice ${id + 1}`}
+          required
           type='text'
-          value={choices.length >= id + 1 ? choices[id].ChoiceText : ''}
+          value={choices[id] ? choices[id].ChoiceText : ''}
         />
         {id > 1
-          ? choices.length >= id + 1 && !choices[id].status
+          ? choices[id] && !choices[id].status
             ? <EnableOrDisable
               onClick={event => enableOrDisable(event)}
               id={id}
               name={index}
-            >
-            Disable Choice
+            >Disable Choice
             </EnableOrDisable>
             : <EnableOrDisable
               onClick={event => enableOrDisable(event)}
               id={id}
               color='info'
               name={index}
-            >
-            Enable Choice
+            >Enable Choice
             </EnableOrDisable>
           : null}
       </ChoiceContainer>

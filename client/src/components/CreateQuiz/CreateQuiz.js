@@ -244,7 +244,7 @@ class CreateQuiz extends Component {
                             Public: false,
                             QuizName: this.state.quizName
                           },
-                        refetchQueries: ['getCurrentInformation']
+                        refetchrefetchQueries: ['getCurrentInformation']
                       })
                       createdQuiz
                         .then(data => {
