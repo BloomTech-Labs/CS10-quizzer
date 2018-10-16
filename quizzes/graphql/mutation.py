@@ -110,7 +110,6 @@ class UpdateTeacherInformationMutation(graphene.ObjectType):
 end UpdateTeacherInformation
 '''
 
-
 '''
 start QueryTeacher
 '''
@@ -146,8 +145,6 @@ class QueryTeacher(graphene.Mutation):
         else:
             raise GraphQLError('Please supply a valid password')
 
-
-
 class QueryTeacherMutation(graphene.ObjectType):
     TeacherID    = graphene.String()
     TeacherEmail = graphene.String()
@@ -155,7 +152,6 @@ class QueryTeacherMutation(graphene.ObjectType):
 '''
 end QueryTeacher
 '''
-
 
 '''
 start CreateStudent
@@ -191,7 +187,6 @@ class CreateStudent(graphene.Mutation):
         
         return CreateStudent(student=student)
 
-
 class CreateStudentMutation(graphene.ObjectType):
     StudentID    = graphene.String()
     StudentName  = graphene.String()
@@ -217,7 +212,6 @@ class DeleteStudent(graphene.Mutation):
 
 class DeleteStudentMutation(graphene.ObjectType):
     StudentID = graphene.String()
-
 
 '''
 start CreateQuiz
@@ -324,7 +318,6 @@ class AddQuizToClass(graphene.Mutation):
 
         return AddQuizToClass(quiz=quiz)
 
-
 class AddQuizToClassMutation(graphene.ObjectType):
     QuizID        = graphene.String()
     QuizName      = graphene.String()
@@ -334,6 +327,28 @@ class AddQuizToClassMutation(graphene.ObjectType):
     last_modified = graphene.String()
 '''
 end AddQuizToClass
+'''
+
+'''
+start DeleteQuiz
+'''
+class DeleteQuiz(graphene.Mutation):
+    class Arguments: 
+        QuizID = graphene.String(required=True)
+        enc_jwt = graphene.String(required=True)
+    
+    quiz = graphene.Field(lambda: DeleteQuizMutation)
+
+    @staticmethod
+    def mutate(self, info, QuizID, enc_jwt):
+        quiz = Quiz.objects.get(QuizID=QuizID).delete()
+
+        return DeleteQuiz(quiz=quiz)
+
+class DeleteQuizMutation(graphene.ObjectType):
+    QuizID = graphene.String() 
+'''
+end DeleteQuiz
 '''
 
 '''
@@ -412,19 +427,42 @@ endUpdateQuestion
 '''
 
 '''
+start DeleteQuestion
+'''
+class DeleteQuestion(graphene.Mutation):
+    class Arguments: 
+        QuestionID = graphene.String(required=True)
+        enc_jwt = graphene.String(required=True)
+    
+    question = graphene.Field(lambda: DeleteQuestionMutation)
+
+    @staticmethod
+    def mutate(self, info, QuestionID, enc_jwt): 
+        question = Question.objects.get(QuestionID=QuestionID).delete()
+
+        return DeleteQuestion(question=question)
+
+class DeleteQuestionMutation(graphene.ObjectType):
+    QuestionID = graphene.String() 
+'''
+end DeleteQuestion
+'''
+
+'''
 start CreateChoice
 '''
 class CreateChoice(graphene.Mutation):
     class Arguments:
         ChoiceText = graphene.String(required=True)
         isCorrect  = graphene.Boolean(required=True)
+        status     = graphene.Boolean(required=True)
         QuestionID = graphene.String(required=True)
         encJWT     = graphene.String(required=True)
 
     choice = graphene.Field(lambda: CreateChoiceMutation)
 
     @staticmethod
-    def mutate(self, info, ChoiceText, isCorrect, QuestionID, encJWT):
+    def mutate(self, info, ChoiceText, isCorrect, status, QuestionID, encJWT):
         decJWT     = decode_jwt(encJWT)
         teacherID  = decJWT[ 'sub' ][ 'id' ]
         teacher    = Teacher.objects.get(TeacherID=teacherID)
@@ -433,7 +471,8 @@ class CreateChoice(graphene.Mutation):
         choice   = Choice.objects.create(
             QuestionID=question,
             ChoiceText=ChoiceText,
-            isCorrect=isCorrect
+            isCorrect=isCorrect,
+            status=status
             )
 
         return CreateChoice(choice=choice)
@@ -443,7 +482,8 @@ class CreateChoiceMutation(graphene.ObjectType):
     ChoiceID      = graphene.String()
     QuestionID    = graphene.String()
     ChoiceText    = graphene.String()
-    isCorrect     = graphene.String()
+    isCorrect     = graphene.Boolean()
+    status        = graphene.Boolean()
     created_at    = graphene.String()
     last_modified = graphene.String()
 '''
@@ -458,12 +498,13 @@ class UpdateChoice(graphene.Mutation):
         ChoiceID = graphene.String(required=True)
         ChoiceText = graphene.String(required=True)
         isCorrect = graphene.Boolean(required=True)
+        status = graphene.Boolean(required=True)
         enc_jwt = graphene.String(required=True)
     
     updated_choice = graphene.Field(lambda: UpdateChoiceMutation)
     
     @staticmethod
-    def mutate(self, info, ChoiceID, ChoiceText, isCorrect, enc_jwt):
+    def mutate(self, info, ChoiceID, ChoiceText, isCorrect, status, enc_jwt):
         dec_jwt = decode_jwt(enc_jwt)
         teacherID = dec_jwt['sub']['id']
         teacher = Teacher.objects.get(TeacherID=teacherID)
@@ -473,6 +514,7 @@ class UpdateChoice(graphene.Mutation):
             # object.save() cannot take any args, so just change entries first
             updated_choice.ChoiceText = ChoiceText if len(ChoiceText) > 0 else updated_choice.ChoiceText
             updated_choice.isCorrect = isCorrect if isCorrect != updated_choice.isCorrect else updated_choice.isCorrect
+            updated_choice.status = status if status != updated_choice.status else updated_choice.status
             updated_choice.save() 
 
             # this is what GraphQL is going to return
@@ -485,8 +527,31 @@ class UpdateChoiceMutation(graphene.ObjectType):
     ChoiceID = graphene.String()
     ChoiceText = graphene.String() 
     isCorrect = graphene.Boolean()
+    status = graphene.Boolean()
 '''
 end UpdateChoice
+'''
+
+'''
+start DeleteChoice 
+'''
+class DeleteChoice(graphene.Mutation):
+    class Arguments: 
+        ChoiceID = graphene.String(required=True)
+        enc_jwt = graphene.String(required=True)
+
+    choice = graphene.Field(lambda: DeleteChoiceMutation)
+
+    @staticmethod
+    def mutate(self, info, ChoiceID, enc_jwt):
+        choice = Choice.objects.get(ChoiceID=ChoiceID).delete()
+
+        return DeleteChoice(choice=choice)
+
+class DeleteChoiceMutation(graphene.ObjectType): 
+    ChoiceID = graphene.String() 
+'''
+end DeleteChoice
 '''
 
 '''

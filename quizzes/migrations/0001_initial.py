@@ -19,6 +19,7 @@ class Migration(migrations.Migration):
                 ('ChoiceID', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('ChoiceText', models.TextField()),
                 ('isCorrect', models.BooleanField()),
+                ('status', models.BooleanField()),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('last_modified', models.DateTimeField(auto_now=True)),
             ],

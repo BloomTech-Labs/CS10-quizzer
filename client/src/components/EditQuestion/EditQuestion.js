@@ -1,28 +1,42 @@
 import React from 'react'
+
 import EditChoice from '../EditChoice/EditChoice'
-import { Button } from 'reactstrap'
-import './EditQuestion.css'
+
+import {
+  Question,
+  ChoiceSet,
+  DeleteQuestion
+} from './styled'
 
 const EditQuestion = (props) => {
-  const { questionSet, questionTextChange, choiceChecked, choiceTextChange, deleteQuestion } = props
+  const {
+    questionSet,
+    questionTextChange,
+    choiceChecked,
+    choiceTextChange,
+    deleteQuestion,
+    enableOrDisable
+  } = props
 
   return (
     questionSet.map((question, index) => {
       return (
         <div key={index}>
-          <textarea
+          <Question
             cols='50'
             name={index}
             onChange={event => questionTextChange(event)}
             placeholder={`Question ${index + 1}`}
-            required rows='5'
+            required
+            rows='5'
             value={question.QuestionText}
           />
-          <fieldset className='question_fieldset'>
+          <ChoiceSet>
             <EditChoice
               choices={question.choiceSet}
               choiceChecked={choiceChecked}
               choiceTextChange={choiceTextChange}
+              enableOrDisable={enableOrDisable}
               id={0}
               index={index}
             />
@@ -30,6 +44,7 @@ const EditQuestion = (props) => {
               choices={question.choiceSet}
               choiceChecked={choiceChecked}
               choiceTextChange={choiceTextChange}
+              enableOrDisable={enableOrDisable}
               id={1}
               index={index}
             />
@@ -37,6 +52,7 @@ const EditQuestion = (props) => {
               choices={question.choiceSet}
               choiceChecked={choiceChecked}
               choiceTextChange={choiceTextChange}
+              enableOrDisable={enableOrDisable}
               id={2}
               index={index}
             />
@@ -44,19 +60,19 @@ const EditQuestion = (props) => {
               choices={question.choiceSet}
               choiceChecked={choiceChecked}
               choiceTextChange={choiceTextChange}
+              enableOrDisable={enableOrDisable}
               id={3}
               index={index}
             />
-          </fieldset>
-          <Button
+          </ChoiceSet>
+          <DeleteQuestion
             color='danger'
-            className='delete_question'
             name={index}
             onClick={event => deleteQuestion(event)}
             type='button'
           >
           Delete Question
-          </Button>
+          </DeleteQuestion>
         </div>
       )
     })

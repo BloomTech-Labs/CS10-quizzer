@@ -1,7 +1,7 @@
 import { Button, Input } from 'reactstrap'
 import styled from 'styled-components'
 
-export const ContainerStyled = styled.div`
+export const EditQuizContainer = styled.div`
   flex: 1
   margin: 0 auto;
   width: 100%;
@@ -12,28 +12,33 @@ export const ContainerStyled = styled.div`
   }
 `
 
-export const HeaderStyled = styled.h4`
+export const Header = styled.h4`
   color: #003366;
   font-family: monospace;
   font-size: 20px;
   font-weight: bold;
-  margin-bottom: 1rem;
+  margin: 0 0 1rem 0;
 `
 
-export const ChecklistStyled = styled.ul`
+export const CheckList = styled.ul`
   list-style: none;
-  margin-bottom: 3rem;
+  margin: 0 0 3rem 0;
   padding: 0;
 `
 
-export const CheclistItemStyled = styled.li`
+export const CheckListItem = styled.li`
   &:before {
     content: "✔";
-    margin-right: 0.5rem;
+    margin: 0 0.5rem 0 0;
   }
 `
 
-export const InputStyled = styled(Input)`
+export const EditQuizForm = styled.form`
+  display: flex;
+  flex-direction: column;
+`
+
+export const EditQuizName = styled(Input)`
   border: 2px solid #003366 !important;
   font-family: monospace;
   font-size: 20px !important;
@@ -41,9 +46,9 @@ export const InputStyled = styled(Input)`
   padding: 20px 10px !important;
 `
 
-export const AddQuizBtn = styled(Button)`
+export const EditQuizBtns = styled(Button)`
   font-family: monospace;
   font-size: 20px !important;
   font-weight: bold !important;
-  margin-bottom: 1rem;
+  margin: 0 0 1rem 0;
 `

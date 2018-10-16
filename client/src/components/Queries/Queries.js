@@ -12,6 +12,7 @@ export const GET_QUIZ_INFORMATION = gql`
         ChoiceID
         ChoiceText
         isCorrect
+        status
       }
     }
   }

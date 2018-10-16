@@ -1,6 +1,12 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Button } from 'reactstrap'
+
+import {
+  ChoiceContainer,
+  ChoiceRadio,
+  ChoiceText,
+  EnableOrDisable
+} from './styled'
 
 class EditChoice extends Component {
   constructor (props) {
@@ -13,49 +19,56 @@ class EditChoice extends Component {
   }
 
   render () {
-    const { choices, id, index } = this.state
-    const { choiceChecked, choiceTextChange } = this.props
+    const {
+      choices,
+      id,
+      index
+    } = this.state
+
+    const {
+      choiceChecked,
+      choiceTextChange,
+      enableOrDisable
+    } = this.props
 
     return (
-      <div>
-        <input
-          checked={choices.length >= id + 1 ? choices[id].isCorrect : null}
+      <ChoiceContainer>
+        <ChoiceRadio
+          checked={choices[id] ? choices[id].isCorrect : null}
           id={id}
-          disabled={choices.length >= id + 1 ? null : true}
+          disabled={choices[id] ? choices[id].status : true}
           name={index}
           onChange={event => choiceChecked(event)}
           required
           type='radio'
         />
-        <input
-          className='question_choices'
-          disabled={choices.length >= id + 1 ? null : true}
+        <ChoiceText
+          disabled={choices[id] ? choices[id].status : true}
           id={id}
           name={index}
           onChange={event => choiceTextChange(event)}
           placeholder={`Choice ${id + 1}`}
+          required
           type='text'
-          value={choices.length >= id + 1 ? choices[id].ChoiceText : ''}
+          value={choices[id] ? choices[id].ChoiceText : ''}
         />
         {id > 1
-          ? choices.length >= id + 1
-            ? <Button
+          ? choices[id] && !choices[id].status
+            ? <EnableOrDisable
+              onClick={event => enableOrDisable(event)}
               id={id}
-              className='enable_disable_choice'
               name={index}
-            >
-            Disable Choice
-            </Button>
-            : <Button
+            >Disable Choice
+            </EnableOrDisable>
+            : <EnableOrDisable
+              onClick={event => enableOrDisable(event)}
               id={id}
               color='info'
-              className='enable_disable_choice'
               name={index}
-            >
-            Enable Choice
-            </Button>
+            >Enable Choice
+            </EnableOrDisable>
           : null}
-      </div>
+      </ChoiceContainer>
     )
   }
 }
@@ -64,6 +77,7 @@ EditChoice.propTypes = {
   choices: PropTypes.array,
   choiceChecked: PropTypes.func,
   choiceTextChange: PropTypes.func,
+  enableOrDisable: PropTypes.func,
   id: PropTypes.number,
   index: PropTypes.number
 }

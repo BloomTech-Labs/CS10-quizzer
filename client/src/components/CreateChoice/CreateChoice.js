@@ -28,7 +28,6 @@ const CreateChoice = (props) => {
         return (
           <EnableDisableChoiceBtnStyled
             id={id}
-            className='enable_disable_choice'
             name={index} onClick={enableOrDisable}
           >
             Enable Choice
@@ -39,7 +38,6 @@ const CreateChoice = (props) => {
           <EnableDisableChoiceBtnStyled
             id={id}
             color='info'
-            className='enable_disable_choice'
             name={index}
             onClick={enableOrDisable}
           >
@@ -54,9 +52,7 @@ const CreateChoice = (props) => {
 
   return (
     <AnswerWrapperStyled>
-      <AnswerInputWrapperStyled
-        className='question_fieldset__answer_wrapper__input_wrapper'
-      >
+      <AnswerInputWrapperStyled>
         <ChoiceRadioStyled
           checked={checked}
           disabled={choices[index][id][2]}
@@ -68,7 +64,6 @@ const CreateChoice = (props) => {
         />
 
         <ChoiceTextStyled
-          className='question_choices'
           disabled={choices[index][id][2]}
           id={id}
           name={index}
