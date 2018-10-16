@@ -27,7 +27,8 @@ const EditQuestion = (props) => {
             name={index}
             onChange={event => questionTextChange(event)}
             placeholder={`Question ${index + 1}`}
-            required rows='5'
+            required
+            rows='5'
             value={question.QuestionText}
           />
           <ChoiceSet>
