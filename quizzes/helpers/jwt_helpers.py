@@ -16,7 +16,7 @@ def create_jwt(teacher_id, teacher_name, teacher_email):
         'email': teacher_email
     },
     'iat': time.time(),
-    'exp': time.time() + 86400
+    'exp': time.time() + 2592000 # 30 day expiration time
   }
 
   new_jwt = jwt.encode(payload, key, algorithm=algorithm)
