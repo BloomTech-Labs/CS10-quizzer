@@ -480,6 +480,7 @@ class EditQuiz extends Component {
         query={GET_QUIZ_INFORMATION}
         variables={{ quizId: this.state.quizId }}
         onCompleted={data => {
+          console.log('Data', data)
           this.setState({
             quizData: data.singleQuiz
           })

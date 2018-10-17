@@ -1,20 +1,20 @@
 import React from 'react'
 import { func, number, string } from 'prop-types'
-import { Col, Row, Input, Label } from 'reactstrap'
+import { Col } from 'reactstrap'
 
 import { InputStyled, LabelStyled } from './styles'
 
-import styled from 'styled-components'
+// import styled from 'styled-components'
 
-const InputWrapperStyled = styled(Col)`
-  @media (min-width: 576px) {
-    margin-left: 0;
-  }
-`
+// const InputWrapperStyled = styled(Col)`
+//   @media (min-width: 576px) {
+//     margin-left: 0;
+//   }
+// `
 
-const LabelWrapperStyled = styled(InputWrapperStyled)`
-  margin-bottom: 1rem;
-`
+// const LabelWrapperStyled = styled(InputWrapperStyled)`
+//   margin-bottom: 1rem;
+// `
 
 const Radio = props => {
   const { name, onClick, price, type, value, labelValue } = props
