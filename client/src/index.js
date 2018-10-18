@@ -4,7 +4,6 @@ import './index.css'
 import App from './App'
 import { BrowserRouter as Router } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
-// import registerServiceWorker from './registerServiceWorker'
 import { ApolloProvider } from 'react-apollo'
 import ApolloClient from 'apollo-boost'
 
@@ -21,5 +20,3 @@ render(
     </Router>
   </ApolloProvider>
   , document.getElementById('root'))
-
-// registerServiceWorker()
