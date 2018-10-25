@@ -4,7 +4,6 @@ import EditChoice from '../EditChoice/EditChoice'
 
 import {
   Question,
-  ChoiceSet,
   DeleteQuestion
 } from './styled'
 
@@ -31,7 +30,7 @@ const EditQuestion = (props) => {
             rows='5'
             value={question.QuestionText}
           />
-          <ChoiceSet>
+          <fieldset>
             <EditChoice
               choices={question.choiceSet}
               choiceChecked={choiceChecked}
@@ -64,14 +63,13 @@ const EditQuestion = (props) => {
               id={3}
               index={index}
             />
-          </ChoiceSet>
+          </fieldset>
           <DeleteQuestion
             color='danger'
             name={index}
             onClick={event => deleteQuestion(event)}
             type='button'
-          >
-          Delete Question
+          >Delete Question
           </DeleteQuestion>
         </div>
       )

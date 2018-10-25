@@ -480,7 +480,6 @@ class EditQuiz extends Component {
         query={GET_QUIZ_INFORMATION}
         variables={{ quizId: this.state.quizId }}
         onCompleted={data => {
-          console.log('Data', data)
           this.setState({
             quizData: data.singleQuiz
           })
@@ -492,7 +491,7 @@ class EditQuiz extends Component {
             const quizData = this.state.quizData
             return (
               <EditQuizContainer>
-                <Header>To edit a quiz it must have</Header>
+                <Header>To edit a quiz it must have:</Header>
 
                 <CheckList>
                   <CheckListItem>A quiz name</CheckListItem>
