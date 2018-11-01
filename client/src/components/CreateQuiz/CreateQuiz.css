@@ -1,8 +1,3 @@
-.create_quiz_form {
-    display: flex;
-    flex-direction: column;
-}
-
 .modal_message_header {
     background: #003366;
     border-radius: 0 !important;

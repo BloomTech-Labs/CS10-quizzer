@@ -9,12 +9,13 @@ import ModalMessage from '../Modals/ModalMessage'
 import './CreateQuiz.css'
 
 import {
-  ContainerStyled,
-  HeaderStyled,
-  ChecklistStyled,
-  CheclistItemStyled,
-  InputStyled,
-  AddQuizBtn
+  CreateQuizContainer,
+  Header,
+  CheckList,
+  CheckListItem,
+  CreateQuizForm,
+  CreateQuizName,
+  CreateQuizBtns
 } from './styled'
 
 class CreateQuiz extends Component {
@@ -196,16 +197,14 @@ class CreateQuiz extends Component {
 
   render () {
     return (
-      <ContainerStyled>
-        <HeaderStyled>
-          To create a quiz you must
-        </HeaderStyled>
+      <CreateQuizContainer>
+        <Header>To create a quiz you must</Header>
 
-        <ChecklistStyled>
-          <CheclistItemStyled>Provide a Quiz Name</CheclistItemStyled>
-          <CheclistItemStyled>Add at least one question</CheclistItemStyled>
-          <CheclistItemStyled>Add at least two answer choices per question</CheclistItemStyled>
-        </ChecklistStyled>
+        <CheckList>
+          <CheckListItem>Provide a Quiz Name</CheckListItem>
+          <CheckListItem>Add at least one question</CheckListItem>
+          <CheckListItem>Add at least two answer choices per question</CheckListItem>
+        </CheckList>
 
         <Mutation mutation={CREATE_QUIZ}>
           {(createNewQuiz) => (
@@ -213,7 +212,7 @@ class CreateQuiz extends Component {
               {(createNewQuestion) => (
                 <Mutation mutation={CREATE_CHOICE}>
                   {(createNewChoice) => (
-                    <form className='create_quiz_form' onSubmit={event => {
+                    <CreateQuizForm onSubmit={event => {
                       event.preventDefault()
                       if (this.state.questions.length === 0) {
                         this.setState({
@@ -320,7 +319,7 @@ class CreateQuiz extends Component {
                           })
                         })
                     }}>
-                      <InputStyled
+                      <CreateQuizName
                         name='quizName'
                         onChange={this.handleOnChange}
                         placeholder='Quiz Name'
@@ -338,20 +337,17 @@ class CreateQuiz extends Component {
                         enableOrDisable={this.enableOrDisable}
                       />
 
-                      <AddQuizBtn
+                      <CreateQuizBtns
                         color='secondary'
-                        className='create_quiz_button'
                         onClick={this.addQuestion}
                       >Add Question
-                      </AddQuizBtn>
+                      </CreateQuizBtns>
 
-                      <AddQuizBtn
+                      <CreateQuizBtns
                         color='info'
-                        className='create_quiz_button'
-                      >
-                      Create Quiz
-                      </AddQuizBtn>
-                    </form>
+                      >Create Quiz
+                      </CreateQuizBtns>
+                    </CreateQuizForm>
                   )}
                 </Mutation>
               )}
@@ -368,7 +364,7 @@ class CreateQuiz extends Component {
           modalFuncTwo={this.toggleModalMessage}
         />
         {this.state.redirect ? <Redirect to='/rocket/quizzes' /> : null}
-      </ContainerStyled>
+      </CreateQuizContainer>
     )
   }
 }
