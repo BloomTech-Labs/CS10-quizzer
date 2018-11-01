@@ -3,7 +3,6 @@ import styled from 'styled-components'
 
 export const Question = styled.textarea`
   border: 2px solid #003366;
-  font-family: monospace;
   font-size: 20px;
   margin: 0 0 20px 0;
   padding: 10px;

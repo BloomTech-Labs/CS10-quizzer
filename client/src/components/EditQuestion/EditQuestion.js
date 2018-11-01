@@ -30,6 +30,7 @@ const EditQuestion = (props) => {
             rows='5'
             value={question.QuestionText}
           />
+
           <fieldset>
             <EditChoice
               choices={question.choiceSet}
@@ -64,11 +65,11 @@ const EditQuestion = (props) => {
               index={index}
             />
           </fieldset>
+
           <DeleteQuestion
             color='danger'
             name={index}
             onClick={event => deleteQuestion(event)}
-            type='button'
           >Delete Question
           </DeleteQuestion>
         </div>
