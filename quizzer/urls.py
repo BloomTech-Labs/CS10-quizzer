@@ -33,6 +33,7 @@ urlpatterns = [
     path('student/<qid>/<cid>/<sid>', TemplateView.as_view(template_name='index.html')),
     path('rocket/settings/', TemplateView.as_view(template_name='index.html')),
     path('rocket/quizzes/', TemplateView.as_view(template_name='index.html')),
+    path('rocket/quizzes/editquiz', TemplateView.as_view(template_name='index.html')),
     path('rocket/classes/', TemplateView.as_view(template_name='index.html')),
     path('rocket/classes/editclass/', TemplateView.as_view(template_name='index.html')),
     path('rocket/billing/', TemplateView.as_view(template_name='index.html')),

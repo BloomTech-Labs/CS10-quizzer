@@ -3,20 +3,28 @@ import React from 'react'
 import CreateChoice from '../CreateChoice/CreateChoice'
 
 import {
-  QuestionFieldSetStyled,
-  QuizFormQuestionTextStyled,
-  DeleteQuestionBtnStyled
+  Question,
+  DeleteQuestion
 } from './styled'
 
 const CreateQuestions = (props) => {
-  const { questions, choices } = props.state
-  const { choiceCheck, choiceChange, deleteQuestion, enableOrDisable, questionChange } = props
+  const {
+    questions,
+    choices
+  } = props.state
+  const {
+    choiceCheck,
+    choiceChange,
+    deleteQuestion,
+    enableOrDisable,
+    questionChange
+  } = props
 
   return (
     questions.map((question, index) => {
       return (
         <div key={index}>
-          <QuizFormQuestionTextStyled
+          <Question
             cols='50'
             name={index}
             placeholder={`Question ${index + 1}`}
@@ -25,15 +33,15 @@ const CreateQuestions = (props) => {
             required
             value={question}
           />
-
-          <QuestionFieldSetStyled className='question_fieldset'>
+          <fieldset>
             <CreateChoice
               checked={choices[index][0][1]}
               choices={choices}
               choiceChange={choiceChange}
               choiceCheck={choiceCheck}
               disabled={choices[index][0][2]}
-              id={0} index={index}
+              id={0}
+              index={index}
               value={choices[index][0][0]}
             />
 
@@ -71,17 +79,14 @@ const CreateQuestions = (props) => {
               value={choices[index][3][0]}
               enableOrDisable={enableOrDisable}
             />
-          </QuestionFieldSetStyled>
+          </fieldset>
 
-          <DeleteQuestionBtnStyled
+          <DeleteQuestion
             color='danger'
-            className='delete_question'
             name={index}
             onClick={deleteQuestion}
-            type='button'
-          >
-            Delete Question
-          </DeleteQuestionBtnStyled>
+          >Delete Question
+          </DeleteQuestion>
         </div>
       )
     })

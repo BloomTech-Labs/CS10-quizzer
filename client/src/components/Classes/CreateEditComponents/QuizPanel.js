@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import QuizCard from './QuizCard'
 import QuizSelector from './QuizSelector'
 import { Query } from 'react-apollo'

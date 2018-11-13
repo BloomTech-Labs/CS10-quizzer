@@ -8,8 +8,7 @@ export const ChoiceContainer = styled.div`
 `
 
 export const ChoiceRadio = styled(Input)`
-  margin-top: 12px !important;
-  width: auto;
+  margin: 12px 0 0 0 !important;
 
   &:after {
     margin: 0 !important;
@@ -17,12 +16,12 @@ export const ChoiceRadio = styled(Input)`
 `
 
 export const ChoiceText = styled(Input)`
-  margin: 0 0 20px 0;
+  margin: 0 0 20px 5%;
 `
 
 export const EnableOrDisable = styled(Button)`
   font-family: monospace;
   font-size: 15px !important;
   font-weight: bold !important;
-  margin: 0 0 1rem 0;
+  margin: 0 0 20px 5%;
 `

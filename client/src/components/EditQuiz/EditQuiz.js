@@ -491,7 +491,7 @@ class EditQuiz extends Component {
             const quizData = this.state.quizData
             return (
               <EditQuizContainer>
-                <Header>To edit a quiz it must have</Header>
+                <Header>To edit a quiz it must have:</Header>
 
                 <CheckList>
                   <CheckListItem>A quiz name</CheckListItem>

@@ -55,14 +55,15 @@ export const SideNavButton = styled.button`
 `
 
 export const RocketListNavBar = styled.div`
+  align-items: center;
   background: #003366;
   border: 3px solid #000000;
   display: flex;
-  align-items: center;
   flex-direction: column;
   font-family: monospace;
   font-size: 20px;
   font-weight: bold;
+  height: 100%;
   margin: 0;
   position: absolute;
   right: ${({ right }) => right}

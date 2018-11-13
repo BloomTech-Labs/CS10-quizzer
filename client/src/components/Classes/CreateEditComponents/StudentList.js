@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import gql from 'graphql-tag'
 import { Query } from 'react-apollo'
 import Student from './Student'
